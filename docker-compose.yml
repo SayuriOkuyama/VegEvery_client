@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  app:
+    build: ./
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    stdin_open: true
+    tty: true
+    networks:
+      - server_sail
+volumes:
+  node_modules:
+networks:
+  server_sail:
+    external: true
