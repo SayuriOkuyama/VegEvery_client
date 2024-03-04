@@ -1,3 +1,99 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
+}
+/******************* reset *******************/
+
+:root {
+  --root-font-size: 16;
+  --text-color: #8c6954;
+  /* --text-color-rgb: 118, 103, 101; */
+  /* --border-color: #aad6f9; */
+  --main-color: #7aa855;
+  --main-color_2: #557540;
+  /* --header-footer-color-rgba: 191, 240, 246, 0.2; */
+  --accent-color: #f57e47;
+  --main-bg-color: #fff;
+  --bg-color-green: #f0f7eb;
+  --bg-color-orange: #f9f1ed;
+}
+
+body {
+  margin: 0 auto;
+  font-size: var(--root-font-size);
+  font-family: var(--system-text-en);
+  background-color: var(--main-bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+}
+
+main {
+  max-width: 1240px;
+  margin: 0 auto;
+  min-height: 83vh;
+}
+
+main.create {
+  min-height: 83vh;
+  height: 83vh;
+}
+
+h2 {
+  /* font-size: calc(24 / var(--root-font-size) * 1rem); 24px */
+}
+
+h3 {
+  /* font-size: calc(20 / var(--root-font-size) * 1rem); 20px */
+}
+
+.logo_link {
+  display: block;
+  margin: 0 auto;
+  width: calc(67 / var(--root-font-size) * 1rem); /*20px*/
+}

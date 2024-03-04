@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <>
       <div>
-        <Link href={'/'}>
+        <Link href={'/'} className="logo_link">
           <Image
             priority
             src="/logo.png"
