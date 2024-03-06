@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import styles from '@/app/components/Navigation.module.css'
+import styles from '@/components/layouts/Navigation/Navigation.module.css'
 import { PiHouseLineLight } from 'react-icons/pi'
 import { PiMapPinLineLight } from 'react-icons/pi'
 import { PiCookingPotLight } from 'react-icons/pi'
