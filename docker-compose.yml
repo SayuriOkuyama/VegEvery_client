@@ -10,9 +10,9 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - server_sail
+      - vegevery_server_sail
 volumes:
   node_modules:
 networks:
-  server_sail:
+  vegevery_server_sail:
     external: true
