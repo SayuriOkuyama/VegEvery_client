@@ -22,6 +22,16 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/recipes/page.js",
+    "components/layouts/ArticleCard.js",
+    "components/layouts/recipes/TagWordSort.js",
+    "components/layouts/recipes/VegeTypeSort.js",
+    "components/layouts/VegeTag.js"
+  ],
   "exclude": ["node_modules"]
 }

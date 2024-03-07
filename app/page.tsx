@@ -1,4 +1,4 @@
-import ArticleCard from '@/components/layouts/ArticleCard'
+import ArticleCard from '@/components/layouts/ArticleCard.js'
 import { Kite_One } from 'next/font/google'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
