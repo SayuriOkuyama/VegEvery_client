@@ -1,4 +1,4 @@
-import ArticleCard from '@/components/layouts/ArticleCard'
+import ArticleCard from '@/components/layouts/ArticleCard.js'
 import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
 import { PiMagnifyingGlassLight } from 'react-icons/pi'

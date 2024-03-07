@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import React from 'react'
-import ArticleCard from '../ArticleCard'
+import ArticleCard from '@/components/layouts/ArticleCard.js'
 
-const VegeTypeSort = () => {
+const VegeTypeSort = ({ articles }) => {
   return (
     <Tabs defaultValue="V" className="flex flex-col">
       <TabsList className="">
@@ -44,12 +44,29 @@ const VegeTypeSort = () => {
       </TabsList>
       <TabsContent value="V">
         <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
+          {articles &&
+            articles.map(article => {
+              return (
+                <ArticleCard
+                  key={article.id}
+                  title={article.title}
+                  thumbnail={article.thumbnail}
+                  user={article.user.name}
+                  likes={article.number_of_likes}
+                  time={article.cooking_time}
+                  vegeTags={[
+                    article.vegan,
+                    article.oriental_vegetarian,
+                    article.ovo_vegetarian,
+                    article.pescatarian,
+                    article.lacto_vegetarian,
+                    article.pollo_vegetarian,
+                    article.fruitarian,
+                    article.other_vegetarian,
+                  ]}
+                />
+              )
+            })}
         </div>
       </TabsContent>
       <TabsContent value="Ori">

@@ -120,6 +120,7 @@ h6 {
   --bg-color-psc: #bbe5ef;
   --bg-color-pol: #ebc4a7;
   --bg-color-flu: #d0b9f6;
+  --bg-color-flu: #d0b9f6;
   --border-color-vegetag: #d1d1d1;
   --border-color-button: #ccb9ae;
 }
@@ -194,6 +195,10 @@ h3 {
 
 .bg-color-flu {
   background: var(--bg-color-flu);
+}
+
+.bg-color-oth {
+  background: var(--bg-color-oth);
 }
 
 .logo_link {

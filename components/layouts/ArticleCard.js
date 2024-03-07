@@ -4,9 +4,9 @@ import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { PiHeart } from 'react-icons/pi'
 import { TfiTimer } from 'react-icons/tfi'
-import VegeTag from './VegeTag'
+import VegeTag from '@/components/layouts/VegeTag.js'
 
-const ArticleCard = () => {
+const ArticleCard = ({ title, thumbnail, user, likes, time, vegeTags }) => {
   return (
     <Card className="h-60">
       <Link
@@ -21,17 +21,15 @@ const ArticleCard = () => {
             className="object-cover m-auto"
           />
           <div className="absolute top-0">
-            <VegeTag />
+            <VegeTag vegeTags={vegeTags} />
           </div>
           <div className="flex absolute bottom-0 end-0 bg-white text-sm">
             <TfiTimer className="flex self-center" />
-            30分
+            {time}分
           </div>
         </div>
         <CardHeader className="flex">
-          <CardTitle className="text-sm">
-            ケチャップで【時短】豆腐ハンバーグ弁当
-          </CardTitle>
+          <CardTitle className="text-sm">{title}</CardTitle>
         </CardHeader>
         <CardFooter>
           <div className="flex">
@@ -39,11 +37,11 @@ const ArticleCard = () => {
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <div className="text-sm self-end">ベジタベル子</div>
+            <div className="text-sm self-end">{user}</div>
           </div>
           <div className="flex justify-end">
             <PiHeart className="self-center" />
-            <p className="text-xs">63</p>
+            <p className="text-xs">{likes}</p>
           </div>
         </CardFooter>
       </Link>
