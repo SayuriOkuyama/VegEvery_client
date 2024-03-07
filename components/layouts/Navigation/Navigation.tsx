@@ -29,7 +29,7 @@ export default function Navigation() {
             <div className={`${styles.menu}  text-center`}>Map</div>
           </div>
         </Link>
-        <Link href={'/'} className={styles.link}>
+        <Link href={'/recipes'} className={styles.link}>
           <div className={`${styles.menu_wrapper}`}>
             <div
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
@@ -38,7 +38,7 @@ export default function Navigation() {
             <div className={`${styles.menu}  text-center`}>Recipe</div>
           </div>
         </Link>
-        <Link href={'/'} className={styles.link}>
+        <Link href={'/food_items'} className={styles.link}>
           <div className={`${styles.menu_wrapper}`}>
             <div
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
