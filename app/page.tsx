@@ -14,12 +14,12 @@ export default function Home() {
       <section>
         <h3 className="text-center text-lg font-bold">レシピ</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 pt-4 pb-8 py-4 gap-4 ">
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
         </div>
         <div className="flex pb-8">
           <Button className="mx-auto bg-button border-button-color">
@@ -30,12 +30,12 @@ export default function Home() {
       <section className="bg-green pt-8">
         <h3 className="text-center text-lg font-bold">フードアイテム</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 pt-8 pb-8 py-4 gap-4 ">
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
-          <ArticleCard></ArticleCard>
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
+          <ArticleCard />
         </div>
         <div className="flex pb-8">
           <Button className="mx-auto bg-button border-button-color">
