@@ -10,7 +10,7 @@ const ArticleCard = () => {
   return (
     <Card className="h-60">
       <Link
-        href={'/article_of_recipe/1'}
+        href={'/recipes/1'}
         className="h-full flex flex-col justify-between">
         <div className="relative">
           <Image
