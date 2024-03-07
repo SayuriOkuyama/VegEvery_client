@@ -167,6 +167,9 @@ h3 {
 .bg-color-v {
   background: var(--bg-color-v);
 }
+.bg-color-v-50 {
+  background: #b2deb980;
+}
 
 .bg-color-ori {
   background: var(--bg-color-ori);
