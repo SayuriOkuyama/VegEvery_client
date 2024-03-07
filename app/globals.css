@@ -111,6 +111,17 @@ h6 {
   --main-bg-color: #fff;
   --bg-color-green: #f0f7eb;
   --bg-color-orange: #f9f1ed;
+  --bg-color-button: #f4f0ec;
+  --bg-color-v: #b2deb9;
+  --bg-color-ori: #f5cadf;
+  --bg-color-ovo: #e8e5ae;
+  --bg-color-psc: #bbe5ef;
+  --bg-color-lct: #f8f8f1;
+  --bg-color-psc: #bbe5ef;
+  --bg-color-pol: #ebc4a7;
+  --bg-color-flu: #d0b9f6;
+  --border-color-vegetag: #d1d1d1;
+  --border-color-button: #ccb9ae;
 }
 
 body {
@@ -134,11 +145,52 @@ main.create {
 }
 
 h2 {
-  /* font-size: calc(24 / var(--root-font-size) * 1rem); 24px */
+  font-size: calc(24 / var(--root-font-size) * 1rem);
 }
 
 h3 {
   /* font-size: calc(20 / var(--root-font-size) * 1rem); 20px */
+}
+
+.bg-green {
+  background: var(--bg-color-green);
+}
+
+.bg-button {
+  background: var(--bg-color-button);
+}
+
+.border-button-color {
+  border: 1px solid var(--border-color-button);
+}
+
+.bg-color-v {
+  background: var(--bg-color-v);
+}
+
+.bg-color-ori {
+  background: var(--bg-color-ori);
+}
+
+.bg-color-ovo {
+  background: var(--bg-color-ovo);
+}
+
+.bg-color-psc {
+  background: var(--bg-color-psc);
+}
+
+.bg-color-lct {
+  background: var(--bg-color-lct);
+  border: 1px solid var(--border-color-vegetag);
+}
+
+.bg-color-pol {
+  background: var(--bg-color-pol);
+}
+
+.bg-color-flu {
+  background: var(--bg-color-flu);
 }
 
 .logo_link {
