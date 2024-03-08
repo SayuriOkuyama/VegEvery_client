@@ -62,6 +62,7 @@ const page = () => {
             page={'other_vegetarian'}
             pageData={pageData}
             articles={articles}
+            pageType={'recipes/search/other_vegetarian'}
           />
         </TabsContent>
       </Tabs>

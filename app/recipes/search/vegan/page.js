@@ -54,14 +54,15 @@ const page = () => {
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="popular">
+        {/* <TabsContent value="popular">
           <Popular />
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value="search">
           <VegeTypeSort
             page={'vegan'}
             pageData={pageData}
             articles={articles}
+            pageType={'recipes/search/vegan'}
           />
         </TabsContent>
       </Tabs>

@@ -62,6 +62,7 @@ const page = () => {
             page={'pescatarian'}
             pageData={pageData}
             articles={articles}
+            pageType={'recipes/search/pescatarian'}
           />
         </TabsContent>
       </Tabs>

@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import axios from '@/lib/axios'
 import { useEffect, useRef, useState } from 'react'
-import Popular from '@/components/layouts/recipes/Popular.js'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 const page = () => {
@@ -19,10 +18,11 @@ const page = () => {
     const getArticles = async () => {
       try {
         const response = await axios.get(
-          `/recipes/search?page=${page}&vegeTag=ovo_vegetarian`,
+          `/food_items/search?page=${page}&vegeTag=pollo_vegetarian`,
         )
 
         const data = await response.data
+        console.log(data)
         setArticles(data.data)
         setPageData(data)
       } catch (err) {}
@@ -32,7 +32,7 @@ const page = () => {
 
   return (
     <main className="pb-24">
-      <h3 className="text-center text-lg font-bold mt-8">レシピ一覧</h3>
+      <h3 className="text-center text-lg font-bold mt-8">フードアイテム情報</h3>
       <div className="flex justify-end mt-4 mb-1">
         <Button className="py-0 px-2 mr-2 bg-button border-button-color">
           <div className="flex items-end">
@@ -45,24 +45,24 @@ const page = () => {
         <TabsList className="w-100 self-center">
           <TabsTrigger
             value="popular"
-            onClick={() => router.push('/recipes?page=1')}>
-            人気のレシピ
+            onClick={() => router.push('/food_items?page=1')}>
+            人気の投稿
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/recipes/search/vegan?page=1')}>
+            onClick={() => router.push('/food_items/search/vegan?page=1')}>
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="popular">
+        {/* <TabsContent value="popular">
           <Popular />
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value="search">
           <VegeTypeSort
-            page={'ovo_vegetarian'}
+            page={'pollo_vegetarian'}
             pageData={pageData}
             articles={articles}
-            pageType={'recipes/search/ovo_vegetarian'}
+            pageType={'food_items/search/pollo_vegetarian'}
           />
         </TabsContent>
       </Tabs>

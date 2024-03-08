@@ -9,7 +9,7 @@ const kiteOne = Kite_One({
   weight: ['400'],
 })
 
-async function getRecipes() {
+async function fetchRecipes() {
   try {
     const response = await axios.get(`/recipes?page=top`, {
       headers: {
@@ -23,9 +23,24 @@ async function getRecipes() {
   } catch (err) {}
 }
 
+async function fetchItems() {
+  try {
+    const response = await axios.get(`/food_items?page=top`, {
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+    })
+
+    const data = await response.data
+    console.log(data)
+    return data
+  } catch (err) {}
+}
+
 export default async function Home() {
-  const articlesOfRecipe = await getRecipes()
-  console.log(articlesOfRecipe)
+  const articlesOfRecipes = await fetchRecipes()
+  const articlesOfItems = await fetchItems()
+  console.log(articlesOfItems)
 
   return (
     <main className="pb-24">
@@ -35,8 +50,8 @@ export default async function Home() {
       <section>
         <h3 className="text-center text-lg font-bold">レシピ</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 pt-4 pb-8 py-4 gap-4 ">
-          {articlesOfRecipe &&
-            articlesOfRecipe.map(articleOfRecipe => {
+          {articlesOfRecipes &&
+            articlesOfRecipes.map(articleOfRecipe => {
               return (
                 <ArticleCard
                   key={articleOfRecipe.id}
@@ -70,12 +85,29 @@ export default async function Home() {
       <section className="bg-green pt-8">
         <h3 className="text-center text-lg font-bold">フードアイテム情報</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 pt-8 pb-8 py-4 gap-4 ">
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
+          {articlesOfItems &&
+            articlesOfItems.map(articlesOfItem => {
+              return (
+                <ArticleCard
+                  key={articlesOfItem.id}
+                  title={articlesOfItem.title}
+                  thumbnail={articlesOfItem.thumbnail}
+                  user={articlesOfItem.user.name}
+                  likes={articlesOfItem.number_of_likes}
+                  time={articlesOfItem.cooking_time}
+                  vegeTags={[
+                    articlesOfItem.vegan,
+                    articlesOfItem.oriental_vegetarian,
+                    articlesOfItem.ovo_vegetarian,
+                    articlesOfItem.pescatarian,
+                    articlesOfItem.lacto_vegetarian,
+                    articlesOfItem.pollo_vegetarian,
+                    articlesOfItem.fruitarian,
+                    articlesOfItem.other_vegetarian,
+                  ]}
+                />
+              )
+            })}
         </div>
         <div>
           <Link href={'/food_items'} className="flex pb-8">
