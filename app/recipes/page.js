@@ -8,9 +8,11 @@ import TagWordSort from '@/components/layouts/recipes/TagWordSort.js'
 import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
 import PaginationParts from '@/components/layouts/PaginationParts.js'
-import Popular from '../../components/layouts/recipes/Popular'
+import Popular from '../../components/layouts/recipes/Popular.js'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
+  const router = useRouter()
   // const [articles, setArticles] = useState()
   // const [pageData, setPageData] = useState()
 
@@ -43,9 +45,14 @@ const page = () => {
       </div>
       <Tabs defaultValue="popular" className="flex flex-col">
         <TabsList className="w-100 self-center">
-          <TabsTrigger value="popular">人気のレシピ</TabsTrigger>
-          <TabsTrigger value="vegetarian_type">ベジタリアンの種類</TabsTrigger>
-          <TabsTrigger value="tags">タグ・ワード</TabsTrigger>
+          <TabsTrigger value="popular" onClick={() => router.push('/recipes')}>
+            人気のレシピ
+          </TabsTrigger>
+          <TabsTrigger
+            value="search"
+            onClick={() => router.push('/recipes/search/vegan')}>
+            タグ・ワード検索
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="vegetarian_type">
           <VegeTypeSort />

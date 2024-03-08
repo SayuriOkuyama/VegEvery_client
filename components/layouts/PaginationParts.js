@@ -8,15 +8,8 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 
-const PaginationParts = ({ pageData }) => {
-  console.log(pageData)
-  const currentPage = pageData.current_page
-  const prevPage = pageData.current_page - 1
-  const nextPage = pageData.current_page + 1
-  console.log(currentPage)
-  console.log(prevPage)
-  console.log(nextPage)
-
+const PaginationParts = ({ pageData, page }) => {
+  console.log(page)
   return (
     <Pagination>
       <PaginationContent>
@@ -25,14 +18,18 @@ const PaginationParts = ({ pageData }) => {
             {pageData.current_page - 2 >= 0 && (
               <PaginationItem>
                 <PaginationPrevious
-                  href={`recipes?page=${pageData.current_page - 1}`}
+                  href={`/recipes/search/${page}?page=${
+                    pageData.current_page - 1
+                  }`}
                 />
               </PaginationItem>
             )}
             {pageData.current_page - 1 > 0 && (
               <PaginationItem>
                 <PaginationLink
-                  href={`recipes?page=${pageData.current_page - 1}`}>
+                  href={`/recipes/search/${page}?page=${
+                    pageData.current_page - 1
+                  }`}>
                   {pageData.current_page - 1}
                 </PaginationLink>
               </PaginationItem>
@@ -41,7 +38,7 @@ const PaginationParts = ({ pageData }) => {
             <PaginationItem>
               <PaginationLink
                 isActive
-                href={`recipes?page=${pageData.current_page}`}>
+                href={`/recipes/search/${page}?page=${pageData.current_page}`}>
                 {pageData.current_page}
               </PaginationLink>
             </PaginationItem>
@@ -49,7 +46,9 @@ const PaginationParts = ({ pageData }) => {
             {pageData.current_page + 1 <= pageData.last_page && (
               <PaginationItem>
                 <PaginationLink
-                  href={`recipes?page=${pageData.current_page + 1}`}>
+                  href={`/recipes/search/${page}?page=${
+                    pageData.current_page + 1
+                  }`}>
                   {pageData.current_page + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -65,7 +64,9 @@ const PaginationParts = ({ pageData }) => {
               <>
                 <PaginationItem>
                   <PaginationNext
-                    href={`recipes?page=${pageData.current_page + 1}`}
+                    href={`/recipes/search/${page}?page=${
+                      pageData.current_page + 1
+                    }`}
                   />
                 </PaginationItem>
               </>
