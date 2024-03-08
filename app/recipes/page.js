@@ -1,3 +1,4 @@
+'use client'
 import ArticleCard from '@/components/layouts/ArticleCard.js'
 import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
@@ -5,21 +6,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import TagWordSort from '@/components/layouts/recipes/TagWordSort.js'
 import axios from '@/lib/axios'
+import { useEffect, useState } from 'react'
+import PaginationParts from '@/components/layouts/PaginationParts.js'
+import Popular from '../../components/layouts/recipes/Popular'
 
-const getArticles = async () => {
-  try {
-    const response = await axios.get(`http://localhost/api/recipes/`)
+const page = () => {
+  // const [articles, setArticles] = useState()
+  // const [pageData, setPageData] = useState()
 
-    const data = await response.data
-    const articles = await data.data
+  // useEffect(() => {
+  //   const getArticles = async () => {
+  //     try {
+  //       const response = await axios.get('/recipes')
 
-    return articles
-  } catch (err) {}
-}
+  //       const data = await response.data
+  //       console.log(data.data)
+  //       setArticles(data.data)
+  //       setPageData(data)
+  //     } catch (err) {}
+  //   }
+  //   getArticles()
+  // }, [])
 
-const page = async () => {
-  const articles = await getArticles()
-  console.log(`articles:${articles}`)
+  // console.log(`articles:${articles}`)
 
   return (
     <main className="pb-24">
@@ -32,47 +41,22 @@ const page = async () => {
           </div>
         </Button>
       </div>
-      <Tabs defaultValue="vegetarian_type" className="flex flex-col">
+      <Tabs defaultValue="popular" className="flex flex-col">
         <TabsList className="w-100 self-center">
+          <TabsTrigger value="popular">人気のレシピ</TabsTrigger>
           <TabsTrigger value="vegetarian_type">ベジタリアンの種類</TabsTrigger>
           <TabsTrigger value="tags">タグ・ワード</TabsTrigger>
-          <TabsTrigger value="popular">人気のレシピ</TabsTrigger>
         </TabsList>
         <TabsContent value="vegetarian_type">
-          <VegeTypeSort articles={articles} />
+          <VegeTypeSort />
         </TabsContent>
         <TabsContent value="tags">
-          <TagWordSort articles={articles} />
+          <TagWordSort />
         </TabsContent>
         <TabsContent value="popular">
-          <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-            {articles &&
-              articles.map(article => {
-                return (
-                  <ArticleCard
-                    key={article.id}
-                    title={article.title}
-                    thumbnail={article.thumbnail}
-                    user={article.user.name}
-                    likes={article.number_of_likes}
-                    time={article.cooking_time}
-                    vegeTags={[
-                      article.vegan,
-                      article.oriental_vegetarian,
-                      article.ovo_vegetarian,
-                      article.pescatarian,
-                      article.lacto_vegetarian,
-                      article.pollo_vegetarian,
-                      article.fruitarian,
-                      article.other_vegetarian,
-                    ]}
-                  />
-                )
-              })}
-          </div>
+          <Popular />
         </TabsContent>
       </Tabs>
-      <div className="flex pb-8">ページネーション</div>
     </main>
   )
 }
