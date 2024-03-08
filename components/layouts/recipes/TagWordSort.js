@@ -1,18 +1,35 @@
 import { Input } from '@/components/ui/input'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { PiMagnifyingGlassLight } from 'react-icons/pi'
 import ArticleCard from '@/components/layouts/ArticleCard.js'
+import { Button } from '@/components/ui/button'
 
 const TagWordSort = ({ articles }) => {
+  const [searchedArticles, setSearchedArticles] = useState(articles)
+  const [searchedWord, setSearchedWord] = useState()
+  const refInput = useRef()
+
+  const handleSearch = () => {
+    // setSearchedWord(refInput.current.value)
+    setSearchedArticles(
+      articles.filter(article =>
+        article.title.includes(refInput.current.value),
+      ),
+    )
+    console.log(searchedArticles)
+  }
+
   return (
     <>
       <div className="flex my-2">
-        <PiMagnifyingGlassLight className="self-center text-lg ml-4 mr-2" />
-        <Input />
+        <Button onClick={() => handleSearch()}>
+          <PiMagnifyingGlassLight className="self-center text-lg ml-4 mr-2" />
+        </Button>
+        <Input ref={refInput} />
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-        {articles &&
-          articles.map(article => {
+        {searchedArticles.length !== 0 ? (
+          searchedArticles.map(article => {
             return (
               <ArticleCard
                 key={article.id}
@@ -33,7 +50,10 @@ const TagWordSort = ({ articles }) => {
                 ]}
               />
             )
-          })}
+          })
+        ) : (
+          <div className="mx-auto">見つかりませんでした</div>
+        )}
       </div>
     </>
   )
