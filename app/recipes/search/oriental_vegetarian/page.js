@@ -14,7 +14,6 @@ const page = () => {
   const router = useRouter()
   const params = useSearchParams()
   const page = params.get('page')
-  console.log(page)
 
   useEffect(() => {
     const getArticles = async () => {
@@ -64,6 +63,7 @@ const page = () => {
             page={'oriental_vegetarian'}
             pageData={pageData}
             articles={articles}
+            pageType={'recipes/search/oriental_vegetarian'}
           />
         </TabsContent>
       </Tabs>

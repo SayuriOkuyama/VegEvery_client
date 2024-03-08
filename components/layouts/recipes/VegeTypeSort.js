@@ -7,7 +7,7 @@ import { PiMagnifyingGlassLight } from 'react-icons/pi'
 import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
 
-const VegeTypeSort = ({ page, pageData, articles }) => {
+const VegeTypeSort = ({ page, pageData, articles, pageType }) => {
   const router = useRouter()
   const refInput = useRef()
 
@@ -22,6 +22,8 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
     'other_vegetarian',
   ]
 
+  const url = pageType === 'recipes/search/vegan' ? 'recipes' : 'food_items'
+
   return (
     <Tabs defaultValue={page} className="flex flex-col">
       <TabsList className="">
@@ -29,7 +31,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="vegan"
           className="rounded-full bg-color-v opacity-60 mr-1 text-xs h-8"
           onClick={() => {
-            router.push(`/recipes/search/vegan?page=1`)
+            router.push(`/${url}/search/vegan?page=1`)
           }}>
           V
         </TabsTrigger>
@@ -37,7 +39,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="oriental_vegetarian"
           className="rounded-full bg-color-ori opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/oriental_vegetarian?page=1`)
+            router.push(`/${url}/search/oriental_vegetarian?page=1`)
           }}>
           Ori
         </TabsTrigger>
@@ -45,7 +47,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="ovo_vegetarian"
           className="rounded-full bg-color-ovo opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/ovo_vegetarian?page=1`)
+            router.push(`/${url}/search/ovo_vegetarian?page=1`)
           }}>
           Ovo
         </TabsTrigger>
@@ -53,7 +55,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="pescatarian"
           className="rounded-full bg-color-psc opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/pescatarian?page=1`)
+            router.push(`/${url}/search/pescatarian?page=1`)
           }}>
           Psc
         </TabsTrigger>
@@ -61,7 +63,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="lacto_vegetarian"
           className="rounded-full bg-color-lct opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/lacto_vegetarian?page=1`)
+            router.push(`/${url}/search/lacto_vegetarian?page=1`)
           }}>
           Lct
         </TabsTrigger>
@@ -69,7 +71,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="pollo_vegetarian"
           className="rounded-full bg-color-pol opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/pollo_vegetarian?page=1`)
+            router.push(`/${url}/search/pollo_vegetarian?page=1`)
           }}>
           Pol
         </TabsTrigger>
@@ -77,7 +79,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="fruitarian"
           className="rounded-full bg-color-flu opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/fruitarian?page=1`)
+            router.push(`/${url}/search/fruitarian?page=1`)
           }}>
           Flu
         </TabsTrigger>
@@ -85,7 +87,7 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
           value="other_vegetarian"
           className="rounded-full bg-color-oth opacity-60 text-sm w-8 h-8"
           onClick={() => {
-            router.push(`/recipes/search/other_vegetarian?page=1`)
+            router.push(`/${url}/search/other_vegetarian?page=1`)
           }}>
           Oth
         </TabsTrigger>
@@ -124,7 +126,13 @@ const VegeTypeSort = ({ page, pageData, articles }) => {
                   )
                 })}
             </div>
-            {pageData && <PaginationParts pageData={pageData} page={page} />}
+            {pageData && (
+              <PaginationParts
+                pageData={pageData}
+                page={page}
+                pageType={pageType}
+              />
+            )}
           </TabsContent>
         )
       })}

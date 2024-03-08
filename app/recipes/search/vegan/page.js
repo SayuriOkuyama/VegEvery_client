@@ -14,7 +14,6 @@ const page = () => {
   const router = useRouter()
   const params = useSearchParams()
   const page = params.get('page')
-  console.log(page)
 
   useEffect(() => {
     const getArticles = async () => {
@@ -24,7 +23,6 @@ const page = () => {
         )
 
         const data = await response.data
-        console.log(data.data)
         setArticles(data.data)
         setPageData(data)
       } catch (err) {}
@@ -56,14 +54,15 @@ const page = () => {
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="popular">
+        {/* <TabsContent value="popular">
           <Popular />
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value="search">
           <VegeTypeSort
             page={'vegan'}
             pageData={pageData}
             articles={articles}
+            pageType={'recipes/search/vegan'}
           />
         </TabsContent>
       </Tabs>

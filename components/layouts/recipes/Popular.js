@@ -5,28 +5,25 @@ import { useEffect, useState } from 'react'
 import PaginationParts from '../PaginationParts'
 import { useSearchParams } from 'next/navigation'
 
-const Popular = () => {
+const Popular = ({ pageType }) => {
   const [articles, setArticles] = useState([])
   const [pageData, setPageData] = useState()
   const searchParams = useSearchParams()
   const page = searchParams.get('page')
 
   useEffect(() => {
-    console.log('effect')
-
     const getArticles = async () => {
       try {
-        const response = await axios.get(`/recipes?page=${page}`)
+        const url = pageType === 'recipes' ? 'recipes' : 'food_items'
+        const response = await axios.get(`/${url}?page=${page}`)
 
         const data = await response.data
         setArticles(data.data)
         setPageData(data)
-        console.log(pageData)
       } catch (err) {}
     }
     getArticles()
   }, [])
-  console.log(pageData)
 
   return (
     <>
@@ -55,7 +52,9 @@ const Popular = () => {
             )
           })}
       </div>
-      {pageData && <PaginationParts pageData={pageData} />}
+      {pageData && (
+        <PaginationParts pageData={pageData} page={page} pageType={pageType} />
+      )}
     </>
   )
 }
