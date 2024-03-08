@@ -6,15 +6,17 @@ import { PiHeart } from 'react-icons/pi'
 import { TfiTimer } from 'react-icons/tfi'
 import VegeTag from '@/components/layouts/VegeTag.js'
 
-const ArticleCard = ({ title, thumbnail, user, likes, time, vegeTags }) => {
+const ArticleCard = ({ id, title, thumbnail, user, likes, time, vegeTags }) => {
+  const url = time ? 'recipes' : 'food_item'
+
   return (
-    <Card className="h-60">
+    <Card className="h-68">
       <Link
-        href={'/recipes/1'}
+        href={`/${url}/${id}`}
         className="h-full flex flex-col justify-between">
         <div className="relative">
           <Image
-            src={'/burger.jpg'}
+            src={thumbnail}
             width={300}
             height={300}
             alt="レシピ画像1"
@@ -28,16 +30,18 @@ const ArticleCard = ({ title, thumbnail, user, likes, time, vegeTags }) => {
             {time}分
           </div>
         </div>
+
         <CardHeader className="flex">
           <CardTitle className="text-sm">{title}</CardTitle>
         </CardHeader>
+
         <CardFooter>
           <div className="flex">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={user.icon} alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <div className="text-sm self-end">{user}</div>
+            <div className="text-sm self-end">{user.name}</div>
           </div>
           <div className="flex justify-end">
             <PiHeart className="self-center" />

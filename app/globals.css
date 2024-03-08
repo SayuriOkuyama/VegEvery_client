@@ -120,7 +120,7 @@ h6 {
   --bg-color-psc: #bbe5ef;
   --bg-color-pol: #ebc4a7;
   --bg-color-flu: #d0b9f6;
-  --bg-color-flu: #d0b9f6;
+  --bg-color-oth: #d0b9f6;
   --border-color-vegetag: #d1d1d1;
   --border-color-button: #ccb9ae;
 }
@@ -146,15 +146,18 @@ main.create {
 }
 
 h2 {
-  font-size: calc(24 / var(--root-font-size) * 1rem);
+  font-size: calc(20 / var(--root-font-size) * 1rem);
 }
 
 h3 {
-  /* font-size: calc(20 / var(--root-font-size) * 1rem); 20px */
+  font-size: calc(16 / var(--root-font-size) * 1rem);
 }
 
 .bg-green {
   background: var(--bg-color-green);
+}
+.bg-orange {
+  background: var(--bg-color-orange);
 }
 
 .bg-button {
@@ -199,6 +202,10 @@ h3 {
 
 .bg-color-oth {
   background: var(--bg-color-oth);
+}
+
+.accent-color-border {
+  border-color: var(--accent-color);
 }
 
 .logo_link {

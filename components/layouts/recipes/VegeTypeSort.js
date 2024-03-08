@@ -109,7 +109,7 @@ const VegeTypeSort = ({ page, pageData, articles, pageType }) => {
                       key={article.id}
                       title={article.title}
                       thumbnail={article.thumbnail}
-                      user={article.user.name}
+                      user={article.user}
                       likes={article.number_of_likes}
                       time={article.cooking_time}
                       vegeTags={[
