@@ -1,3 +1,4 @@
+'use client'
 import ArticleCard from '@/components/layouts/ArticleCard.js'
 import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
@@ -5,20 +6,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import TagWordSort from '@/components/layouts/recipes/TagWordSort.js'
 import axios from '@/lib/axios'
+import { useEffect, useState } from 'react'
 
-const getArticles = async () => {
-  try {
-    const response = await axios.get(`http://localhost/api/recipes/`)
+const page = () => {
+  const [articles, setArticles] = useState()
 
-    const data = await response.data
-    const articles = await data.data
+  useEffect(() => {
+    const getArticles = async () => {
+      try {
+        const response = await axios.get('/recipes')
 
-    return articles
-  } catch (err) {}
-}
+        const data = await response.data
+        console.log(data.data)
+        setArticles(data.data)
+      } catch (err) {}
+    }
+    getArticles()
+  }, [])
 
-const page = async () => {
-  const articles = await getArticles()
   console.log(`articles:${articles}`)
 
   return (
