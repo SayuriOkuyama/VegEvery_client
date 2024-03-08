@@ -5,32 +5,11 @@ import { PiNotePencilLight } from 'react-icons/pi'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import TagWordSort from '@/components/layouts/recipes/TagWordSort.js'
-import axios from '@/lib/axios'
-import { useEffect, useState } from 'react'
-import PaginationParts from '@/components/layouts/PaginationParts.js'
 import Popular from '../../components/layouts/recipes/Popular.js'
 import { useRouter } from 'next/navigation'
 
 const page = () => {
   const router = useRouter()
-  // const [articles, setArticles] = useState()
-  // const [pageData, setPageData] = useState()
-
-  // useEffect(() => {
-  //   const getArticles = async () => {
-  //     try {
-  //       const response = await axios.get('/recipes')
-
-  //       const data = await response.data
-  //       console.log(data.data)
-  //       setArticles(data.data)
-  //       setPageData(data)
-  //     } catch (err) {}
-  //   }
-  //   getArticles()
-  // }, [])
-
-  // console.log(`articles:${articles}`)
 
   return (
     <main className="pb-24">

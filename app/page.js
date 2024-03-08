@@ -2,25 +2,62 @@ import ArticleCard from '@/components/layouts/ArticleCard.js'
 import { Kite_One } from 'next/font/google'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import axios from '@/lib/axios'
 
 const kiteOne = Kite_One({
   subsets: ['latin'],
   weight: ['400'],
 })
 
-export default function Home() {
+async function getRecipes() {
+  try {
+    const response = await axios.get(`/recipes?page=top`, {
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+    })
+
+    const data = await response.data
+    console.log(data)
+    return data
+  } catch (err) {}
+}
+
+export default async function Home() {
+  const articlesOfRecipe = await getRecipes()
+  console.log(articlesOfRecipe)
+
   return (
     <main className="pb-24">
-      <h2 className="text-center py-8">for Every Vegetarian</h2>
+      <h2 className={`${kiteOne.className} text-center py-8`}>
+        for Every Vegetarian
+      </h2>
       <section>
         <h3 className="text-center text-lg font-bold">レシピ</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 pt-4 pb-8 py-4 gap-4 ">
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
-          <ArticleCard />
+          {articlesOfRecipe &&
+            articlesOfRecipe.map(articleOfRecipe => {
+              return (
+                <ArticleCard
+                  key={articleOfRecipe.id}
+                  title={articleOfRecipe.title}
+                  thumbnail={articleOfRecipe.thumbnail}
+                  user={articleOfRecipe.user.name}
+                  likes={articleOfRecipe.number_of_likes}
+                  time={articleOfRecipe.cooking_time}
+                  vegeTags={[
+                    articleOfRecipe.vegan,
+                    articleOfRecipe.oriental_vegetarian,
+                    articleOfRecipe.ovo_vegetarian,
+                    articleOfRecipe.pescatarian,
+                    articleOfRecipe.lacto_vegetarian,
+                    articleOfRecipe.pollo_vegetarian,
+                    articleOfRecipe.fruitarian,
+                    articleOfRecipe.other_vegetarian,
+                  ]}
+                />
+              )
+            })}
         </div>
         <div>
           <Link href={'/recipes'} className="flex pb-8">

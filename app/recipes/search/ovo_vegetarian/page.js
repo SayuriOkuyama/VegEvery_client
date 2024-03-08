@@ -14,7 +14,6 @@ const page = () => {
   const router = useRouter()
   const params = useSearchParams()
   const page = params.get('page')
-  console.log(page)
 
   useEffect(() => {
     const getArticles = async () => {

@@ -12,8 +12,6 @@ const Popular = () => {
   const page = searchParams.get('page')
 
   useEffect(() => {
-    console.log('effect')
-
     const getArticles = async () => {
       try {
         const response = await axios.get(`/recipes?page=${page}`)
@@ -21,12 +19,10 @@ const Popular = () => {
         const data = await response.data
         setArticles(data.data)
         setPageData(data)
-        console.log(pageData)
       } catch (err) {}
     }
     getArticles()
   }, [])
-  console.log(pageData)
 
   return (
     <>

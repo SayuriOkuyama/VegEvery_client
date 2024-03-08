@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/pagination'
 
 const PaginationParts = ({ pageData, page }) => {
-  console.log(page)
   return (
     <Pagination>
       <PaginationContent>
