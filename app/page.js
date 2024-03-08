@@ -18,7 +18,6 @@ async function fetchRecipes() {
     })
 
     const data = await response.data
-    console.log(data)
     return data
   } catch (err) {}
 }
@@ -32,7 +31,6 @@ async function fetchItems() {
     })
 
     const data = await response.data
-    console.log(data)
     return data
   } catch (err) {}
 }
@@ -55,9 +53,10 @@ export default async function Home() {
               return (
                 <ArticleCard
                   key={articleOfRecipe.id}
+                  id={articleOfRecipe.id}
                   title={articleOfRecipe.title}
                   thumbnail={articleOfRecipe.thumbnail}
-                  user={articleOfRecipe.user.name}
+                  user={articleOfRecipe.user}
                   likes={articleOfRecipe.number_of_likes}
                   time={articleOfRecipe.cooking_time}
                   vegeTags={[
@@ -92,7 +91,7 @@ export default async function Home() {
                   key={articlesOfItem.id}
                   title={articlesOfItem.title}
                   thumbnail={articlesOfItem.thumbnail}
-                  user={articlesOfItem.user.name}
+                  user={articlesOfItem.user}
                   likes={articlesOfItem.number_of_likes}
                   time={articlesOfItem.cooking_time}
                   vegeTags={[

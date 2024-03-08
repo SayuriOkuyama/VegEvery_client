@@ -31,7 +31,8 @@
     "components/layouts/ArticleCard.js",
     "components/layouts/recipes/TagWordSort.js",
     "components/layouts/recipes/VegeTypeSort.js",
-    "components/layouts/VegeTag.js"
+    "components/layouts/VegeTag.js",
+    "app/recipes/[id]/page.js"
   ],
   "exclude": ["node_modules"]
 }
