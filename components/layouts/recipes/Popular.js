@@ -33,6 +33,7 @@ const Popular = ({ pageType }) => {
             return (
               <ArticleCard
                 key={article.id}
+                id={article.id}
                 title={article.title}
                 thumbnail={article.thumbnail}
                 user={article.user}

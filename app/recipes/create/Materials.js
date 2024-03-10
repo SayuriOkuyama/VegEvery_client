@@ -57,19 +57,21 @@ const Materials = ({ register, control }) => {
               <option value="goldfish">カップ</option>
             </select>
             {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
-            <button
-              className="border ml-1"
-              type="button"
-              onClick={() => remove(index)}>
-              ✕
-            </button>
+            {index !== 0 && (
+              <button
+                className="border ml-1"
+                type="button"
+                onClick={() => remove(index)}>
+                ✕
+              </button>
+            )}
           </div>
         ))}
       </div>
       <div>
         {/* 要素を追加する */}
         <button
-          className="border mt-4 block mx-auto px-2 rounded-full text-sm"
+          className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
           type="button"
           onClick={() => append({ material: '', quantity: '', unit: '' })}>
           材料を追加

@@ -89,6 +89,7 @@ export default async function Home() {
               return (
                 <ArticleCard
                   key={articlesOfItem.id}
+                  id={articlesOfItem.id}
                   title={articlesOfItem.title}
                   thumbnail={articlesOfItem.thumbnail}
                   user={articlesOfItem.user}

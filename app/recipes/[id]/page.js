@@ -17,6 +17,7 @@ const page = async ({ params }) => {
       const response = await axios.get(`/recipes/${id}`)
 
       const data = await response.data
+      console.log(data)
 
       return data
     } catch (err) {
@@ -24,7 +25,7 @@ const page = async ({ params }) => {
     }
   }
   const data = await getArticles()
-
+  // console.log(data)
   const user = data.user
   const materials = data.materials
   const recipe_steps = data.recipe_steps.sort((a, b) => a.order - b.order)
