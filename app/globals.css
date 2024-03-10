@@ -214,7 +214,7 @@ h3 {
   width: calc(67 / var(--root-font-size) * 1rem); /*20px*/
 }
 
-.dropzone {
+/* .dropzone {
   border: 2px dashed #cccccc;
   padding: 20px;
   text-align: center;
@@ -229,4 +229,4 @@ h3 {
 .image-preview img {
   max-width: 300px;
   max-height: 300px;
-}
+} */

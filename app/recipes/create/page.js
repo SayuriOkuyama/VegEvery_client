@@ -1,18 +1,18 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+// import {
+//   Form,
+//   FormControl,
+//   FormDescription,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Tags from './Tags'
 import Materials from './Materials.js'
@@ -92,12 +92,9 @@ const page = () => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
-  const [thumbnail, setThumbnail] = useState(null)
-  const thumbnailRef = useRef(null)
-  // const { watch, getValues } = useForm()
-  // const watchThumbnail = watch('thumbnail', '未登録')
+  // const [thumbnail, setThumbnail] = useState(null)
+  // const thumbnailRef = useRef(null)
 
-  // 1. Define your form.
   const { register, handleSubmit, control } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
@@ -120,38 +117,19 @@ const page = () => {
   // const thumbnailRegister = register('thumbnail')
   const { ref, name, onBlur, ...rest } = register('thumbnail')
 
-  console.log({ ...rest })
-
-  // const thumbnailOnChange = thumbnailRegister.onChange
-
-  // thumbnailRegister.onChange = e => {
-  //   const res = thumbnailOnChange(e)
-  //   const files = e.target.files
-  //   console.log(files)
-  //   console.log('これからセット')
-
-  //   if (files) {
-  //     console.log('セット')
-
-  //     setThumbnail(files[0])
-  //     console.dir(watchThumbnail)
-  //     console.log(thumbnail)
-  //   }
-  //   return res
-  // }
-
   function onSubmit(values) {
     console.log(values)
+    console.log(image.file)
     form.reset()
   }
-  const showFolder = () => {
-    console.log('click')
-    console.log(thumbnailRef.current)
+  // const showFolder = () => {
+  //   console.log('click')
+  //   console.log(thumbnailRef.current)
 
-    if (thumbnailRef.current) {
-      thumbnailRef.current.click()
-    }
-  }
+  //   if (thumbnailRef.current) {
+  //     thumbnailRef.current.click()
+  //   }
+  // }
 
   // state に画像をセットする
   const setFile = e => {
@@ -168,83 +146,38 @@ const page = () => {
     }
   }
 
-  // const registerRef = node => {
-  //   ref(node) // register の ref に関連付ける
-  // }
-
-  useEffect(() => {
-    if (register) {
-      thumbnailRef.current = register.thumbnail
-    }
-  }, [register])
-
   return (
     <main className="pb-32">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
-        <div {...getRootProps()} className="dropzone">
-          <input {...getInputProps()} {...register(`image`)} />
-          <p>Drag 'n' drop an image here, or click to select image</p>
-        </div>
-        {image && (
-          <div className="image-preview">
-            <img src={image.preview} alt="Uploaded Image" />
-          </div>
-        )}
         <FormVegeType register={register} control={control} />
+
+        {/* <h3>メイン画像</h3> */}
         <div className="bg-orange">
-          {/* <h3>メイン画像</h3> */}
-          <label class="upload-label hidden">
-            ファイルを選択
-            <input type="file hidden" />
-          </label>
-          <button
-            type="button"
-            className="block mx-auto h-52"
-            onClick={() => showFolder()}>
-            <div className="w-dvw h-full flex justify-center items-center">
-              <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
-                <PiCameraLight />
-              </IconContext.Provider>
+          {image ? (
+            <div className="image-preview relative flex w-full">
+              <button
+                className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
+                type="button"
+                onClick={() => setImage('')}>
+                ✕
+              </button>
+              <img
+                src={image.preview}
+                className="object-cover w-full h-full block"
+                alt="Uploaded Image"
+              />
             </div>
-          </button>
-          {/* <Controller
-            control={control}
-            name="ReactDatepicker"
-            // rules={{
-            //   required: true,
-            //   onChange: e => setFile(e),
-            // }}
-            render={({ field: { onChange, onBlur, value, name, ref } }) => ( */}
-          <input
-            // ここで ref を指定
-            ref={register.thumbnail}
-            // ref={node => {
-            //   ref(node)
-            //   console.log(node)
-            //   // console.dir(ref(e))
-            //   thumbnailRef.current = node
-            // }}
-            capture="environment"
-            className="border mx-auto"
-            type="file"
-            accept=".png, .jpeg, .jpg "
-            // hidden
-            // ここでは register に引数（ref）を渡さない！
-            // register から Controller に変更したから field になる？
-            // {...rest}
-            name={name}
-            onBlur={onBlur}
-            onChange={e => {
-              console.log('呼び出し')
-              // onChange(e)
-              setFile(e)
-            }}
-            // value={value}
-          />
-          {/* )}
-          /> */}
+          ) : (
+            <div {...getRootProps()} className="dropzone h-52">
+              <input {...getInputProps()} />
+              <div className="h-full flex justify-center items-center">
+                <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
+                  <PiCameraLight />
+                </IconContext.Provider>
+              </div>
+            </div>
+          )}
         </div>
-        <img src={thumbnail?.name} />
 
         <div className="container py-4 space-y-4">
           <div>
