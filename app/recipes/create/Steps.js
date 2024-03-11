@@ -7,74 +7,12 @@ import { useDropzone } from 'react-dropzone'
 import Dropzone from 'react-dropzone'
 
 const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
-  // const [image, setImage] = useState([])
   const itemsRef = useRef(null)
 
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
   })
-  // const showFolder = index => {
-  //   const map = getMap()
-  //   const thisStepMap = map.get(index)
-  //   const node = thisStepMap.node
-  //   console.log(node)
-
-  //   if (node) {
-  //     console.log('代わりにクリック')
-  //     node.click()
-  //   }
-  // }
-
-  // const setDrop = (acceptedFiles, index) => {
-  //   const file = acceptedFiles[0]
-  //   console.log(index)
-  //   setStepImage({
-  //     file,
-  //     // preview: URL.createObjectURL(file),
-  //   })
-  //   // setValue(`stepImages.${index}`, URL.createObjectURL(file))
-  // }
-
-  // const onDrop = useCallback((files: File[]) => {
-  //   if (files.length > 0) {
-  //     setValue('file', files[0]);
-  //   }
-  // }, []);
-
-  // const { getRootProps, getInputProps } = useDropzone({ onDrop })
-
-  // state に画像をセットする
-  // const setFile = (e, index) => {
-  //   console.log('セットする')
-  //   const files = e.target.files
-  //   // console.log(image)
-  //   const map = getMap()
-  //   map.set(index, { image: files[0] })
-  //   const thisStepMap = map.get(index)
-  //   const image = thisStepMap.image
-  //   console.log(image)
-
-  //   if (files) {
-  //     console.log(files[0])
-
-  //     setStepImage(prev => {
-  //       return {
-  //         ...prev,
-  //         [index]: files[0],
-  //       }
-  //     })
-  //     console.log(image)
-  //   }
-  // }
-
-  function getMap() {
-    if (!itemsRef.current) {
-      // Initialize the Map on first usage.
-      itemsRef.current = new Map()
-    }
-    return itemsRef.current
-  }
 
   return (
     <div className="container pb-8">
@@ -86,9 +24,9 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
         {fields.map((field, index) => (
           <div key={field.id} className="my-4">
             <h4>{index + 1}.</h4>
-            <div className="bg-orange">
+            <div className="bg-orange h-52 w-full mx-auto">
               {stepImage[index] ? (
-                <div className="image-preview relative flex w-full">
+                <div className="image-preview relative flex h-52 mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
@@ -105,11 +43,9 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
                 </div>
               ) : (
                 <Dropzone
+                  className="h-52"
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
-                    // console.log(index)
-                    console.log(file)
-                    console.log(stepImage)
                     setValue(`stepImages.${index}`, {
                       [index]: URL.createObjectURL(file),
                     })
@@ -120,7 +56,6 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
                         preview: URL.createObjectURL(file),
                       },
                     }))
-                    console.log('呼ばれない？')
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>
@@ -140,10 +75,9 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
             </div>
             <div>
               <textarea
-                className="border mt-4"
+                className="border mt-4 w-full"
                 name=""
                 id=""
-                // type="step_text"
                 cols="30"
                 rows="10"
                 placeholder="手順を入力"
@@ -166,7 +100,7 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
         <button
           className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
           type="button"
-          onClick={() => append({ order: '', image: '', text: '' })}>
+          onClick={() => append({ text: '' })}>
           手順を追加
         </button>
       </div>

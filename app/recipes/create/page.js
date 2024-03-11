@@ -91,7 +91,7 @@ const page = () => {
       materials: [{ material: '', quantity: '', unit: '' }],
       time: '',
       thumbnail: '',
-      steps: [{ order: '', image: '', text: '' }],
+      steps: [{ text: '' }],
     },
   })
   const form = useForm()
@@ -109,29 +109,8 @@ const page = () => {
 
   function onSubmit(values) {
     console.log(values)
-    console.log(image.file)
     form.reset()
   }
-  // const showFolder = () => {
-  //   console.log('click')
-  //   console.log(thumbnailRef.current)
-
-  //   if (thumbnailRef.current) {
-  //     thumbnailRef.current.click()
-  //   }
-  // }
-
-  // state に画像をセットする
-  // const setFile = e => {
-  //   const files = e.target.files
-  //   console.log(files)
-  //   console.log('これからセット')
-
-  //   if (files) {
-  //     console.log('セット')
-  //     setThumbnail(files[0])
-  //   }
-  // }
 
   return (
     <main className="pb-32">
@@ -155,7 +134,7 @@ const page = () => {
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="dropzone h-52">
+            <div {...getRootProps()} className="h-52">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
