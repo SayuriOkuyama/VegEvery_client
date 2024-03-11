@@ -3,57 +3,70 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { createRef, useEffect, useRef, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
+import { useDropzone } from 'react-dropzone'
+import Dropzone from 'react-dropzone'
 
-const Steps = ({ register, control }) => {
-  const [image, setImage] = useState([])
-  const refs = useRef([])
+const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
+  // const [image, setImage] = useState([])
   const itemsRef = useRef(null)
 
-  // const { register, control } = useForm({
-  //   defaultValues: {
-  //     materials: [{ material: '', quantity: '', unit: '' }],
-  //   },
-  // })
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
   })
-  const { ref } = register
-  const showFolder = index => {
-    const map = getMap()
-    const thisStepMap = map.get(index)
-    const node = thisStepMap.node
-    console.log(node)
+  // const showFolder = index => {
+  //   const map = getMap()
+  //   const thisStepMap = map.get(index)
+  //   const node = thisStepMap.node
+  //   console.log(node)
 
-    if (node) {
-      console.log('代わりにクリック')
-      node.click()
-    }
+  //   if (node) {
+  //     console.log('代わりにクリック')
+  //     node.click()
+  //   }
+  // }
+
+  const setDrop = (acceptedFiles, index) => {
+    const file = acceptedFiles[0]
+    console.log(index)
+    setStepImage({
+      file,
+      // preview: URL.createObjectURL(file),
+    })
+    // setValue(`stepImages.${index}`, URL.createObjectURL(file))
   }
+
+  // const onDrop = useCallback((files: File[]) => {
+  //   if (files.length > 0) {
+  //     setValue('file', files[0]);
+  //   }
+  // }, []);
+
+  // const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   // state に画像をセットする
-  const setFile = (e, index) => {
-    console.log('セットする')
-    const files = e.target.files
-    // console.log(image)
-    const map = getMap()
-    map.set(index, { image: files[0] })
-    const thisStepMap = map.get(index)
-    const image = thisStepMap.image
-    console.log(image)
-    if (files) {
-      console.log(files[0])
-      // const formData = new FormData()
-      // formData.append('images[]', files[0])
-      setImage(prev => {
-        return {
-          ...prev,
-          [index]: files[0],
-        }
-      })
-      console.log(image)
-    }
-  }
+  // const setFile = (e, index) => {
+  //   console.log('セットする')
+  //   const files = e.target.files
+  //   // console.log(image)
+  //   const map = getMap()
+  //   map.set(index, { image: files[0] })
+  //   const thisStepMap = map.get(index)
+  //   const image = thisStepMap.image
+  //   console.log(image)
+
+  //   if (files) {
+  //     console.log(files[0])
+
+  //     setStepImage(prev => {
+  //       return {
+  //         ...prev,
+  //         [index]: files[0],
+  //       }
+  //     })
+  //     console.log(image)
+  //   }
+  // }
 
   function getMap() {
     if (!itemsRef.current) {
@@ -73,57 +86,54 @@ const Steps = ({ register, control }) => {
         {fields.map((field, index) => (
           <div key={field.id} className="my-4">
             <h4>{index + 1}.</h4>
-            <div>
-              <input
-                type="text"
-                hidden
-                value={index + 1}
-                {...register(`steps.${index}.order`)}
-              />
-              <div className="bg-orange">
-                <button
-                  type="button"
-                  className="block mx-auto h-52"
-                  onClick={() => showFolder(index)}>
-                  <div className="w-full h-full flex justify-center items-center">
-                    <IconContext.Provider
-                      value={{ color: '#ccc', size: '80px' }}>
-                      <PiCameraLight />
-                    </IconContext.Provider>
-                  </div>
-                </button>
-                <input
-                  // ここで ref を指定
-                  // ref={refs.current[index]}
-                  ref={node => {
-                    const map = getMap()
-                    if (node) {
-                      map.set(index, { node: node })
-                    } else {
-                      map.delete(index)
-                    }
-                  }}
-                  className="border mx-auto"
-                  type="file"
-                  name="test"
-                  accept=".png, .jpeg, .jpg "
-                  // onClick={e => selectFile(e)}
-                  onChange={e => setFile(e, index)}
-                  hidden
-                  // ここでは register に引数（ref）を渡さない！
-                  // {...register(`steps.${index}.image`)}
-                />
-              </div>
-              <img src={image[index]?.name} />
-              {/*
-              <input
-                className="border"
-                // type="quantity"
-                type="file"
-                placeholder="100"
-                // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
-                {...register(`steps.${index}.image`)}
-              /> */}
+            <div className="bg-orange">
+              {stepImage[index] ? (
+                <div className="image-preview relative flex w-full">
+                  <button
+                    className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
+                    type="button"
+                    onClick={() =>
+                      stepImage(prevState => ({ ...prevState, [index]: '' }))
+                    }>
+                    ✕
+                  </button>
+                  <img
+                    src={stepImage[index].preview}
+                    className="object-cover w-full h-full block"
+                    alt="Uploaded Image"
+                  />
+                </div>
+              ) : (
+                <Dropzone
+                  onDrop={acceptedFiles => {
+                    const file = acceptedFiles[0]
+                    console.log(index)
+                    console.log(file)
+                    setStepImage({
+                      index: {
+                        file,
+                        preview: URL.createObjectURL(file),
+                      },
+                    })
+                    setValue(`stepImages.${index}`, {
+                      [index]: URL.createObjectURL(file),
+                    })
+                  }}>
+                  {({ getRootProps, getInputProps }) => (
+                    <>
+                      <div
+                        {...getRootProps()}
+                        className="w-full h-full flex justify-center items-center">
+                        <IconContext.Provider
+                          value={{ color: '#ccc', size: '80px' }}>
+                          <PiCameraLight />
+                        </IconContext.Provider>
+                        <input type="text hidden" {...getInputProps()} />
+                      </div>
+                    </>
+                  )}
+                </Dropzone>
+              )}
             </div>
             <div>
               <textarea

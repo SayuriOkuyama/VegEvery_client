@@ -81,21 +81,9 @@ import { useDropzone } from 'react-dropzone'
 
 const page = () => {
   const [image, setImage] = useState(null)
+  const [stepImage, setStepImage] = useState([])
 
-  const onDrop = acceptedFiles => {
-    const file = acceptedFiles[0]
-    setImage({
-      file,
-      preview: URL.createObjectURL(file),
-    })
-  }
-
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
-
-  // const [thumbnail, setThumbnail] = useState(null)
-  // const thumbnailRef = useRef(null)
-
-  const { register, handleSubmit, control } = useForm({
+  const { register, setValue, handleSubmit, control } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -107,15 +95,17 @@ const page = () => {
     },
   })
   const form = useForm()
-  // const { fields, append, remove } = useFieldArray({
-  //   control,
 
-  //   name: 'tags',
-  //   name: 'materials',
-  // })
-  // const { ref } = register('thumbnail')
-  // const thumbnailRegister = register('thumbnail')
-  const { ref, name, onBlur, ...rest } = register('thumbnail')
+  const onDrop = acceptedFiles => {
+    const file = acceptedFiles[0]
+    setImage({
+      file,
+      preview: URL.createObjectURL(file),
+    })
+    setValue('thumbnail', URL.createObjectURL(file))
+  }
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   function onSubmit(values) {
     console.log(values)
@@ -132,19 +122,16 @@ const page = () => {
   // }
 
   // state に画像をセットする
-  const setFile = e => {
-    const files = e.target.files
-    console.log(files)
-    console.log('これからセット')
+  // const setFile = e => {
+  //   const files = e.target.files
+  //   console.log(files)
+  //   console.log('これからセット')
 
-    if (files) {
-      console.log('セット')
-
-      setThumbnail(files[0])
-      // console.dir(watchThumbnail)
-      console.log(thumbnail)
-    }
-  }
+  //   if (files) {
+  //     console.log('セット')
+  //     setThumbnail(files[0])
+  //   }
+  // }
 
   return (
     <main className="pb-32">
@@ -195,9 +182,18 @@ const page = () => {
             />
           </div>
         </div>
+
         <Materials register={register} control={control} />
-        <Steps register={register} control={control} />
+
+        <Steps
+          register={register}
+          control={control}
+          stepImage={stepImage}
+          setStepImage={setStepImage}
+          setValue={setValue}
+        />
         <hr className="mx-4" />
+
         <div className="">
           <Button
             type="submit"
