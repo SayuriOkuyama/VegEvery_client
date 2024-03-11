@@ -26,15 +26,15 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
   //   }
   // }
 
-  const setDrop = (acceptedFiles, index) => {
-    const file = acceptedFiles[0]
-    console.log(index)
-    setStepImage({
-      file,
-      // preview: URL.createObjectURL(file),
-    })
-    // setValue(`stepImages.${index}`, URL.createObjectURL(file))
-  }
+  // const setDrop = (acceptedFiles, index) => {
+  //   const file = acceptedFiles[0]
+  //   console.log(index)
+  //   setStepImage({
+  //     file,
+  //     // preview: URL.createObjectURL(file),
+  //   })
+  //   // setValue(`stepImages.${index}`, URL.createObjectURL(file))
+  // }
 
   // const onDrop = useCallback((files: File[]) => {
   //   if (files.length > 0) {
@@ -107,17 +107,20 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
                 <Dropzone
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
-                    console.log(index)
+                    // console.log(index)
                     console.log(file)
-                    setStepImage({
-                      index: {
-                        file,
-                        preview: URL.createObjectURL(file),
-                      },
-                    })
+                    console.log(stepImage)
                     setValue(`stepImages.${index}`, {
                       [index]: URL.createObjectURL(file),
                     })
+                    setStepImage(prevState => ({
+                      ...prevState,
+                      [index]: {
+                        file,
+                        preview: URL.createObjectURL(file),
+                      },
+                    }))
+                    console.log('呼ばれない？')
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>
