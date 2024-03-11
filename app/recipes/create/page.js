@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
+import axios from '@/lib/axios'
+
 // import {
 //   Form,
 //   FormControl,
@@ -22,6 +24,8 @@ import { useEffect, useRef, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
+import useSWR from 'swr'
+import { useRouter } from 'next/navigation.js'
 
 // const formSchema = z.object({
 //   title: z
@@ -82,6 +86,16 @@ import { useDropzone } from 'react-dropzone'
 const page = () => {
   const [image, setImage] = useState(null)
   const [stepImage, setStepImage] = useState([])
+  const router = useRouter()
+
+  // const fetcher = url => axios.get(url).then(res => res.data)
+
+  // const { data, error } = useSWR(
+  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/store`,
+  //   fetcher,
+  // )
+  // if (error) return <div>投稿に失敗しました。</div>
+  // if (isLoading) return <div>loading...</div>
 
   const { register, setValue, handleSubmit, control } = useForm({
     // resolver: zodResolver(formSchema),
@@ -109,7 +123,13 @@ const page = () => {
 
   function onSubmit(values) {
     console.log(values)
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, values)
+      .then(res => console.log(res.data))
+
     form.reset()
+    router.push('/recipes')
   }
 
   return (
