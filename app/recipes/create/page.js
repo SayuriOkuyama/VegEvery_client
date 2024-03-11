@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
+import axios from '@/lib/axios'
+
 // import {
 //   Form,
 //   FormControl,
@@ -22,6 +24,8 @@ import { useEffect, useRef, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
+import useSWR from 'swr'
+import { useRouter } from 'next/navigation.js'
 
 // const formSchema = z.object({
 //   title: z
@@ -82,6 +86,16 @@ import { useDropzone } from 'react-dropzone'
 const page = () => {
   const [image, setImage] = useState(null)
   const [stepImage, setStepImage] = useState([])
+  const router = useRouter()
+
+  // const fetcher = url => axios.get(url).then(res => res.data)
+
+  // const { data, error } = useSWR(
+  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/store`,
+  //   fetcher,
+  // )
+  // if (error) return <div>投稿に失敗しました。</div>
+  // if (isLoading) return <div>loading...</div>
 
   const { register, setValue, handleSubmit, control } = useForm({
     // resolver: zodResolver(formSchema),
@@ -91,7 +105,7 @@ const page = () => {
       materials: [{ material: '', quantity: '', unit: '' }],
       time: '',
       thumbnail: '',
-      steps: [{ order: '', image: '', text: '' }],
+      steps: [{ text: '' }],
     },
   })
   const form = useForm()
@@ -109,29 +123,14 @@ const page = () => {
 
   function onSubmit(values) {
     console.log(values)
-    console.log(image.file)
+
+    axios
+      .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, values)
+      .then(res => console.log(res.data))
+
     form.reset()
+    router.push('/recipes')
   }
-  // const showFolder = () => {
-  //   console.log('click')
-  //   console.log(thumbnailRef.current)
-
-  //   if (thumbnailRef.current) {
-  //     thumbnailRef.current.click()
-  //   }
-  // }
-
-  // state に画像をセットする
-  // const setFile = e => {
-  //   const files = e.target.files
-  //   console.log(files)
-  //   console.log('これからセット')
-
-  //   if (files) {
-  //     console.log('セット')
-  //     setThumbnail(files[0])
-  //   }
-  // }
 
   return (
     <main className="pb-32">
@@ -155,7 +154,7 @@ const page = () => {
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="dropzone h-52">
+            <div {...getRootProps()} className="h-52">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
