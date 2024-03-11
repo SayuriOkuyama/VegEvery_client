@@ -1,24 +1,27 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+// import {
+//   Form,
+//   FormControl,
+//   FormDescription,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Tags from './Tags'
 import Materials from './Materials.js'
 import Steps from './Steps.js'
 import FormVegeType from './FormVegeType.js'
 import { useEffect, useRef, useState } from 'react'
+import { PiCameraLight } from 'react-icons/pi'
+import { IconContext } from 'react-icons'
+import { useDropzone } from 'react-dropzone'
 
 // const formSchema = z.object({
 //   title: z
@@ -77,12 +80,10 @@ import { useEffect, useRef, useState } from 'react'
 // })
 
 const page = () => {
-  const [thumbnail, setThumbnail] = useState(null)
-  const thumbnailRef = useRef(null)
-  const { watch } = useForm()
+  const [image, setImage] = useState(null)
+  const [stepImage, setStepImage] = useState([])
 
-  // 1. Define your form.
-  const { register, handleSubmit, control } = useForm({
+  const { register, setValue, handleSubmit, control } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -94,67 +95,76 @@ const page = () => {
     },
   })
   const form = useForm()
-  // const { fields, append, remove } = useFieldArray({
-  //   control,
 
-  //   name: 'tags',
-  //   name: 'materials',
-  // })
-  // const { ref } = register('thumbnail')
+  const onDrop = acceptedFiles => {
+    const file = acceptedFiles[0]
+    setImage({
+      file,
+      preview: URL.createObjectURL(file),
+    })
+    setValue('thumbnail', URL.createObjectURL(file))
+  }
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   function onSubmit(values) {
     console.log(values)
+    console.log(image.file)
     form.reset()
   }
-  const showFolder = () => {
-    console.log('click')
-    if (thumbnailRef.current) {
-      thumbnailRef.current.click()
-    }
-  }
+  // const showFolder = () => {
+  //   console.log('click')
+  //   console.log(thumbnailRef.current)
 
-  // const selectFile = e => {
-  //   console.log('選択中')
+  //   if (thumbnailRef.current) {
+  //     thumbnailRef.current.click()
+  //   }
   // }
 
   // state に画像をセットする
-  const setFile = e => {
-    const files = e.target.files
+  // const setFile = e => {
+  //   const files = e.target.files
+  //   console.log(files)
+  //   console.log('これからセット')
 
-    if (files) {
-      console.log('セット')
-
-      setThumbnail(files[0])
-      console.log(thumbnail)
-    }
-  }
+  //   if (files) {
+  //     console.log('セット')
+  //     setThumbnail(files[0])
+  //   }
+  // }
 
   return (
     <main className="pb-32">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-16">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <FormVegeType register={register} control={control} />
-        <div className="bg-orange py-8">
-          {/* <h3>メイン画像</h3> */}
-          <button
-            type="button"
-            className="block mx-auto"
-            onClick={() => showFolder()}>
-            写真
-          </button>
-          <input
-            // ここで ref を指定
-            ref={thumbnailRef}
-            className="border mx-auto"
-            type="file"
-            accept=".png, .jpeg, .jpg "
-            onClick={e => selectFile(e)}
-            onChange={e => setFile(e)}
-            hidden
-            // ここでは register に引数（ref）を渡さない！
-            {...register}
-          />
+
+        {/* <h3>メイン画像</h3> */}
+        <div className="bg-orange">
+          {image ? (
+            <div className="image-preview relative flex w-full">
+              <button
+                className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
+                type="button"
+                onClick={() => setImage('')}>
+                ✕
+              </button>
+              <img
+                src={image.preview}
+                className="object-cover w-full h-full block"
+                alt="Uploaded Image"
+              />
+            </div>
+          ) : (
+            <div {...getRootProps()} className="dropzone h-52">
+              <input {...getInputProps()} />
+              <div className="h-full flex justify-center items-center">
+                <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
+                  <PiCameraLight />
+                </IconContext.Provider>
+              </div>
+            </div>
+          )}
         </div>
-        <img src={thumbnail?.name} />
 
         <div className="container py-4 space-y-4">
           <div>
@@ -175,13 +185,22 @@ const page = () => {
 
         <Materials register={register} control={control} />
 
-        <Steps register={register} control={control} />
+        <Steps
+          register={register}
+          control={control}
+          stepImage={stepImage}
+          setStepImage={setStepImage}
+          setValue={setValue}
+        />
+        <hr className="mx-4" />
 
-        <Button
-          type="submit"
-          className="mx-auto bg-button block py-1 border-button-color ">
-          投稿
-        </Button>
+        <div className="">
+          <Button
+            type="submit"
+            className="mx-auto bg-button block py-1 mt-16 border-button-color ">
+            投稿
+          </Button>
+        </div>
       </form>
       {/* </Form> */}
     </main>

@@ -17,6 +17,7 @@ const page = async ({ params }) => {
       const response = await axios.get(`/recipes/${id}`)
 
       const data = await response.data
+      console.log(data)
 
       return data
     } catch (err) {
@@ -24,26 +25,26 @@ const page = async ({ params }) => {
     }
   }
   const data = await getArticles()
-
-  const user = data.user
-  const materials = data.materials
-  const recipe_steps = data.recipe_steps.sort((a, b) => a.order - b.order)
-  const comments_to_recipe = data.comments_to_recipe
-  const tags = data.tags
-  const vegeTags = [
-    data.vegan,
-    data.oriental_vegetarian,
-    data.ovo_vegetarian,
-    data.pescatarian,
-    data.lacto_vegetarian,
-    data.pollo_vegetarian,
-    data.fruitarian,
-    data.other_vegetarian,
-  ]
+  // console.log(data)
+  // const user = data.user
+  // const materials = data.materials
+  // const recipe_steps = data.recipe_steps.sort((a, b) => a.order - b.order)
+  // const comments_to_recipe = data.comments_to_recipe
+  // const tags = data.tags
+  // const vegeTags = [
+  //   data.vegan,
+  //   data.oriental_vegetarian,
+  //   data.ovo_vegetarian,
+  //   data.pescatarian,
+  //   data.lacto_vegetarian,
+  //   data.pollo_vegetarian,
+  //   data.fruitarian,
+  //   data.other_vegetarian,
+  // ]
 
   return (
     <main className="pb-20">
-      <div className="flex justify-center mt-4 mb-2">
+      {/* <div className="flex justify-center mt-4 mb-2">
         <VegeTag vegeTags={vegeTags} />
       </div>
       <Image
@@ -141,7 +142,7 @@ const page = async ({ params }) => {
         <Button className="mx-auto bg-button border-button-color">
           一覧に戻る
         </Button>
-      </Link>
+      </Link> */}
     </main>
   )
 }

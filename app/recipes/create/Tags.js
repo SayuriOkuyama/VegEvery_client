@@ -22,19 +22,21 @@ const Tags = ({ register, control }) => {
               {...register(`tags.${index}.tag`)}
             />
             {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
-            <button
-              className="border"
-              type="button"
-              onClick={() => remove(index)}>
-              ✕
-            </button>
+            {index !== 0 && (
+              <button
+                className="border"
+                type="button"
+                onClick={() => remove(index)}>
+                ✕
+              </button>
+            )}
           </div>
         ))}
       </div>
       <div>
         {/* 要素を追加する */}
         <button
-          className="border mt-2 mx-auto block px-2 rounded-full text-sm"
+          className="border mt-4 mx-auto block px-2 bg-button border-button-color rounded-full text-sm"
           type="button"
           onClick={() => append({ tag: '' })}>
           タグを追加
