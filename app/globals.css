@@ -168,6 +168,10 @@ h3 {
   border: 1px solid var(--border-color-button);
 }
 
+.border-button-color-b {
+  border-bottom: 1px solid var(--border-color-button);
+}
+
 .bg-color-v {
   background: var(--bg-color-v);
 }
@@ -213,20 +217,3 @@ h3 {
   margin: 0 auto;
   width: calc(67 / var(--root-font-size) * 1rem); /*20px*/
 }
-
-/* .dropzone {
-  border: 2px dashed #cccccc;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  margin-bottom: 20px;
-}
-
-.image-preview {
-  margin-top: 20px;
-}
-
-.image-preview img {
-  max-width: 300px;
-  max-height: 300px;
-} */
