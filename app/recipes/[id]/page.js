@@ -6,6 +6,8 @@ import { TfiTimer } from 'react-icons/tfi'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PiNotePencilLight } from 'react-icons/pi'
+import { IconContext } from 'react-icons'
 
 const page = async ({ params }) => {
   const id = params.id
@@ -44,6 +46,15 @@ const page = async ({ params }) => {
 
   return (
     <main className="pb-20">
+      {user.id === 1 && (
+        <Link
+          href={`/recipes/edit?id=${data.article.id}`}
+          className="fixed top-3 right-3">
+          <div className="rounded-full p-1 side_icon">
+            <PiNotePencilLight size="28px" />
+          </div>
+        </Link>
+      )}
       <div className="flex justify-center mt-4 mb-2">
         <VegeTag vegeTags={vegeTags} />
       </div>
@@ -58,7 +69,6 @@ const page = async ({ params }) => {
       <div className="flex flex-row flex-wrap container space-x-1">
         {tags &&
           tags.map(tag => {
-            console.log(tag)
             return (
               <div
                 key={tag.id}
@@ -126,8 +136,15 @@ const page = async ({ params }) => {
       <div className="bg-orange py-8">
         <div className="container">
           <h3 className="mb-4">コメント</h3>
-          <hr className="accent-color-border my-4" />
+          {(commentsToRecipe && commentsToRecipe.length) !== 0 ? (
+            <hr className="accent-color-border my-4" />
+          ) : (
+            <div className="text-center opacity-70 text-sm">
+              まだコメントがありません
+            </div>
+          )}
           {commentsToRecipe &&
+            commentsToRecipe.length !== 0 &&
             commentsToRecipe.map(commentToRecipe => {
               return (
                 <>

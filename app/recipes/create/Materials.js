@@ -49,18 +49,18 @@ const Materials = ({ register, control }) => {
               // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
               {...register(`materials.${index}.unit`)}>
               <option value=""></option>
-              <option value="dog">g</option>
-              <option value="cat">mg</option>
-              <option value="hamster">L</option>
-              <option value="parrot">mL</option>
-              <option value="spider">cc</option>
-              <option value="goldfish">個</option>
-              <option value="goldfish">本</option>
-              <option value="goldfish">片</option>
-              <option value="goldfish">枚</option>
-              <option value="goldfish">杯（小さじ）</option>
-              <option value="goldfish">杯（大さじ）</option>
-              <option value="goldfish">カップ</option>
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+              <option value="L">L</option>
+              <option value="mL">mL</option>
+              <option value="cc">cc</option>
+              <option value="個">個</option>
+              <option value="本">本</option>
+              <option value="片">片</option>
+              <option value="枚">枚</option>
+              <option value="杯（小さじ）">杯（小さじ）</option>
+              <option value="杯（大さじ）">杯（大さじ）</option>
+              <option value="カップ">カップ</option>
             </select>
             {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
             {index !== 0 && (

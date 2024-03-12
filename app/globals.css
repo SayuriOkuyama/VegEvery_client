@@ -217,3 +217,7 @@ h3 {
   margin: 0 auto;
   width: calc(67 / var(--root-font-size) * 1rem); /*20px*/
 }
+
+.side_icon {
+  background-color: #fcd2be30;
+}

@@ -21,7 +21,7 @@ const PaginationParts = ({ pageData, pageType }) => {
                 />
               </PaginationItem>
             )}
-            {pageData.current_page < pageData.current_page + 2 && (
+            {3 < pageData.current_page && (
               <>
                 <PaginationItem className="w-8">
                   <PaginationEllipsis className="w-8 h-8" />
@@ -69,7 +69,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <PaginationItem className="w-8">
                 <PaginationLink
                   className="w-8 h-8"
-                  href={`/${pageType}?page=${pageData.current_page + 1}`}>
+                  href={`/${pageType}?page=${pageData.current_page + 2}`}>
                   {pageData.current_page + 2}
                 </PaginationLink>
               </PaginationItem>
