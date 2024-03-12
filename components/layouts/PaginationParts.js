@@ -11,27 +11,45 @@ import {
 const PaginationParts = ({ pageData, pageType }) => {
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="">
         {pageData ? (
           <>
-            {pageData.current_page - 2 >= 0 && (
-              <PaginationItem>
+            {pageData.current_page - 3 >= 0 && (
+              <PaginationItem className="w-8">
                 <PaginationPrevious
                   href={`/${pageType}?page=${pageData.current_page - 1}`}
                 />
               </PaginationItem>
             )}
-            {pageData.current_page - 1 > 0 && (
-              <PaginationItem>
+            {pageData.current_page < pageData.current_page + 2 && (
+              <>
+                <PaginationItem className="w-8">
+                  <PaginationEllipsis className="w-8 h-8" />
+                </PaginationItem>
+              </>
+            )}
+            {pageData.current_page - 2 > 0 && (
+              <PaginationItem className="w-8">
                 <PaginationLink
+                  className="w-8 h-8"
+                  href={`/${pageType}?page=${pageData.current_page - 2}`}>
+                  {pageData.current_page - 2}
+                </PaginationLink>
+              </PaginationItem>
+            )}
+            {pageData.current_page - 1 > 0 && (
+              <PaginationItem className="w-8">
+                <PaginationLink
+                  className="w-8 h-8"
                   href={`/${pageType}?page=${pageData.current_page - 1}`}>
                   {pageData.current_page - 1}
                 </PaginationLink>
               </PaginationItem>
             )}
 
-            <PaginationItem>
+            <PaginationItem className="w-8">
               <PaginationLink
+                className="w-8 h-8"
                 isActive
                 href={`/${pageType}?page=${pageData.current_page}`}>
                 {pageData.current_page}
@@ -39,23 +57,33 @@ const PaginationParts = ({ pageData, pageType }) => {
             </PaginationItem>
 
             {pageData.current_page + 1 <= pageData.last_page && (
-              <PaginationItem>
+              <PaginationItem className="w-8">
                 <PaginationLink
+                  className="w-8 h-8"
                   href={`/${pageType}?page=${pageData.current_page + 1}`}>
                   {pageData.current_page + 1}
                 </PaginationLink>
               </PaginationItem>
             )}
+            {pageData.current_page + 2 <= pageData.last_page - 1 && (
+              <PaginationItem className="w-8">
+                <PaginationLink
+                  className="w-8 h-8"
+                  href={`/${pageType}?page=${pageData.current_page + 1}`}>
+                  {pageData.current_page + 2}
+                </PaginationLink>
+              </PaginationItem>
+            )}
             {pageData.current_page < pageData.last_page - 1 && (
               <>
-                <PaginationItem>
-                  <PaginationEllipsis />
+                <PaginationItem className="w-8">
+                  <PaginationEllipsis className="w-8 h-8" />
                 </PaginationItem>
               </>
             )}
             {pageData.current_page < pageData.last_page && (
               <>
-                <PaginationItem>
+                <PaginationItem className="w-8">
                   <PaginationNext
                     href={`/${pageType}?page=${pageData.current_page + 1}`}
                   />
