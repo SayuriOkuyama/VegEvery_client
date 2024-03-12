@@ -127,53 +127,94 @@ const page = () => {
   function onSubmit(values) {
     console.log(values)
 
-    const formData = new FormData()
-    formData.append('thumbnail', values.thumbnail)
+    // const formData = new FormData()
+    // formData.append('thumbnail', values.thumbnail)
 
-    console.log(values.thumbnail.name)
+    // console.log(values.thumbnail.name)
 
     const fileExtension = values.thumbnail.name.split('.').pop()
-    console.log(fileExtension)
+    // console.log(fileExtension)
+    let thumbnailUrl = ''
+    const stepImageUrls = []
 
-    const { data, error } = supabase.storage
+    supabase.storage
       .from('VegEvery-backet')
       .upload(
         `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
         values.thumbnail,
       )
-    if (error) {
-      alert('エラーが発生しました：' + error.message)
-      return
-    }
+      .then(response => {
+        console.log('Insert successful:', response.data)
+        const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
+        thumbnailUrl = `${supabase_url}/object/public/${response.data.fullPath}`
 
-    // const { data, error } = supabase.storage
-    //   .from('VegEvery-backet')
-    //   .getPublicUrl('recipes/thumbnail/demo_tumbnail.png')
+        // すべてのステップ画像のアップロードが完了したかどうかを追跡するPromiseの配列
+        const uploadPromises = values.stepImages.map(image =>
+          supabase.storage
+            .from('VegEvery-backet')
+            .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image),
+        )
+        // すべてのアップロードが完了した後に次の処理を行う
+        Promise.all(uploadPromises)
+          .then(responses => {
+            console.log('All images uploaded successfully')
 
-    // if (error) {
-    //   alert('エラーが発生しました：' + error.message)
-    //   return
-    // }
-    console.log(data)
-    console.log(error)
-    const response = supabase.storage
-      .from('VegEvery-backet')
-      .getPublicUrl(`recipes/thumbnail/${uuidv4()}.${fileExtension}`)
+            // すべてのステップ画像のURLを配列に追加
+            responses.forEach(response => {
+              const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+              stepImageUrls.push(stepImageUrl)
+            })
+            // // ここで次の処理を行う
+            // values.stepImages.forEach(image => {
+            //   supabase.storage
+            //     .from('VegEvery-backet')
+            //     .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image)
+            //     .then(response => {
+            //       console.log('Insert successful:', response.data)
 
-    const url = response.data.publicUrl
+            //       // const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
 
-    console.log(response)
-    console.log(url)
-    // console.log(values.stepImage)
-    // values.stepImages.forEach((element, index) => {
-    //   formData.append(`stepImages[${index}]`, element)
-    // })
-    // values.materials.forEach((element, index) => {
-    //   formData.append(`materials[${index}]`, element)
-    // })
-    // values.tags.forEach((element, index) => {
-    //   formData.append(`tags[${index}]`, element)
-    // })
+            //       const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+            //       console.log(stepImageUrls)
+
+            //       stepImageUrls.push(stepImageUrl)
+            //       console.log(stepImageUrls)
+            //       // ここで次の処理を行う
+            //     })
+            //     .catch(error => {
+            //       console.error('Error inserting data:', error)
+            //     })
+            // })
+
+            console.log({
+              values,
+              thumbnailUrl,
+              stepImageUrls,
+            })
+            axios
+              .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
+                values,
+                thumbnailUrl,
+                stepImageUrls,
+              })
+              .then(res => {
+                console.log(res.data)
+                form.reset()
+                console.log('画面遷移')
+                // router.push('/recipes')
+              })
+              .catch(error => {
+                console.error('Error sending data to backend:', error)
+              })
+          })
+          .catch(error => {
+            console.error('Error uploading step images:', error)
+          })
+      })
+      .catch(error => {
+        console.error('Error uploading thumbnail:', error)
+      })
+
     // formData.append('title', values.thumbnail)
     // formData.append('servings', values.thumbnail)
     // formData.append('time', values.thumbnail)
@@ -185,10 +226,6 @@ const page = () => {
     // formData.append('pollo_vegetarian', values.vege_type.pollo_vegetarian)
     // formData.append('fruitarian', values.vege_type.fruitarian)
     // formData.append('other_vegetarian', values.vege_type.other_vegetarian)
-
-    // axios
-    //   .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, values)
-    //   .then(res => console.log(res.data))
 
     form.reset()
     // router.push('/recipes')
