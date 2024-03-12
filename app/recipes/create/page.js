@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
+import { supabase } from '@/lib/utils/supabase/supabase'
+import { v4 as uuidv4 } from 'uuid'
 
 // import {
 //   Form,
@@ -105,6 +107,7 @@ const page = () => {
       materials: [{ material: '', quantity: '', unit: '' }],
       time: '',
       thumbnail: '',
+      servings: '',
       steps: [{ text: '' }],
     },
   })
@@ -116,7 +119,7 @@ const page = () => {
       file,
       preview: URL.createObjectURL(file),
     })
-    setValue('thumbnail', URL.createObjectURL(file))
+    setValue('thumbnail', file)
   }
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
@@ -124,12 +127,71 @@ const page = () => {
   function onSubmit(values) {
     console.log(values)
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, values)
-      .then(res => console.log(res.data))
+    const formData = new FormData()
+    formData.append('thumbnail', values.thumbnail)
+
+    console.log(values.thumbnail.name)
+
+    const fileExtension = values.thumbnail.name.split('.').pop()
+    console.log(fileExtension)
+
+    const { data, error } = supabase.storage
+      .from('VegEvery-backet')
+      .upload(
+        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
+        values.thumbnail,
+      )
+    if (error) {
+      alert('エラーが発生しました：' + error.message)
+      return
+    }
+
+    // const { data, error } = supabase.storage
+    //   .from('VegEvery-backet')
+    //   .getPublicUrl('recipes/thumbnail/demo_tumbnail.png')
+
+    // if (error) {
+    //   alert('エラーが発生しました：' + error.message)
+    //   return
+    // }
+    console.log(data)
+    console.log(error)
+    const response = supabase.storage
+      .from('VegEvery-backet')
+      .getPublicUrl(`recipes/thumbnail/${uuidv4()}.${fileExtension}`)
+
+    const url = response.data.publicUrl
+
+    console.log(response)
+    console.log(url)
+    // console.log(values.stepImage)
+    // values.stepImages.forEach((element, index) => {
+    //   formData.append(`stepImages[${index}]`, element)
+    // })
+    // values.materials.forEach((element, index) => {
+    //   formData.append(`materials[${index}]`, element)
+    // })
+    // values.tags.forEach((element, index) => {
+    //   formData.append(`tags[${index}]`, element)
+    // })
+    // formData.append('title', values.thumbnail)
+    // formData.append('servings', values.thumbnail)
+    // formData.append('time', values.thumbnail)
+    // formData.append('vegan', values.vege_type.vegan)
+    // formData.append('oriental_vegetarian', values.vege_type.oriental_vegetarian)
+    // formData.append('ovo_vegetarian', values.vege_type.ovo_vegetarian)
+    // formData.append('pescatarian', values.vege_type.pescatarian)
+    // formData.append('lacto_vegetarian', values.vege_type.lacto_vegetarian)
+    // formData.append('pollo_vegetarian', values.vege_type.pollo_vegetarian)
+    // formData.append('fruitarian', values.vege_type.fruitarian)
+    // formData.append('other_vegetarian', values.vege_type.other_vegetarian)
+
+    // axios
+    //   .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, values)
+    //   .then(res => console.log(res.data))
 
     form.reset()
-    router.push('/recipes')
+    // router.push('/recipes')
   }
 
   return (
@@ -174,11 +236,12 @@ const page = () => {
           <div>
             <h3>調理目安時間</h3>
             <input
-              className="border"
-              type="text"
-              placeholder="20分"
+              className="border w-8"
+              type="number"
+              placeholder="20"
               {...register(`time`)}
             />
+            分
           </div>
         </div>
 

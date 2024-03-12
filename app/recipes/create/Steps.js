@@ -46,9 +46,7 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
                   className="h-52"
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
-                    setValue(`stepImages.${index}`, {
-                      [index]: URL.createObjectURL(file),
-                    })
+                    setValue(`stepImages.${index}`, file)
                     setStepImage(prevState => ({
                       ...prevState,
                       [index]: {

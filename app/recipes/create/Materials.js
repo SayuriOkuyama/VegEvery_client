@@ -17,7 +17,12 @@ const Materials = ({ register, control }) => {
       <div className="flex">
         <h3 className="mb-2">
           材料（
-          <input type="text" placeholder="２〜３" className="w-12 border" />
+          <input
+            type="text"
+            placeholder="２〜３"
+            className="w-12 border"
+            {...register('servings')}
+          />
           ）人前
         </h3>
       </div>
@@ -52,6 +57,7 @@ const Materials = ({ register, control }) => {
               <option value="goldfish">個</option>
               <option value="goldfish">本</option>
               <option value="goldfish">片</option>
+              <option value="goldfish">枚</option>
               <option value="goldfish">杯（小さじ）</option>
               <option value="goldfish">杯（大さじ）</option>
               <option value="goldfish">カップ</option>
