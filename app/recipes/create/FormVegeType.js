@@ -13,7 +13,7 @@ const FormVegeType = ({ register }) => {
               type="checkbox"
               id="vegan"
               hidden
-              {...register(`vege_type.vegan`, { name: 'vege_type' })}
+              {...register(`vege_type.vegan`)}
             />
             V
           </Avatar>
@@ -25,9 +25,7 @@ const FormVegeType = ({ register }) => {
               type="checkbox"
               id="Oriental"
               hidden
-              {...register(`vege_type.oriental_vegetarian`, {
-                name: 'vege_type',
-              })}
+              {...register(`vege_type.oriental_vegetarian`)}
             />
             Ori
           </Avatar>
@@ -39,7 +37,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Ovo"
-              {...register(`vege_type.ovo_vegetarian`, { name: 'vege_type' })}
+              {...register(`vege_type.ovo_vegetarian`)}
             />
             Ovo
           </Avatar>
@@ -51,7 +49,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Psc"
-              {...register(`vege_type.pescatarian`, { name: 'vege_type' })}
+              {...register(`vege_type.pescatarian`)}
             />
             Psc
           </Avatar>
@@ -63,7 +61,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Lct"
-              {...register(`vege_type.lacto_vegetarian`, { name: 'vege_type' })}
+              {...register(`vege_type.lacto_vegetarian`)}
             />
             Lct
           </Avatar>
@@ -75,7 +73,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Pol"
-              {...register(`vege_type.pollo_vegetarian`, { name: 'vege_type' })}
+              {...register(`vege_type.pollo_vegetarian`)}
             />
             Pol
           </Avatar>
@@ -87,7 +85,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Flu"
-              {...register(`vege_type.fruitarian`, { name: 'vege_type' })}
+              {...register(`vege_type.fruitarian`)}
             />
             Flu
           </Avatar>
@@ -99,7 +97,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Oth"
-              {...register(`vege_type.other_vegetarian`, { name: 'vege_type' })}
+              {...register(`vege_type.other_vegetarian`)}
             />
             Oth
           </Avatar>

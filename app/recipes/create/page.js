@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
+import { supabase } from '@/lib/utils/supabase/supabase'
+import { v4 as uuidv4 } from 'uuid'
 
 // import {
 //   Form,
@@ -105,6 +107,7 @@ const page = () => {
       materials: [{ material: '', quantity: '', unit: '' }],
       time: '',
       thumbnail: '',
+      servings: '',
       steps: [{ text: '' }],
     },
   })
@@ -116,7 +119,7 @@ const page = () => {
       file,
       preview: URL.createObjectURL(file),
     })
-    setValue('thumbnail', URL.createObjectURL(file))
+    setValue('thumbnail', file)
   }
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
@@ -124,12 +127,108 @@ const page = () => {
   function onSubmit(values) {
     console.log(values)
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, values)
-      .then(res => console.log(res.data))
+    // const formData = new FormData()
+    // formData.append('thumbnail', values.thumbnail)
+
+    // console.log(values.thumbnail.name)
+
+    const fileExtension = values.thumbnail.name.split('.').pop()
+    // console.log(fileExtension)
+    let thumbnailUrl = ''
+    const stepImageUrls = []
+
+    supabase.storage
+      .from('VegEvery-backet')
+      .upload(
+        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
+        values.thumbnail,
+      )
+      .then(response => {
+        console.log('Insert successful:', response.data)
+        const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
+        thumbnailUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+
+        // すべてのステップ画像のアップロードが完了したかどうかを追跡するPromiseの配列
+        const uploadPromises = values.stepImages.map(image =>
+          supabase.storage
+            .from('VegEvery-backet')
+            .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image),
+        )
+        // すべてのアップロードが完了した後に次の処理を行う
+        Promise.all(uploadPromises)
+          .then(responses => {
+            console.log('All images uploaded successfully')
+
+            // すべてのステップ画像のURLを配列に追加
+            responses.forEach(response => {
+              const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+              stepImageUrls.push(stepImageUrl)
+            })
+            // // ここで次の処理を行う
+            // values.stepImages.forEach(image => {
+            //   supabase.storage
+            //     .from('VegEvery-backet')
+            //     .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image)
+            //     .then(response => {
+            //       console.log('Insert successful:', response.data)
+
+            //       // const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
+
+            //       const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+            //       console.log(stepImageUrls)
+
+            //       stepImageUrls.push(stepImageUrl)
+            //       console.log(stepImageUrls)
+            //       // ここで次の処理を行う
+            //     })
+            //     .catch(error => {
+            //       console.error('Error inserting data:', error)
+            //     })
+            // })
+
+            console.log({
+              values,
+              thumbnailUrl,
+              stepImageUrls,
+            })
+            axios
+              .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
+                values,
+                thumbnailUrl,
+                stepImageUrls,
+              })
+              .then(res => {
+                console.log(res.data)
+                form.reset()
+                console.log('画面遷移')
+                // router.push('/recipes')
+              })
+              .catch(error => {
+                console.error('Error sending data to backend:', error)
+              })
+          })
+          .catch(error => {
+            console.error('Error uploading step images:', error)
+          })
+      })
+      .catch(error => {
+        console.error('Error uploading thumbnail:', error)
+      })
+
+    // formData.append('title', values.thumbnail)
+    // formData.append('servings', values.thumbnail)
+    // formData.append('time', values.thumbnail)
+    // formData.append('vegan', values.vege_type.vegan)
+    // formData.append('oriental_vegetarian', values.vege_type.oriental_vegetarian)
+    // formData.append('ovo_vegetarian', values.vege_type.ovo_vegetarian)
+    // formData.append('pescatarian', values.vege_type.pescatarian)
+    // formData.append('lacto_vegetarian', values.vege_type.lacto_vegetarian)
+    // formData.append('pollo_vegetarian', values.vege_type.pollo_vegetarian)
+    // formData.append('fruitarian', values.vege_type.fruitarian)
+    // formData.append('other_vegetarian', values.vege_type.other_vegetarian)
 
     form.reset()
-    router.push('/recipes')
+    // router.push('/recipes')
   }
 
   return (
@@ -174,11 +273,12 @@ const page = () => {
           <div>
             <h3>調理目安時間</h3>
             <input
-              className="border"
-              type="text"
-              placeholder="20分"
+              className="border w-8"
+              type="number"
+              placeholder="20"
               {...register(`time`)}
             />
+            分
           </div>
         </div>
 
