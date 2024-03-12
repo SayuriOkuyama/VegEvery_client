@@ -101,8 +101,22 @@ const page = () => {
       console.log(data)
       setValue('title', data.article.title)
 
+      setValue('vege_type.vegan', data.article.vegan)
+      setValue(
+        'vege_type.oriental_vegetarian',
+        data.article.oriental_vegetarian,
+      )
+      setValue('vege_type.ovo_vegetarian', data.article.ovo_vegetarian)
+      setValue('vege_type.pescatarian', data.article.pescatarian)
+      setValue('vege_type.lacto_vegetarian', data.article.lacto_vegetarian)
+      setValue('vege_type.pollo_vegetarian', data.article.pollo_vegetarian)
+      setValue('vege_type.fruitarian', data.article.fruitarian)
+      setValue('vege_type.other_vegetarian', data.article.other_vegetarian)
+
+      setImage({
+        preview: data.article.thumbnail,
+      })
       data.article.tags.map((tag, index) => {
-        // console.log(tag.name)
         setValue(`tags.${index}.tag`, tag.name)
       })
 
@@ -118,12 +132,9 @@ const page = () => {
 
       data.article.recipe_steps.sort((a, b) => a.order - b.order)
       data.article.recipe_steps.map(step => {
-        // console.log(step.order)
-        // console.log(step.image)
         setStepsData(prevState => ({
           ...prevState,
           [step.order]: {
-            // file,
             preview: step.image,
             text: step.text,
           },
@@ -135,7 +146,7 @@ const page = () => {
     data = fetchData()
   }, [articleId])
 
-  const { register, setValue, handleSubmit, control } = useForm({
+  const { register, setValue, handleSubmit, control, getValues } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -262,7 +273,7 @@ const page = () => {
             <h3>レシピタイトル</h3>
             <input className="border" type="text" {...register(`title`)} />
           </div>
-          <Tags register={register} control={control} />
+          <Tags register={register} control={control} getValues={getValues} />
           <div>
             <h3>調理目安時間</h3>
             <input
@@ -275,7 +286,11 @@ const page = () => {
           </div>
         </div>
 
-        <Materials register={register} control={control} />
+        <Materials
+          register={register}
+          control={control}
+          getValues={getValues}
+        />
 
         <Steps
           register={register}

@@ -1,16 +1,13 @@
 'use client'
 import { useForm, useFieldArray } from 'react-hook-form'
 
-const Materials = ({ register, control }) => {
-  // const { register, control } = useForm({
-  //   defaultValues: {
-  //     materials: [{ material: '', quantity: '', unit: '' }],
-  //   },
-  // })
+const Materials = ({ register, control, getValues }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'materials',
     control,
   })
+  const materials = getValues('materials')
+  console.log(materials)
 
   return (
     <div className="bg-green py-4 container">
@@ -28,8 +25,8 @@ const Materials = ({ register, control }) => {
       </div>
       <div className="space-y-2">
         {/* 一位に特定するために map する際に index を付与する */}
-        {fields.map((field, index) => (
-          <div className="flex space-x-2" key={field.id}>
+        {Object.keys(materials).map((material, index) => (
+          <div className="flex space-x-2" key={material.id}>
             <input
               className="border block w-20"
               type="text"

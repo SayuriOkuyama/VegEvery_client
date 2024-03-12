@@ -29,7 +29,6 @@ const Steps = ({ register, control, setValue, stepsData, setStepsData }) => {
         {stepsData &&
           Object.keys(stepsData).length !== 0 &&
           Object.keys(stepsData).map((key, index) => {
-            console.log(stepsData[key])
             return (
               <div key={stepsData[key].id} className="my-4">
                 <h4>{key}.</h4>
