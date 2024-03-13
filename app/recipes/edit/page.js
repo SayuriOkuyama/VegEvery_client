@@ -124,23 +124,49 @@ const page = () => {
       setValue('servings', data.article.servings)
 
       data.article.materials.map((material, index) => {
-        console.log(material)
+        // console.log(material)
         setValue(`materials.${index}.material`, material.name)
         setValue(`materials.${index}.quantity`, material.quantity)
         setValue(`materials.${index}.unit`, material.unit)
       })
 
       data.article.recipe_steps.sort((a, b) => a.order - b.order)
-      data.article.recipe_steps.map(step => {
-        setStepsData(prevState => ({
-          ...prevState,
-          [step.order]: {
-            preview: step.image,
-            text: step.text,
-          },
-        }))
-        setValue(`steps.${step.order}.text`, step.text)
+      console.log(data.article.recipe_steps)
+      const orders = []
+      data.article.recipe_steps.forEach(step => {
+        if (step) {
+          // console.log(step)
+          let order = step.order
+          // console.log(order)
+          console.log(orders.includes(order))
+          if (orders.includes(order)) {
+            while (orders.includes(order)) {
+              order++
+            }
+          }
+          orders.push(order)
+          console.log(orders)
+
+          setStepsData(prevState => ({
+            ...prevState,
+            [order]: {
+              order: order,
+              preview: step.image,
+              text: step.text,
+            },
+          }))
+        }
       })
+      // data.article.recipe_steps.map(step => {
+      //   setStepsData(prevState => ({
+      //     ...prevState,
+      //     [step.order]: {
+      //       order: step.order,
+      //       preview: step.image,
+      //       text: step.text,
+      //     },
+      //   }))
+      // })
       return data
     }
     data = fetchData()
@@ -155,7 +181,6 @@ const page = () => {
       time: '',
       thumbnail: '',
       servings: '',
-      steps: [{ text: '' }],
     },
   })
   const form = useForm()

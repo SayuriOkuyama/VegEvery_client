@@ -90,7 +90,7 @@ const page = () => {
   const [stepImage, setStepImage] = useState([])
   const router = useRouter()
 
-  const { register, setValue, handleSubmit, control } = useForm({
+  const { register, setValue, handleSubmit, control, getValues } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -217,7 +217,7 @@ const page = () => {
             <h3>レシピタイトル</h3>
             <input className="border" type="text" {...register(`title`)} />
           </div>
-          <Tags register={register} control={control} />
+          <Tags register={register} control={control} getValues={getValues} />
           <div>
             <h3>調理目安時間</h3>
             <input
@@ -230,7 +230,11 @@ const page = () => {
           </div>
         </div>
 
-        <Materials register={register} control={control} />
+        <Materials
+          register={register}
+          control={control}
+          getValues={getValues}
+        />
 
         <Steps
           register={register}
