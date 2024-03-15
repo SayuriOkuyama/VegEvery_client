@@ -32,7 +32,10 @@
     "components/layouts/recipes/TagWordSort.js",
     "components/layouts/recipes/VegeTypeSort.js",
     "components/layouts/VegeTag.js",
-    "app/recipes/[id]/page.js"
+    "app/recipes/[id]/page.js",
+    "lib/next-auth/options.js",
+    "lib/next-auth/provider.js",
+    "app/api/auth/[...nextauth]/route.js"
   ],
   "exclude": ["node_modules"]
 }

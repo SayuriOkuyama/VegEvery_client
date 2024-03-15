@@ -1,89 +1,22 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { set, useForm, useFieldArray } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
 import { v4 as uuidv4 } from 'uuid'
-
-// import {
-//   Form,
-//   FormControl,
-//   FormDescription,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import Tags from '@/app/recipes/create/Tags.js'
-import Materials from '@/app/recipes/create/Materials.js'
-import Steps from '@/app/recipes/create/Steps.js'
-import FormVegeType from '@/app/recipes/create/FormVegeType.js'
+import EditTags from '@/app/recipes/edit/EditTags.js'
+import EditMaterials from '@/app/recipes/edit/EditMaterials.js'
+import EditStep from '@/app/recipes/edit/EditStep.js'
+import EditFormVegeTypes from '@/app/recipes/edit/EditFormVegeTypes.js'
 import { useEffect, useRef, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
-import useSWR from 'swr'
 import { useRouter, useSearchParams } from 'next/navigation.js'
 import { getArticles } from '@/lib/utils/fetch.js'
-// const formSchema = z.object({
-//   title: z
-//     .string()
-//     .min(2, {
-//       message: 'タイトルは 2 文字以上で入力してください。',
-//     })
-//     .max(30, {
-//       message: 'タイトルは 30 文字以内で入力してください。',
-//     }),
-//   tags: z
-//     .string()
-//     .min(2, {
-//       message: 'タグは 2 文字以上で入力してください。',
-//     })
-//     .max(10, {
-//       message: 'タグは 10 文字以内で入力してください。',
-//     }),
-// time: z
-//   .string()
-//   .min(1, {
-//     message: '調理目安時間は 1 文字以上で入力してください',
-//   })
-//   .max(10, { message: '調理目安時間は 10 文字以内で入力してください' }),
-// servings: z.string().min(2, {
-//   message: '分量は 2 文字以上で入力してください。',
-// }),
-// material: z
-//   .string()
-//   .min(1, {
-//     message: '材料は 1 文字以上で入力してください。',
-//   })
-//   .max(20, {
-//     message: '材料は 20 文字以内で入力してください。',
-//   }),
-// quantity: z
-//   .string()
-//   .min(1, {
-//     message: '量は 1 文字以上で入力してください。',
-//   })
-//   .max(1, {
-//     message: '量は 10 文字以内で入力してください。',
-//   }),
-// unit: z.string().min(2, {
-//   message: '量は 1 文字以上で入力してください。',
-// }),
-// image: z.string().min(2, {
-//   message: 'Username must be at least 2 characters.',
-// }),
-// step: z.string().min(2, {
-//   message: '手順は 2 文字以上で入力してください。',
-// }),
-//   image: z.string().min(2, {
-//     message: 'Username must be at least 2 characters.',
-//   }),
-// })
+import useSWR from 'swr'
 
 const page = () => {
   const router = useRouter()
@@ -93,33 +26,86 @@ const page = () => {
 
   const [image, setImage] = useState(null)
   const [stepsData, setStepsData] = useState([])
+  const { register, setValue, handleSubmit, control, getValues, reset } =
+    useForm({
+      // resolver: zodResolver(formSchema),
+      defaultValues: {
+        title: '',
+        tags: [{ tag: '' }],
+        materials: [{ material: '', quantity: '', unit: '' }],
+        thumbnail: '',
+        servings: '',
+      },
+    })
+  const form = useForm()
+  const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
+  console.log(data)
 
-  let data
+  // let data
   useEffect(() => {
+    console.log('エフェクト')
+    if (data) {
+      console.log(data)
+
+      reset({
+        title: data.article.title,
+        thumbnail: data.article.thumbnail,
+        tags: data.article.tags ? data.article.tags : '',
+        materials: data.article.materials,
+        steps: data.article.recipe_steps,
+        servings: data.article.servings,
+        time: data.article.cooking_time,
+      })
+      setImage({
+        image: data.article.thumbnail,
+      })
+    }
+
     const fetchData = async () => {
       const data = await getArticles({ path, articleId })
-      console.log(data)
-      setValue('title', data.article.title)
 
-      setValue('vege_type.vegan', data.article.vegan)
-      setValue(
-        'vege_type.oriental_vegetarian',
-        data.article.oriental_vegetarian,
-      )
-      setValue('vege_type.ovo_vegetarian', data.article.ovo_vegetarian)
-      setValue('vege_type.pescatarian', data.article.pescatarian)
-      setValue('vege_type.lacto_vegetarian', data.article.lacto_vegetarian)
-      setValue('vege_type.pollo_vegetarian', data.article.pollo_vegetarian)
-      setValue('vege_type.fruitarian', data.article.fruitarian)
-      setValue('vege_type.other_vegetarian', data.article.other_vegetarian)
-
-      setImage({
-        preview: data.article.thumbnail,
+      const tags = []
+      data.article.tags.map((tag, index) => {
+        setValue(`tags.${index}.tag`, tag.name)
+        tags.push(tag.name)
       })
+
+      // const defaultValue = [
+      //   { title: data.article.title },
+      //   {
+      //     vege_type: {
+      //       vegan: data.article.vegan,
+      //       oriental_vegetarian: data.article.oriental_vegetarian,
+      //       ovo_vegetarian: data.article.ovo_vegetarian,
+      //       pescatarian: data.article.pescatarian,
+      //       lacto_vegetarian: data.article.lacto_vegetarian,
+      //       pollo_vegetarian: data.article.pollo_vegetarian,
+      //       fruitarian: data.article.fruitarian,
+      //       other_vegetarian: data.article.other_vegetarian,
+      //     },
+      //   },
+      //   { tags: tags },
+      //   { time: data.article.cooking_time },
+      //   { servings: data.article.servings },
+      // ]
+      // setValue('title', data.article.title)
+
+      // setValue('vege_type.vegan', data.article.vegan)
+      // setValue(
+      //   'vege_type.oriental_vegetarian',
+      //   data.article.oriental_vegetarian,
+      // )
+      // setValue('vege_type.ovo_vegetarian', data.article.ovo_vegetarian)
+      // setValue('vege_type.pescatarian', data.article.pescatarian)
+      // setValue('vege_type.lacto_vegetarian', data.article.lacto_vegetarian)
+      // setValue('vege_type.pollo_vegetarian', data.article.pollo_vegetarian)
+      // setValue('vege_type.fruitarian', data.article.fruitarian)
+      // setValue('vege_type.other_vegetarian', data.article.other_vegetarian)
+
       data.article.tags.map((tag, index) => {
         setValue(`tags.${index}.tag`, tag.name)
       })
-
+      // setFormData({ title: data.article.title })
       setValue('time', data.article.cooking_time)
       setValue('servings', data.article.servings)
 
@@ -146,15 +132,22 @@ const page = () => {
           }
           orders.push(order)
           console.log(orders)
-
-          setStepsData(prevState => ({
-            ...prevState,
-            [order]: {
-              order: order,
-              preview: step.image,
-              text: step.text,
-            },
-          }))
+          set
+          // setValue(`stepsData.${step.order}`, {
+          //   [order]: {
+          //     order: order,
+          //     image: step.image,
+          //     text: step.text,
+          //   },
+          // })
+          // setStepsData(prevState => ({
+          //   ...prevState,
+          //   [order]: {
+          //     order: order,
+          //     image: step.image,
+          //     text: step.text,
+          //   },
+          // }))
         }
       })
       // data.article.recipe_steps.map(step => {
@@ -167,29 +160,27 @@ const page = () => {
       //     },
       //   }))
       // })
+      console.log(data)
+
+      reset({
+        title: data.article.title,
+        tags: data.article.tags ? data.article.tags : '',
+        materials: data.article.materials,
+        steps: data.article.recipe_steps,
+        servings: data.article.servings,
+        time: data.article.cooking_time,
+      })
+
       return data
     }
-    data = fetchData()
-  }, [articleId])
-
-  const { register, setValue, handleSubmit, control, getValues } = useForm({
-    // resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      tags: [{ tag: '' }],
-      materials: [{ material: '', quantity: '', unit: '' }],
-      time: '',
-      thumbnail: '',
-      servings: '',
-    },
-  })
-  const form = useForm()
+    // data = fetchData()
+  }, [data])
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
     setImage({
       file,
-      preview: URL.createObjectURL(file),
+      image: URL.createObjectURL(file),
     })
     setValue('thumbnail', file)
   }
@@ -260,11 +251,13 @@ const page = () => {
         console.error('Error uploading thumbnail:', error)
       })
   }
-
+  if (error) return <p>Error: {error.message}</p>
+  if (!data) return <p>Loading...</p>
   return (
+    // <RecoilRoot>
     <main className="pb-32">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
-        <FormVegeType register={register} control={control} />
+        <EditFormVegeTypes register={register} control={control} />
 
         <div className="bg-orange">
           {image ? (
@@ -276,7 +269,7 @@ const page = () => {
                 ✕
               </button>
               <img
-                src={image.preview}
+                src={image.image}
                 className="object-cover w-full h-full block"
                 alt="Uploaded Image"
               />
@@ -298,7 +291,11 @@ const page = () => {
             <h3>レシピタイトル</h3>
             <input className="border" type="text" {...register(`title`)} />
           </div>
-          <Tags register={register} control={control} getValues={getValues} />
+          <EditTags
+            register={register}
+            control={control}
+            getValues={getValues}
+          />
           <div>
             <h3>調理目安時間</h3>
             <input
@@ -311,18 +308,19 @@ const page = () => {
           </div>
         </div>
 
-        <Materials
+        <EditMaterials
           register={register}
           control={control}
           getValues={getValues}
         />
 
-        <Steps
+        <EditStep
           register={register}
           control={control}
           stepsData={stepsData}
           setStepsData={setStepsData}
           setValue={setValue}
+          reset={reset}
         />
         <hr className="mx-4" />
 
@@ -336,6 +334,7 @@ const page = () => {
       </form>
       {/* </Form> */}
     </main>
+    // </RecoilRoot>
   )
 }
 
