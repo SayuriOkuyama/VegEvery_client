@@ -47,6 +47,45 @@ const page = () => {
     if (data) {
       console.log(data)
 
+      const orders = []
+      data.article.recipe_steps.forEach((step, index) => {
+        console.log(index)
+        if (step) {
+          // console.log(step)
+          let order = step.order
+          // console.log(order)
+          console.log(orders.includes(order))
+          if (orders.includes(order)) {
+            while (orders.includes(order)) {
+              order++
+            }
+          }
+          orders.push(order)
+          console.log(orders)
+          data.article.recipe_steps[index].order = order
+          console.log({
+            [order]: {
+              order: order,
+              image: step.image,
+              text: step.text,
+            },
+          })
+          setValue(`steps.${order}`, {
+            order: order,
+            image: step.image,
+            text: step.text,
+          })
+          setStepsData(prevState => ({
+            ...prevState,
+            [order]: {
+              order: order,
+              image: step.image,
+              text: step.text,
+            },
+          }))
+        }
+      })
+
       reset({
         title: data.article.title,
         thumbnail: data.article.thumbnail,
@@ -132,22 +171,28 @@ const page = () => {
           }
           orders.push(order)
           console.log(orders)
-          set
-          // setValue(`stepsData.${step.order}`, {
-          //   [order]: {
-          //     order: order,
-          //     image: step.image,
-          //     text: step.text,
-          //   },
-          // })
-          // setStepsData(prevState => ({
-          //   ...prevState,
-          //   [order]: {
-          //     order: order,
-          //     image: step.image,
-          //     text: step.text,
-          //   },
-          // }))
+          console.log({
+            [order]: {
+              order: order,
+              image: step.image,
+              text: step.text,
+            },
+          })
+          setValue(`stepsData.${step.order}`, {
+            [order]: {
+              order: order,
+              image: step.image,
+              text: step.text,
+            },
+          })
+          setStepsData(prevState => ({
+            ...prevState,
+            [order]: {
+              order: order,
+              image: step.image,
+              text: step.text,
+            },
+          }))
         }
       })
       // data.article.recipe_steps.map(step => {

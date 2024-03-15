@@ -57,22 +57,20 @@ const EditStep = ({
             <div key={field.id} className="my-4">
               <h4>{field.order}.</h4>
               <div className="bg-orange h-52 w-full mx-auto">
-                {field.image ? (
+                {stepsData[field.order].image ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                       type="button"
                       // defaultValue={field.image}
-                      onClick={() =>
+                      onClick={e =>
+                        // setStepImage(prevState => ({ ...prevState, [index]: '' }))
                         setStepsData(prevState => {
-                          console.log({
-                            ...prevState,
-                            [field.order]: {
-                              order: field.order,
-                              image: '',
-                              text: field.text,
-                            },
-                          })
+                          console.log('クリック！！！')
+
+                          console.log(stepsData[field.order].image)
+                          setValue(`steps.${index}.image`, '')
+                          console.log(fields)
                           return {
                             ...prevState,
                             [field.order]: {
@@ -85,9 +83,9 @@ const EditStep = ({
                       }>
                       ✕
                     </button>
-                    {field.image && (
+                    {stepsData[field.order].image && (
                       <img
-                        src={field.image}
+                        src={stepsData[field.order].image}
                         name={field.image}
                         className="object-cover w-full h-full block"
                         alt="Uploaded Image"
@@ -100,7 +98,8 @@ const EditStep = ({
                     onDrop={acceptedFiles => {
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      setValue(`steps.${stepsData.order}`, {
+                      console.log(createdUrl)
+                      setValue(`steps.${field.order}`, {
                         order: field.order,
                         file,
                         image: createdUrl,
@@ -108,7 +107,7 @@ const EditStep = ({
                       })
                       setStepsData(prevState => ({
                         ...prevState,
-                        [key]: {
+                        [field.order]: {
                           order: field.order,
                           file,
                           image: createdUrl,
@@ -132,23 +131,15 @@ const EditStep = ({
                   </Dropzone>
                 )}
               </div>
-              <div>{field.order}</div>
-              <div>{field.image}</div>
-              <div>{field.text}</div>
+
               <div>
                 <textarea
                   className="border mt-4 w-full"
-                  name=""
-                  id=""
                   cols="30"
                   rows="10"
                   placeholder="手順を入力"
-                  // defaultValue={field.text}
-                  // defaultValue={'a'}
-                  value={field.text}
-                  // onChange={e => textHandler(e)}
-                  // defaultValue={''}
-                  {...register(`steps.${stepsData.order}.text`)}></textarea>
+                  defaultValue={field.text}
+                  {...register(`steps.${index}.text`)}></textarea>
               </div>
               {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
               {index !== 0 && (
