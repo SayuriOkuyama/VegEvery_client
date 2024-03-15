@@ -90,16 +90,7 @@ const page = () => {
   const [stepImage, setStepImage] = useState([])
   const router = useRouter()
 
-  // const fetcher = url => axios.get(url).then(res => res.data)
-
-  // const { data, error } = useSWR(
-  //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/store`,
-  //   fetcher,
-  // )
-  // if (error) return <div>投稿に失敗しました。</div>
-  // if (isLoading) return <div>loading...</div>
-
-  const { register, setValue, handleSubmit, control } = useForm({
+  const { register, setValue, handleSubmit, control, getValues } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -127,13 +118,7 @@ const page = () => {
   function onSubmit(values) {
     console.log(values)
 
-    // const formData = new FormData()
-    // formData.append('thumbnail', values.thumbnail)
-
-    // console.log(values.thumbnail.name)
-
     const fileExtension = values.thumbnail.name.split('.').pop()
-    // console.log(fileExtension)
     let thumbnailUrl = ''
     const stepImageUrls = []
 
@@ -164,27 +149,6 @@ const page = () => {
               const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
               stepImageUrls.push(stepImageUrl)
             })
-            // // ここで次の処理を行う
-            // values.stepImages.forEach(image => {
-            //   supabase.storage
-            //     .from('VegEvery-backet')
-            //     .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image)
-            //     .then(response => {
-            //       console.log('Insert successful:', response.data)
-
-            //       // const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-
-            //       const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
-            //       console.log(stepImageUrls)
-
-            //       stepImageUrls.push(stepImageUrl)
-            //       console.log(stepImageUrls)
-            //       // ここで次の処理を行う
-            //     })
-            //     .catch(error => {
-            //       console.error('Error inserting data:', error)
-            //     })
-            // })
 
             console.log({
               values,
@@ -201,7 +165,7 @@ const page = () => {
                 console.log(res.data)
                 form.reset()
                 console.log('画面遷移')
-                // router.push('/recipes')
+                router.push('/recipes')
               })
               .catch(error => {
                 console.error('Error sending data to backend:', error)
@@ -214,21 +178,6 @@ const page = () => {
       .catch(error => {
         console.error('Error uploading thumbnail:', error)
       })
-
-    // formData.append('title', values.thumbnail)
-    // formData.append('servings', values.thumbnail)
-    // formData.append('time', values.thumbnail)
-    // formData.append('vegan', values.vege_type.vegan)
-    // formData.append('oriental_vegetarian', values.vege_type.oriental_vegetarian)
-    // formData.append('ovo_vegetarian', values.vege_type.ovo_vegetarian)
-    // formData.append('pescatarian', values.vege_type.pescatarian)
-    // formData.append('lacto_vegetarian', values.vege_type.lacto_vegetarian)
-    // formData.append('pollo_vegetarian', values.vege_type.pollo_vegetarian)
-    // formData.append('fruitarian', values.vege_type.fruitarian)
-    // formData.append('other_vegetarian', values.vege_type.other_vegetarian)
-
-    form.reset()
-    // router.push('/recipes')
   }
 
   return (
@@ -236,7 +185,6 @@ const page = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <FormVegeType register={register} control={control} />
 
-        {/* <h3>メイン画像</h3> */}
         <div className="bg-orange">
           {image ? (
             <div className="image-preview relative flex w-full">
@@ -269,7 +217,7 @@ const page = () => {
             <h3>レシピタイトル</h3>
             <input className="border" type="text" {...register(`title`)} />
           </div>
-          <Tags register={register} control={control} />
+          <Tags register={register} control={control} getValues={getValues} />
           <div>
             <h3>調理目安時間</h3>
             <input
@@ -282,7 +230,11 @@ const page = () => {
           </div>
         </div>
 
-        <Materials register={register} control={control} />
+        <Materials
+          register={register}
+          control={control}
+          getValues={getValues}
+        />
 
         <Steps
           register={register}

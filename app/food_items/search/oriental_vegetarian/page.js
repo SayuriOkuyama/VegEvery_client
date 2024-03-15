@@ -22,7 +22,6 @@ const page = () => {
         )
 
         const data = await response.data
-        console.log(data)
         setArticles(data.data)
         setPageData(data)
       } catch (err) {}

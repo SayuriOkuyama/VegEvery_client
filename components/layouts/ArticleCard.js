@@ -6,8 +6,17 @@ import { PiHeart } from 'react-icons/pi'
 import { TfiTimer } from 'react-icons/tfi'
 import VegeTag from '@/components/layouts/VegeTag.js'
 
-const ArticleCard = ({ id, title, thumbnail, user, likes, time, vegeTags }) => {
-  const url = time ? 'recipes' : 'food_item'
+const ArticleCard = ({
+  id,
+  title,
+  thumbnail,
+  user,
+  likes,
+  time,
+  vegeTags,
+  tagSize,
+}) => {
+  const url = time ? 'recipes' : 'food_items'
 
   return (
     <Card className="h-68">
@@ -23,12 +32,14 @@ const ArticleCard = ({ id, title, thumbnail, user, likes, time, vegeTags }) => {
             className="object-cover m-auto"
           />
           <div className="absolute top-0">
-            <VegeTag vegeTags={vegeTags} />
+            <VegeTag vegeTags={vegeTags} size={tagSize} />
           </div>
-          <div className="flex absolute bottom-0 end-0 bg-white text-sm">
-            <TfiTimer className="flex self-center" />
-            {time}分
-          </div>
+          {time && (
+            <div className="flex absolute bottom-0 end-0 bg-white text-sm">
+              <TfiTimer className="flex self-center" />
+              {time}分
+            </div>
+          )}
         </div>
 
         <CardHeader className="flex">

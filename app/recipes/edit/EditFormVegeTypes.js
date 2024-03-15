@@ -2,7 +2,7 @@
 
 import { Avatar } from '@/components/ui/avatar'
 
-const EditFormVegeTypes = ({ register }) => {
+const FormVegeType = ({ register }) => {
   return (
     <div>
       <h3 className="text-center">対応のベジタリアンを選択</h3>
@@ -107,4 +107,4 @@ const EditFormVegeTypes = ({ register }) => {
   )
 }
 
-export default EditFormVegeTypes
+export default FormVegeType

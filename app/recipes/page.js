@@ -36,9 +36,6 @@ const page = () => {
         <TabsContent value="popular">
           <Popular pageType={'recipes'} />
         </TabsContent>
-        {/* <TabsContent value="vegetarian_type">
-          <VegeTypeSort />
-        </TabsContent> */}
       </Tabs>
     </main>
   )

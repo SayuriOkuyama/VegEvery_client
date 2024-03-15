@@ -107,6 +107,7 @@ const VegeTypeSort = ({ page, pageData, articles, pageType }) => {
                   return (
                     <ArticleCard
                       key={article.id}
+                      tagSize="small"
                       id={article.id}
                       title={article.title}
                       thumbnail={article.thumbnail}

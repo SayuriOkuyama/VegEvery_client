@@ -2,19 +2,16 @@ import VegeTag from '@/components/layouts/VegeTag'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Image from 'next/image'
 import { PiHeart } from 'react-icons/pi'
-import { TfiTimer } from 'react-icons/tfi'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { PiNotePencilLight } from 'react-icons/pi'
-import { IconContext } from 'react-icons'
 
 const page = async ({ params }) => {
   const id = params.id
 
   const getArticles = async () => {
     try {
-      const response = await axios.get(`/recipes/${id}`)
+      const response = await axios.get(`/food_items/${id}`)
 
       const data = await response.data
 
@@ -27,11 +24,9 @@ const page = async ({ params }) => {
   const data = await getArticles()
 
   const user = data.article.user
-  const materials = data.article.materials
-  const recipe_steps = data.article.recipe_steps.sort(
-    (a, b) => a.order - b.order,
-  )
-  const commentsToRecipe = data.comments
+  const items = data.article.items
+  const reports = data.article.reports.sort((a, b) => a.order - b.order)
+  const commentsToItem = data.comments
   const tags = data.article.tags
   const vegeTags = [
     data.article.vegan,
@@ -46,15 +41,6 @@ const page = async ({ params }) => {
 
   return (
     <main className="pb-20">
-      {user.id === 1 && (
-        <Link
-          href={`/recipes/edit?id=${data.article.id}`}
-          className="fixed top-3 right-3">
-          <div className="rounded-full p-1 side_icon">
-            <PiNotePencilLight size="28px" />
-          </div>
-        </Link>
-      )}
       <div className="flex justify-center mt-4 mb-2">
         <VegeTag vegeTags={vegeTags} />
       </div>
@@ -69,6 +55,7 @@ const page = async ({ params }) => {
       <div className="flex flex-row flex-wrap container space-x-1">
         {tags &&
           tags.map(tag => {
+            console.log(tag)
             return (
               <div
                 key={tag.id}
@@ -87,10 +74,6 @@ const page = async ({ params }) => {
           <div className="text-lg self-end">{user.name}</div>
         </div>
         <div className="">
-          <div className="flex text-lg ml-auto justify-end">
-            <TfiTimer className="flex self-center" />
-            <p>{data.article.cooking_time}分</p>
-          </div>
           <div className="flex text-lg">
             <PiHeart className="self-center" />
             <p>{data.article.number_of_likes}</p>
@@ -98,37 +81,51 @@ const page = async ({ params }) => {
         </div>
       </div>
       <div className="bg-green py-4">
-        <div className="container">
-          <h3>{`材料（${data.article.servings}人前）`}</h3>
-          {materials.map(material => {
+        <ul className="container">
+          {/* <h3>{`材料（${data.servings}人前）`}</h3> */}
+          {items.map((item, index) => {
             return (
-              <li key={material.id} className="flex justify-between">
-                <div>・{material.name}</div>
-                <div>
-                  <span>{material.quantity}</span>
-                  <span>{material.unit}</span>
+              <li key={item.id} className="list-none">
+                <div className="border-button-color-b w-fit">
+                  <div className="font-bold">{item.name}</div>
                 </div>
+                <div className="flex justify-end">
+                  <span className="my-1 text-xs ml-auto border rounded-full border-button-color bg-button px-1 text-end">
+                    レシピを探す
+                  </span>
+                </div>
+                <div>
+                  <div className=" py-2">
+                    <p className="font-bold text-sm">購入場所</p>
+                    <p className="text-sm">{item.where_to_buy}</p>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <p className="font-bold text-sm">購入価格</p>
+                    <p className="text-sm">{item.price}</p>
+                  </div>
+                </div>
+                {index !== items.length - 1 && <hr className="mx-2 my-4" />}
               </li>
             )
           })}
-        </div>
+        </ul>
       </div>
       <div className="container py-8">
-        <h3 className="mb-4">作り方</h3>
-        {recipe_steps.map(recipe_step => {
+        <h3 className="mb-4">レポート</h3>
+        {reports.map(report => {
           return (
-            <div key={recipe_step.id} className="pb-4">
-              <p>{recipe_step.order}.</p>
-              {recipe_step.image && (
+            <div key={report.id} className="pb-4">
+              <p>{report.order}.</p>
+              {report.image && (
                 <Image
-                  src={recipe_step.image}
+                  src={report.image}
                   width={400}
                   height={300}
                   alt="レシピ画像1"
                   className="object-cover m-auto mb-4 mt-2"
                 />
               )}
-              {recipe_step.text && <div>{recipe_step.text}</div>}
+              {report.text && <div>{report.text}</div>}
             </div>
           )
         })}
@@ -136,34 +133,27 @@ const page = async ({ params }) => {
       <div className="bg-orange py-8">
         <div className="container">
           <h3 className="mb-4">コメント</h3>
-          {(commentsToRecipe && commentsToRecipe.length) !== 0 ? (
-            <hr className="accent-color-border my-4" />
-          ) : (
-            <div className="text-center opacity-70 text-sm">
-              まだコメントがありません
-            </div>
-          )}
-          {commentsToRecipe &&
-            commentsToRecipe.length !== 0 &&
-            commentsToRecipe.map(commentToRecipe => {
+          <hr className="accent-color-border my-4" />
+          {commentsToItem &&
+            commentsToItem.map(commentToItem => {
               return (
-                <>
-                  <div key={commentToRecipe.id} className="flex">
+                <div key={commentToItem.id}>
+                  <div className="flex">
                     <Avatar className="self-end mr-2">
-                      <AvatarImage src={user.icon} alt="@shadcn" />
+                      <AvatarImage src={commentToItem.userIcon} alt="@shadcn" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="text-md self-center">
-                      {commentToRecipe.userName}
+                      {commentToItem.userName}
                     </div>
                   </div>
-                  <div className="mx-4 my-2">{commentToRecipe.text}</div>
+                  <div className="mx-4 my-2">{commentToItem.text}</div>
                   <div className="flex text-sm justify-end mr-4">
                     <PiHeart className="self-center" />
-                    <p>{commentToRecipe.likes}</p>
+                    <p>{commentToItem.likes}</p>
                   </div>
                   <hr className="accent-color-border my-4" />
-                </>
+                </div>
               )
             })}
 

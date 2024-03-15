@@ -53,6 +53,7 @@ export default async function Home() {
               return (
                 <ArticleCard
                   key={articleOfRecipe.id}
+                  tagSize="small"
                   id={articleOfRecipe.id}
                   title={articleOfRecipe.title}
                   thumbnail={articleOfRecipe.thumbnail}
