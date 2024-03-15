@@ -31,7 +31,7 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
                     onClick={() =>
-                      stepImage(prevState => ({ ...prevState, [index]: '' }))
+                      setStepImage(prevState => ({ ...prevState, [index]: '' }))
                     }>
                     ✕
                   </button>
