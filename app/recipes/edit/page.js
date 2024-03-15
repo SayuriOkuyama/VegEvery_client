@@ -54,15 +54,15 @@ const page = () => {
           // console.log(step)
           let order = step.order
           // console.log(order)
-          console.log(orders.includes(order))
+          // console.log(orders.includes(order))
           if (orders.includes(order)) {
             while (orders.includes(order)) {
               order++
             }
           }
           orders.push(order)
-          console.log(orders)
-          data.article.recipe_steps[index].order = order
+          // console.log(orders)
+          data.article.recipe_steps[index].order = index + 1
           console.log({
             [order]: {
               order: order,
@@ -70,14 +70,14 @@ const page = () => {
               text: step.text,
             },
           })
-          setValue(`steps.${order}`, {
+          setValue(`steps.${index + 1}`, {
             order: order,
             image: step.image,
             text: step.text,
           })
           setStepsData(prevState => ({
             ...prevState,
-            [order]: {
+            [index + 1]: {
               order: order,
               image: step.image,
               text: step.text,

@@ -57,7 +57,7 @@ const EditStep = ({
             <div key={field.id} className="my-4">
               <h4>{field.order}.</h4>
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepsData[field.order].image ? (
+                {stepsData[field.order] && stepsData[field.order].image ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
@@ -99,7 +99,7 @@ const EditStep = ({
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
                       console.log(createdUrl)
-                      setValue(`steps.${field.order}`, {
+                      setValue(`steps.${index}`, {
                         order: field.order,
                         file,
                         image: createdUrl,
@@ -157,7 +157,11 @@ const EditStep = ({
         <button
           className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
           type="button"
-          onClick={() => append({ order: '', image: '', text: '' })}>
+          onClick={() => {
+            console.log(fields.length)
+            let nextOrder = fields.length + 1
+            return append({ order: nextOrder, image: '', text: '' })
+          }}>
           手順を追加
         </button>
       </div>
