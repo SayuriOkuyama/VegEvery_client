@@ -38,7 +38,7 @@ async function fetchItems() {
 export default async function Home() {
   const articlesOfRecipes = await fetchRecipes()
   const articlesOfItems = await fetchItems()
-  console.log(articlesOfItems)
+  console.log(articlesOfRecipes)
 
   return (
     <main className="pb-24">
@@ -56,7 +56,7 @@ export default async function Home() {
                   tagSize="small"
                   id={articleOfRecipe.id}
                   title={articleOfRecipe.title}
-                  thumbnail={articleOfRecipe.thumbnail}
+                  thumbnail={articleOfRecipe.thumbnail_url}
                   user={articleOfRecipe.user}
                   likes={articleOfRecipe.number_of_likes}
                   time={articleOfRecipe.cooking_time}
@@ -92,7 +92,7 @@ export default async function Home() {
                   key={articlesOfItem.id}
                   id={articlesOfItem.id}
                   title={articlesOfItem.title}
-                  thumbnail={articlesOfItem.thumbnail}
+                  thumbnail={articlesOfItem.thumbnail_url}
                   user={articlesOfItem.user}
                   likes={articlesOfItem.number_of_likes}
                   time={articlesOfItem.cooking_time}

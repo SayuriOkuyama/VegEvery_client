@@ -49,7 +49,6 @@ const page = () => {
 
       const orders = []
       data.article.recipe_steps.forEach((step, index) => {
-        console.log(index)
         if (step) {
           // console.log(step)
           let order = step.order
@@ -66,20 +65,20 @@ const page = () => {
           console.log({
             [order]: {
               order: order,
-              image: step.image,
+              image_url: step.image_url,
               text: step.text,
             },
           })
           setValue(`steps.${index + 1}`, {
             order: order,
-            image: step.image,
+            image_url: step.image_url,
             text: step.text,
           })
           setStepsData(prevState => ({
             ...prevState,
             [index + 1]: {
               order: order,
-              image: step.image,
+              image_url: step.image_url,
               text: step.text,
             },
           }))
@@ -88,140 +87,115 @@ const page = () => {
 
       reset({
         title: data.article.title,
-        thumbnail: data.article.thumbnail,
-        tags: data.article.tags ? data.article.tags : '',
+        thumbnail: data.article.thumbnail_url,
+        tags: data.article.tags,
         materials: data.article.materials,
         steps: data.article.recipe_steps,
         servings: data.article.servings,
         time: data.article.cooking_time,
+        vegeTags: {
+          vegan: data.article.vegan,
+          oriental_vegetarian: data.article.oriental_vegetarian,
+          ovo_vegetarian: data.article.ovo_vegetarian,
+          pescatarian: data.article.pescatarian,
+          lacto_vegetarian: data.article.lacto_vegetarian,
+          pollo_vegetarian: data.article.pollo_vegetarian,
+          fruitarian: data.article.fruitarian,
+          other_vegetarian: data.article.other_vegetarian,
+        },
       })
       setImage({
-        image: data.article.thumbnail,
+        image: data.article.thumbnail_url,
       })
     }
 
-    const fetchData = async () => {
-      const data = await getArticles({ path, articleId })
+    // const fetchData = async () => {
+    //   const data = await getArticles({ path, articleId })
 
-      const tags = []
-      data.article.tags.map((tag, index) => {
-        setValue(`tags.${index}.tag`, tag.name)
-        tags.push(tag.name)
-      })
+    //   const tags = []
+    //   data.article.tags.map((tag, index) => {
+    //     setValue(`tags.${index}.tag`, tag.name)
+    //     tags.push(tag.name)
+    //   })
 
-      // const defaultValue = [
-      //   { title: data.article.title },
-      //   {
-      //     vege_type: {
-      //       vegan: data.article.vegan,
-      //       oriental_vegetarian: data.article.oriental_vegetarian,
-      //       ovo_vegetarian: data.article.ovo_vegetarian,
-      //       pescatarian: data.article.pescatarian,
-      //       lacto_vegetarian: data.article.lacto_vegetarian,
-      //       pollo_vegetarian: data.article.pollo_vegetarian,
-      //       fruitarian: data.article.fruitarian,
-      //       other_vegetarian: data.article.other_vegetarian,
-      //     },
-      //   },
-      //   { tags: tags },
-      //   { time: data.article.cooking_time },
-      //   { servings: data.article.servings },
-      // ]
-      // setValue('title', data.article.title)
+    //   data.article.tags.map((tag, index) => {
+    //     setValue(`tags.${index}.tag`, tag.name)
+    //   })
+    //   // setFormData({ title: data.article.title })
+    //   setValue('time', data.article.cooking_time)
+    //   setValue('servings', data.article.servings)
 
-      // setValue('vege_type.vegan', data.article.vegan)
-      // setValue(
-      //   'vege_type.oriental_vegetarian',
-      //   data.article.oriental_vegetarian,
-      // )
-      // setValue('vege_type.ovo_vegetarian', data.article.ovo_vegetarian)
-      // setValue('vege_type.pescatarian', data.article.pescatarian)
-      // setValue('vege_type.lacto_vegetarian', data.article.lacto_vegetarian)
-      // setValue('vege_type.pollo_vegetarian', data.article.pollo_vegetarian)
-      // setValue('vege_type.fruitarian', data.article.fruitarian)
-      // setValue('vege_type.other_vegetarian', data.article.other_vegetarian)
+    //   data.article.materials.map((material, index) => {
+    //     // console.log(material)
+    //     setValue(`materials.${index}.material`, material.name)
+    //     setValue(`materials.${index}.quantity`, material.quantity)
+    //     setValue(`materials.${index}.unit`, material.unit)
+    //   })
 
-      data.article.tags.map((tag, index) => {
-        setValue(`tags.${index}.tag`, tag.name)
-      })
-      // setFormData({ title: data.article.title })
-      setValue('time', data.article.cooking_time)
-      setValue('servings', data.article.servings)
+    //   data.article.recipe_steps.sort((a, b) => a.order - b.order)
+    //   console.log(data.article.recipe_steps)
+    //   const orders = []
+    //   data.article.recipe_steps.forEach(step => {
+    //     if (step) {
+    //       // console.log(step)
+    //       let order = step.order
+    //       // console.log(order)
+    //       console.log(orders.includes(order))
+    //       if (orders.includes(order)) {
+    //         while (orders.includes(order)) {
+    //           order++
+    //         }
+    //       }
+    //       orders.push(order)
+    //       console.log(orders)
+    //       console.log({
+    //         [order]: {
+    //           order: order,
+    //           image: step.image,
+    //           text: step.text,
+    //         },
+    //       })
+    //       setValue(`stepsData.${step.order}`, {
+    //         [order]: {
+    //           order: order,
+    //           image: step.image,
+    //           text: step.text,
+    //         },
+    //       })
+    //       setStepsData(prevState => ({
+    //         ...prevState,
+    //         [order]: {
+    //           order: order,
+    //           image: step.image,
+    //           text: step.text,
+    //         },
+    //       }))
+    //     }
+    //   })
 
-      data.article.materials.map((material, index) => {
-        // console.log(material)
-        setValue(`materials.${index}.material`, material.name)
-        setValue(`materials.${index}.quantity`, material.quantity)
-        setValue(`materials.${index}.unit`, material.unit)
-      })
+    //   console.log(data)
 
-      data.article.recipe_steps.sort((a, b) => a.order - b.order)
-      console.log(data.article.recipe_steps)
-      const orders = []
-      data.article.recipe_steps.forEach(step => {
-        if (step) {
-          // console.log(step)
-          let order = step.order
-          // console.log(order)
-          console.log(orders.includes(order))
-          if (orders.includes(order)) {
-            while (orders.includes(order)) {
-              order++
-            }
-          }
-          orders.push(order)
-          console.log(orders)
-          console.log({
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          })
-          setValue(`stepsData.${step.order}`, {
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          })
-          setStepsData(prevState => ({
-            ...prevState,
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          }))
-        }
-      })
-      // data.article.recipe_steps.map(step => {
-      //   setStepsData(prevState => ({
-      //     ...prevState,
-      //     [step.order]: {
-      //       order: step.order,
-      //       preview: step.image,
-      //       text: step.text,
-      //     },
-      //   }))
-      // })
-      console.log(data)
+    //   reset({
+    //     title: data.article.title,
+    //     tags: data.article.tags ? data.article.tags : '',
+    //     materials: data.article.materials,
+    //     steps: data.article.recipe_steps,
+    //     servings: data.article.servings,
+    //     time: data.article.cooking_time,
+    //   })
 
-      reset({
-        title: data.article.title,
-        tags: data.article.tags ? data.article.tags : '',
-        materials: data.article.materials,
-        steps: data.article.recipe_steps,
-        servings: data.article.servings,
-        time: data.article.cooking_time,
-      })
-
-      return data
-    }
+    //   return data
+    // }
     // data = fetchData()
   }, [data])
 
   const onDrop = acceptedFiles => {
+    // 0番目から4文字切り出す
+    if (image.substr(0, 4) !== 'blob') {
+      const { data, error } = supabase.storage
+        .from('VegEvery-backet')
+        .remove([`recipes/thumbnail/${image.path}`])
+    }
     const file = acceptedFiles[0]
     setImage({
       file,
@@ -235,10 +209,13 @@ const page = () => {
   function onSubmit(values) {
     console.log(values)
 
+    // if (values.thumbnail.name) {
     const fileExtension = values.thumbnail.name.split('.').pop()
-    let thumbnailUrl = ''
-    const stepImageUrls = []
+    // }
 
+    let thumbnailUrl = ''
+
+    const stepImageUrls = []
     supabase.storage
       .from('VegEvery-backet')
       .upload(

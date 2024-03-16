@@ -25,25 +25,6 @@ const EditStep = ({
 
   console.log(fields)
 
-  // useEffect(() => {
-  //   console.log('エフェクト')
-
-  //   if (fields.length === 0) {
-  //     Object.keys(stepsData).map(key => {
-  //       console.log({
-  //         order: key,
-  //         Image: stepsData[key].image,
-  //         text: stepsData[key].text,
-  //       })
-  //       append({
-  //         order: key,
-  //         image: stepsData[key].image,
-  //         text: stepsData[key].text,
-  //       })
-  //     })
-  //   }
-  // }, [stepsData, append])
-
   return (
     <div className="container pb-8">
       <div className="flex">
@@ -52,12 +33,11 @@ const EditStep = ({
       <div className="">
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => {
-          console.log(field)
           return (
             <div key={field.id} className="my-4">
               <h4>{field.order}.</h4>
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepsData[field.order] && stepsData[field.order].image ? (
+                {stepsData[field.order] && stepsData[field.order].image_url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
@@ -66,16 +46,12 @@ const EditStep = ({
                       onClick={e =>
                         // setStepImage(prevState => ({ ...prevState, [index]: '' }))
                         setStepsData(prevState => {
-                          console.log('クリック！！！')
-
-                          console.log(stepsData[field.order].image)
                           setValue(`steps.${index}.image`, '')
-                          console.log(fields)
                           return {
                             ...prevState,
                             [field.order]: {
                               order: field.order,
-                              image: '',
+                              image_url: '',
                               text: field.text,
                             },
                           }
@@ -83,10 +59,10 @@ const EditStep = ({
                       }>
                       ✕
                     </button>
-                    {stepsData[field.order].image && (
+                    {stepsData[field.order].image_url && (
                       <img
-                        src={stepsData[field.order].image}
-                        name={field.image}
+                        src={stepsData[field.order].image_url}
+                        name={field.image_url}
                         className="object-cover w-full h-full block"
                         alt="Uploaded Image"
                       />
@@ -98,11 +74,10 @@ const EditStep = ({
                     onDrop={acceptedFiles => {
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      console.log(createdUrl)
                       setValue(`steps.${index}`, {
                         order: field.order,
                         file,
-                        image: createdUrl,
+                        image_url: createdUrl,
                         text: field.text,
                       })
                       setStepsData(prevState => ({
@@ -110,7 +85,7 @@ const EditStep = ({
                         [field.order]: {
                           order: field.order,
                           file,
-                          image: createdUrl,
+                          image_url: createdUrl,
                           text: field.text,
                         },
                       }))
@@ -158,9 +133,8 @@ const EditStep = ({
           className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
           type="button"
           onClick={() => {
-            console.log(fields.length)
             let nextOrder = fields.length + 1
-            return append({ order: nextOrder, image: '', text: '' })
+            return append({ order: nextOrder, image_url: '', text: '' })
           }}>
           手順を追加
         </button>

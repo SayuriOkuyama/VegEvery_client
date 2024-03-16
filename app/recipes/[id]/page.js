@@ -59,7 +59,7 @@ const page = async ({ params }) => {
         <VegeTag vegeTags={vegeTags} />
       </div>
       <Image
-        src={data.article.thumbnail}
+        src={data.article.thumbnail_url}
         width={400}
         height={300}
         alt="レシピ画像1"
@@ -119,9 +119,9 @@ const page = async ({ params }) => {
           return (
             <div key={recipe_step.id} className="pb-4">
               <p>{recipe_step.order}.</p>
-              {recipe_step.image && (
+              {recipe_step.image_url && (
                 <Image
-                  src={recipe_step.image}
+                  src={recipe_step.image_url}
                   width={400}
                   height={300}
                   alt="レシピ画像1"

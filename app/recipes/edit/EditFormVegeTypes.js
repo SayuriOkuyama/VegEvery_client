@@ -1,8 +1,14 @@
 'use client'
 
 import { Avatar } from '@/components/ui/avatar'
+import { useFieldArray } from 'react-hook-form'
 
-const FormVegeType = ({ register }) => {
+const FormVegeType = ({ register, control }) => {
+  const { fields } = useFieldArray({
+    name: 'vegeTags',
+    control,
+  })
+  console.log(fields)
   return (
     <div>
       <h3 className="text-center">対応のベジタリアンを選択</h3>
@@ -13,7 +19,7 @@ const FormVegeType = ({ register }) => {
               type="checkbox"
               id="vegan"
               hidden
-              {...register(`vege_type.vegan`)}
+              {...register(`vegeTags.vegan`)}
             />
             V
           </Avatar>
@@ -25,7 +31,7 @@ const FormVegeType = ({ register }) => {
               type="checkbox"
               id="Oriental"
               hidden
-              {...register(`vege_type.oriental_vegetarian`)}
+              {...register(`vegeTags.oriental_vegetarian`)}
             />
             Ori
           </Avatar>
@@ -37,7 +43,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Ovo"
-              {...register(`vege_type.ovo_vegetarian`)}
+              {...register(`vegeTags.ovo_vegetarian`)}
             />
             Ovo
           </Avatar>
@@ -49,7 +55,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Psc"
-              {...register(`vege_type.pescatarian`)}
+              {...register(`vegeTags.pescatarian`)}
             />
             Psc
           </Avatar>
@@ -61,7 +67,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Lct"
-              {...register(`vege_type.lacto_vegetarian`)}
+              {...register(`vegeTags.lacto_vegetarian`)}
             />
             Lct
           </Avatar>
@@ -73,7 +79,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Pol"
-              {...register(`vege_type.pollo_vegetarian`)}
+              {...register(`vegeTags.pollo_vegetarian`)}
             />
             Pol
           </Avatar>
@@ -85,7 +91,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Flu"
-              {...register(`vege_type.fruitarian`)}
+              {...register(`vegeTags.fruitarian`)}
             />
             Flu
           </Avatar>
@@ -97,7 +103,7 @@ const FormVegeType = ({ register }) => {
               hidden
               type="checkbox"
               id="Oth"
-              {...register(`vege_type.other_vegetarian`)}
+              {...register(`vegeTags.other_vegetarian`)}
             />
             Oth
           </Avatar>
