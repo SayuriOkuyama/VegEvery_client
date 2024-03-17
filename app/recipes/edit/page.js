@@ -32,6 +32,7 @@ const page = () => {
   const { register, setValue, handleSubmit, control, getValues, reset } =
     useForm()
   const form = useForm()
+
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
   console.log(data)
 
@@ -66,7 +67,6 @@ const page = () => {
           }))
           // 比較用
           arrayPath.push(step.image_path)
-          console.log(arrayPath)
         }
       })
       setArrayOldPath(arrayPath)
@@ -101,12 +101,6 @@ const page = () => {
   }, [data])
 
   const onDrop = acceptedFiles => {
-    // // 0番目から4文字切り出す
-    // if (image.substr(0, 4) !== 'blob') {
-    //   const { data, error } = supabase.storage
-    //     .from('VegEvery-backet')
-    //     .remove([`recipes/thumbnail/${image.path}`])
-    // }
     const file = acceptedFiles[0]
     setImage({
       file,
@@ -114,150 +108,138 @@ const page = () => {
     })
     setValue('thumbnail', file)
   }
-
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log(values)
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
+    const stepImages = []
+    const pathOnly = []
+    try {
+      // サムネイルに変更があった場合のみ、ストレージにアップロード
+      if (values.thumbnail && values.thumbnail.name) {
+        // 拡張子部分を切り出す
+        const fileExtension = values.thumbnail.name.split('.').pop()
 
-    // サムネイルに変更があった場合のみ、ストレージにアップロード
-    if (values.thumbnail && values.thumbnail.name) {
-      // 拡張子部分を切り出す
-      console.log('cut')
-      const fileExtension = values.thumbnail.name.split('.').pop()
-
-      // サムネイルのアップロード
-      supabase.storage
-        .from('VegEvery-backet')
-        .upload(
+        // サムネイルのアップロード
+        const response = await supabase.storage.from('VegEvery-backet').upload(
           // ランダムな文字列に拡張子を付けたものをパスとする
           `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
           values.thumbnail,
         )
-        .then(response => {
-          console.log('Insert successful:', response.data)
-          console.log(oldThumbnail.path)
-          const { data, error } = supabase.storage
-            .from('VegEvery-backet')
-            .remove(oldThumbnail.path)
-            .then(response => {
-              console.log('Delete successful:', response.data)
-            })
-            .catch(error => {
-              console.error('Error delete thumbnail:', error)
-            })
-          thumbnail_path = response.data.path
-          thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
-          console.log(thumbnail_path)
-          console.log(thumbnail_url)
-        })
-        .catch(error => {
-          console.error('Error uploading thumbnail:', error)
-        })
-    } else {
-      console.log('変更なし')
-      thumbnail_path = values.thumbnail_path
-      thumbnail_url = values.thumbnail_url
-    }
+        console.log('Thumbnail upload successful:', response.data)
+        thumbnail_path = response.data.path
+        thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
-    const stepImages = []
-    const pathOnly = []
-    const max = Math.max(oldStepImages.length, values.steps.length)
-
-    for (let i = 0; i < max; i++) {
-      if (oldStepImages[i] && values.steps[i]) {
-        if (
-          oldStepImages[i].url !== values.steps[i].image_url &&
-          values.steps[i].image_url.substr(0, 4) === 'blob'
-        ) {
-          const fileExtension = values.steps[i].file.name.split('.').pop()
-
-          supabase.storage
-            .from('VegEvery-backet')
-            .upload(
-              `recipes/step_image/${uuidv4()}.${fileExtension}`,
-              values.steps[i].file,
-            )
-            .then(response => {
-              console.log('Insert successful:', response.data)
-
-              stepImages[i] = {
-                image_path: response.data.path,
-                image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-              }
-              pathOnly.push(response.data.path)
-            })
-            .catch(error => {
-              console.error('Error uploading step_image:', error)
-            })
-        } else {
-          stepImages[i] = {
-            image_path: values.steps[i].image_path,
-            image_url: values.steps[i].image_url,
-          }
-          pathOnly.push(values.steps[i].image_path)
-        }
-      }
-    }
-
-    // すべてのアップロードが完了した後に次の処理を行う
-    Promise.all(stepImages)
-    console.log('All images uploaded successfully')
-    console.log(stepImages)
-
-    console.log(pathOnly)
-    console.log(arrayOldPath)
-
-    arrayOldPath.map(oldPath => {
-      console.log(oldPath)
-      if (!pathOnly.includes(oldPath)) {
-        console.log('含まれてないから削除')
-
-        const { data, error } = supabase.storage
+        const { data, error } = await supabase.storage
           .from('VegEvery-backet')
-          .remove(oldPath)
-          .then(response => {
-            console.log('Delete step_image successful:', response.data)
-          })
-          .catch(error => {
-            console.error('Error delete step_image:', error)
-          })
+          .remove(oldThumbnail.path)
+      } else {
+        thumbnail_path = values.thumbnail_path
+        thumbnail_url = values.thumbnail_url
       }
 
+      // const max = Math.max(oldStepImages.length, values.steps.length)
+      await Promise.all(
+        // 新しい画像をストレージに保存
+        // for (let i = 0; i < max; i++) {
+        values.steps.map(async (step, index) => {
+          // if (oldStepImages[i] && step) {
+          if (
+            // oldStepImages[i] &&
+            step &&
+            // oldStepImages[i].url !== step.image_url &&
+            step.image_url.substr(0, 4) === 'blob'
+          ) {
+            const fileExtension = step.file.name.split('.').pop()
+
+            const response = await supabase.storage
+              .from('VegEvery-backet')
+              .upload(
+                `recipes/step_image/${uuidv4()}.${fileExtension}`,
+                step.file,
+              )
+            console.log('Step image upload successful:', response.data)
+
+            stepImages[index] = {
+              image_path: response.data.path,
+              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
+            }
+            pathOnly.push(response.data.path)
+          } else {
+            stepImages[index] = {
+              image_path: step.image_path,
+              image_url: step.image_url,
+            }
+            console.log(stepImages)
+            pathOnly.push(step.image_path)
+          }
+        }),
+      )
+      // すべて);のアップロードが完了した後に次の処理を行う
+      // console.log({
+      //   values,
+      //   thumbnail_path,
+      //   thumbnail_url,
+      //   stepImages,
+      // }),
+
+      // 要らなくなった画像をストレージから削除
+      await Promise.all(
+        arrayOldPath.map(oldPath => {
+          console.log(oldPath)
+          if (!pathOnly.includes(oldPath)) {
+            supabase.storage
+              .from('VegEvery-backet')
+              .remove(oldPath)
+              .then(response => {
+                console.log('Delete step_image successful:', response.data)
+              })
+              .catch(error => {
+                console.error('Error delete step_image:', error)
+              })
+          }
+        }),
+      )
       console.log({
         values,
         thumbnail_path,
         thumbnail_url,
         stepImages,
       })
-    })
 
-    Promise.all(stepImages, thumbnail_path, thumbnail_url)
-    console.log({
-      values,
-      thumbnail_path,
-      thumbnail_url,
-      stepImages,
-    })
-    // axios
-    //   .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
-    //     values,
-    //     thumbnailUrl,
-    //     stepImageUrls,
-    //   })
-    //   .then(res => {
-    //     console.log(res.data)
-    //     form.reset()
-    //     console.log('画面遷移')
-    //     router.push('/recipes')
-    //   })
-    //   .catch(error => {
-    //     console.error('Error sending data to backend:', error)
-    //   })
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
+        {
+          values: {
+            title: values.title,
+            thumbnail: {
+              thumbnail_path: thumbnail_path,
+              thumbnail_url: thumbnail_url,
+            },
+            cooking_time: values.time,
+            servings: values.servings,
+            tags: values.tags,
+            vegeTags: values.vegeTags,
+            materials: values.materials,
+            recipe_step: {
+              step_order_text: values.steps,
+              stepImages: stepImages,
+            },
+          },
+        },
+      )
+
+      console.log(res.data)
+      // form.reset()
+      console.log('画面遷移')
+      // router.push('/recipes')
+    } catch (error) {
+      console.error('Error handling form submission:', error)
+    }
   }
 
   if (error) return <p>Error: {error.message}</p>
@@ -321,6 +303,7 @@ const page = () => {
           register={register}
           control={control}
           getValues={getValues}
+          setValue={setValue}
         />
 
         <EditStep

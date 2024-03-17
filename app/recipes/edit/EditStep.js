@@ -14,7 +14,7 @@ const EditStep = ({
   setStepsData,
   reset,
 }) => {
-  console.log(stepsData)
+  // console.log(stepsData)
 
   const itemsRef = useRef(null)
 
@@ -23,7 +23,7 @@ const EditStep = ({
     control,
   })
 
-  console.log(fields)
+  // console.log(fields)
 
   return (
     <div className="container pb-8">
@@ -50,13 +50,6 @@ const EditStep = ({
                       type="button"
                       onClick={e => {
                         setStepsData(prevState => {
-                          console.log({
-                            ...prevState,
-                            [field.order]: {
-                              ...prevState[field.order],
-                              image_url: '',
-                            },
-                          })
                           return {
                             ...prevState,
                             [field.order]: {
@@ -67,7 +60,11 @@ const EditStep = ({
                             },
                           }
                         })
-                        setValue(`steps.${index}.image`, '')
+                        setValue(`steps.${index}`, {
+                          image: '',
+                          image_path: '',
+                          image_url: '',
+                        })
                       }}>
                       ✕
                     </button>

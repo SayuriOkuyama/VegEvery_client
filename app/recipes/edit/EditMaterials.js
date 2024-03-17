@@ -1,14 +1,14 @@
 'use client'
 import { useForm, useFieldArray } from 'react-hook-form'
 
-const EditMaterials = ({ register, control, getValues }) => {
+const EditMaterials = ({ register, control, getValues, setValue }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'materials',
     control,
   })
   const materials = getValues('materials')
   // console.log(materials)
-
+  // console.log(fields)
   return (
     <div className="bg-green py-4 container">
       <div className="flex">
@@ -66,7 +66,14 @@ const EditMaterials = ({ register, control, getValues }) => {
                 <button
                   className="border block ml-1 bg-white w-4 h-4 text-center leading-none text-sm"
                   type="button"
-                  onClick={() => remove(index)}>
+                  onClick={() => {
+                    remove(index)
+                    // setValue(`materials.${index}`, {
+                    //   name: '',
+                    //   quantity: '',
+                    //   unit: '',
+                    // })
+                  }}>
                   ✕
                 </button>
               ) : (
@@ -81,7 +88,7 @@ const EditMaterials = ({ register, control, getValues }) => {
         <button
           className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
           type="button"
-          onClick={() => append({ material: '', quantity: '', unit: '' })}>
+          onClick={() => append({ name: '', quantity: '', unit: '' })}>
           材料を追加
         </button>
       </div>
