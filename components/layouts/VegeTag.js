@@ -22,8 +22,8 @@ const VegeTag = ({ vegeTags, size }) => {
             Ori
           </Avatar>
         ) : (
-          <Avatar className="bg-color-v w-8 h-8 justify-center items-center text-sm mx-1">
-            V
+          <Avatar className="bg-color-ori w-8 h-8 justify-center items-center text-sm mx-1">
+            Ori
           </Avatar>
         ))}
       {vegeTags &&

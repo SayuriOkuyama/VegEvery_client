@@ -137,7 +137,7 @@ const page = () => {
         const uploadPromises = values.stepImages.map(image =>
           supabase.storage
             .from('VegEvery-backet')
-            .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image),
+            .upload(`recipes/step_image/${uuidv4()}.${fileExtension}`, image),
         )
         // すべてのアップロードが完了した後に次の処理を行う
         Promise.all(uploadPromises)

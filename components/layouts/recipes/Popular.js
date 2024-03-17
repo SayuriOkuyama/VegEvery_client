@@ -36,7 +36,7 @@ const Popular = ({ pageType }) => {
                 tagSize="small"
                 id={article.id}
                 title={article.title}
-                thumbnail={article.thumbnail}
+                thumbnail={article.thumbnail_url}
                 user={article.user}
                 likes={article.number_of_likes}
                 time={article.cooking_time}

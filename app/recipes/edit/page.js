@@ -24,204 +24,89 @@ const page = () => {
   const articleId = query.get('id')
   const path = 'recipes'
 
+  const [oldThumbnail, setOldThumbnail] = useState()
+  const [oldStepImages, setOldStepImages] = useState()
+  const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
   const [stepsData, setStepsData] = useState([])
   const { register, setValue, handleSubmit, control, getValues, reset } =
-    useForm({
-      // resolver: zodResolver(formSchema),
-      defaultValues: {
-        title: '',
-        tags: [{ tag: '' }],
-        materials: [{ material: '', quantity: '', unit: '' }],
-        thumbnail: '',
-        servings: '',
-      },
-    })
+    useForm()
   const form = useForm()
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
   console.log(data)
 
-  // let data
   useEffect(() => {
     console.log('エフェクト')
     if (data) {
       console.log(data)
-
-      const orders = []
+      setOldThumbnail({
+        path: data.article.thumbnail_path,
+        url: data.article.thumbnail_url,
+      })
+      const arrayPath = []
+      const preOldStepImages = []
       data.article.recipe_steps.forEach((step, index) => {
-        console.log(index)
         if (step) {
-          // console.log(step)
-          let order = step.order
-          // console.log(order)
-          console.log(orders.includes(order))
-          if (orders.includes(order)) {
-            while (orders.includes(order)) {
-              order++
-            }
-          }
-          orders.push(order)
-          console.log(orders)
-          data.article.recipe_steps[index].order = order
-          console.log({
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          })
-          setValue(`steps.${order}`, {
-            order: order,
-            image: step.image,
+          preOldStepImages.push({ path: step.image_path, url: step.image_url })
+          data.article.recipe_steps[index].order = index + 1
+
+          setValue(`steps.${index + 1}`, {
+            order: step.order,
+            image_url: step.image_url,
             text: step.text,
           })
+          // 画像出力用
           setStepsData(prevState => ({
             ...prevState,
-            [order]: {
-              order: order,
-              image: step.image,
+            [index + 1]: {
+              order: step.order,
+              image_url: step.image_url,
               text: step.text,
             },
           }))
+          // 比較用
+          arrayPath.push(step.image_path)
+          console.log(arrayPath)
         }
       })
+      setArrayOldPath(arrayPath)
+      // 編集キャンセルに備えて、元の画像を保持しておく
+      setOldStepImages(preOldStepImages)
 
       reset({
         title: data.article.title,
-        thumbnail: data.article.thumbnail,
-        tags: data.article.tags ? data.article.tags : '',
+        thumbnail_path: data.article.thumbnail_path,
+        thumbnail_url: data.article.thumbnail_url,
+        tags: data.article.tags,
         materials: data.article.materials,
         steps: data.article.recipe_steps,
         servings: data.article.servings,
         time: data.article.cooking_time,
+        vegeTags: {
+          vegan: data.article.vegan,
+          oriental_vegetarian: data.article.oriental_vegetarian,
+          ovo_vegetarian: data.article.ovo_vegetarian,
+          pescatarian: data.article.pescatarian,
+          lacto_vegetarian: data.article.lacto_vegetarian,
+          pollo_vegetarian: data.article.pollo_vegetarian,
+          fruitarian: data.article.fruitarian,
+          other_vegetarian: data.article.other_vegetarian,
+        },
       })
+
       setImage({
-        image: data.article.thumbnail,
+        image: data.article.thumbnail_url,
       })
     }
-
-    const fetchData = async () => {
-      const data = await getArticles({ path, articleId })
-
-      const tags = []
-      data.article.tags.map((tag, index) => {
-        setValue(`tags.${index}.tag`, tag.name)
-        tags.push(tag.name)
-      })
-
-      // const defaultValue = [
-      //   { title: data.article.title },
-      //   {
-      //     vege_type: {
-      //       vegan: data.article.vegan,
-      //       oriental_vegetarian: data.article.oriental_vegetarian,
-      //       ovo_vegetarian: data.article.ovo_vegetarian,
-      //       pescatarian: data.article.pescatarian,
-      //       lacto_vegetarian: data.article.lacto_vegetarian,
-      //       pollo_vegetarian: data.article.pollo_vegetarian,
-      //       fruitarian: data.article.fruitarian,
-      //       other_vegetarian: data.article.other_vegetarian,
-      //     },
-      //   },
-      //   { tags: tags },
-      //   { time: data.article.cooking_time },
-      //   { servings: data.article.servings },
-      // ]
-      // setValue('title', data.article.title)
-
-      // setValue('vege_type.vegan', data.article.vegan)
-      // setValue(
-      //   'vege_type.oriental_vegetarian',
-      //   data.article.oriental_vegetarian,
-      // )
-      // setValue('vege_type.ovo_vegetarian', data.article.ovo_vegetarian)
-      // setValue('vege_type.pescatarian', data.article.pescatarian)
-      // setValue('vege_type.lacto_vegetarian', data.article.lacto_vegetarian)
-      // setValue('vege_type.pollo_vegetarian', data.article.pollo_vegetarian)
-      // setValue('vege_type.fruitarian', data.article.fruitarian)
-      // setValue('vege_type.other_vegetarian', data.article.other_vegetarian)
-
-      data.article.tags.map((tag, index) => {
-        setValue(`tags.${index}.tag`, tag.name)
-      })
-      // setFormData({ title: data.article.title })
-      setValue('time', data.article.cooking_time)
-      setValue('servings', data.article.servings)
-
-      data.article.materials.map((material, index) => {
-        // console.log(material)
-        setValue(`materials.${index}.material`, material.name)
-        setValue(`materials.${index}.quantity`, material.quantity)
-        setValue(`materials.${index}.unit`, material.unit)
-      })
-
-      data.article.recipe_steps.sort((a, b) => a.order - b.order)
-      console.log(data.article.recipe_steps)
-      const orders = []
-      data.article.recipe_steps.forEach(step => {
-        if (step) {
-          // console.log(step)
-          let order = step.order
-          // console.log(order)
-          console.log(orders.includes(order))
-          if (orders.includes(order)) {
-            while (orders.includes(order)) {
-              order++
-            }
-          }
-          orders.push(order)
-          console.log(orders)
-          console.log({
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          })
-          setValue(`stepsData.${step.order}`, {
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          })
-          setStepsData(prevState => ({
-            ...prevState,
-            [order]: {
-              order: order,
-              image: step.image,
-              text: step.text,
-            },
-          }))
-        }
-      })
-      // data.article.recipe_steps.map(step => {
-      //   setStepsData(prevState => ({
-      //     ...prevState,
-      //     [step.order]: {
-      //       order: step.order,
-      //       preview: step.image,
-      //       text: step.text,
-      //     },
-      //   }))
-      // })
-      console.log(data)
-
-      reset({
-        title: data.article.title,
-        tags: data.article.tags ? data.article.tags : '',
-        materials: data.article.materials,
-        steps: data.article.recipe_steps,
-        servings: data.article.servings,
-        time: data.article.cooking_time,
-      })
-
-      return data
-    }
-    // data = fetchData()
   }, [data])
 
   const onDrop = acceptedFiles => {
+    // // 0番目から4文字切り出す
+    // if (image.substr(0, 4) !== 'blob') {
+    //   const { data, error } = supabase.storage
+    //     .from('VegEvery-backet')
+    //     .remove([`recipes/thumbnail/${image.path}`])
+    // }
     const file = acceptedFiles[0]
     setImage({
       file,
@@ -235,67 +120,146 @@ const page = () => {
   function onSubmit(values) {
     console.log(values)
 
-    const fileExtension = values.thumbnail.name.split('.').pop()
-    let thumbnailUrl = ''
-    const stepImageUrls = []
+    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
+    let thumbnail_path
+    let thumbnail_url
 
-    supabase.storage
-      .from('VegEvery-backet')
-      .upload(
-        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
-        values.thumbnail,
-      )
-      .then(response => {
-        console.log('Insert successful:', response.data)
-        const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-        thumbnailUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+    // サムネイルに変更があった場合のみ、ストレージにアップロード
+    if (values.thumbnail && values.thumbnail.name) {
+      // 拡張子部分を切り出す
+      console.log('cut')
+      const fileExtension = values.thumbnail.name.split('.').pop()
 
-        // すべてのステップ画像のアップロードが完了したかどうかを追跡するPromiseの配列
-        const uploadPromises = values.stepImages.map(image =>
+      // サムネイルのアップロード
+      supabase.storage
+        .from('VegEvery-backet')
+        .upload(
+          // ランダムな文字列に拡張子を付けたものをパスとする
+          `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
+          values.thumbnail,
+        )
+        .then(response => {
+          console.log('Insert successful:', response.data)
+          console.log(oldThumbnail.path)
+          const { data, error } = supabase.storage
+            .from('VegEvery-backet')
+            .remove(oldThumbnail.path)
+            .then(response => {
+              console.log('Delete successful:', response.data)
+            })
+            .catch(error => {
+              console.error('Error delete thumbnail:', error)
+            })
+          thumbnail_path = response.data.path
+          thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
+          console.log(thumbnail_path)
+          console.log(thumbnail_url)
+        })
+        .catch(error => {
+          console.error('Error uploading thumbnail:', error)
+        })
+    } else {
+      console.log('変更なし')
+      thumbnail_path = values.thumbnail_path
+      thumbnail_url = values.thumbnail_url
+    }
+
+    const stepImages = []
+    const pathOnly = []
+    const max = Math.max(oldStepImages.length, values.steps.length)
+
+    for (let i = 0; i < max; i++) {
+      if (oldStepImages[i] && values.steps[i]) {
+        if (
+          oldStepImages[i].url !== values.steps[i].image_url &&
+          values.steps[i].image_url.substr(0, 4) === 'blob'
+        ) {
+          const fileExtension = values.steps[i].file.name.split('.').pop()
+
           supabase.storage
             .from('VegEvery-backet')
-            .upload(`recipes/thumbnail/${uuidv4()}.${fileExtension}`, image),
-        )
-        // すべてのアップロードが完了した後に次の処理を行う
-        Promise.all(uploadPromises)
-          .then(responses => {
-            console.log('All images uploaded successfully')
+            .upload(
+              `recipes/step_image/${uuidv4()}.${fileExtension}`,
+              values.steps[i].file,
+            )
+            .then(response => {
+              console.log('Insert successful:', response.data)
 
-            // すべてのステップ画像のURLを配列に追加
-            responses.forEach(response => {
-              const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
-              stepImageUrls.push(stepImageUrl)
+              stepImages[i] = {
+                image_path: response.data.path,
+                image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
+              }
+              pathOnly.push(response.data.path)
             })
+            .catch(error => {
+              console.error('Error uploading step_image:', error)
+            })
+        } else {
+          stepImages[i] = {
+            image_path: values.steps[i].image_path,
+            image_url: values.steps[i].image_url,
+          }
+          pathOnly.push(values.steps[i].image_path)
+        }
+      }
+    }
 
-            console.log({
-              values,
-              thumbnailUrl,
-              stepImageUrls,
-            })
-            axios
-              .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
-                values,
-                thumbnailUrl,
-                stepImageUrls,
-              })
-              .then(res => {
-                console.log(res.data)
-                form.reset()
-                console.log('画面遷移')
-                router.push('/recipes')
-              })
-              .catch(error => {
-                console.error('Error sending data to backend:', error)
-              })
+    // すべてのアップロードが完了した後に次の処理を行う
+    Promise.all(stepImages)
+    console.log('All images uploaded successfully')
+    console.log(stepImages)
+
+    console.log(pathOnly)
+    console.log(arrayOldPath)
+
+    arrayOldPath.map(oldPath => {
+      console.log(oldPath)
+      if (!pathOnly.includes(oldPath)) {
+        console.log('含まれてないから削除')
+
+        const { data, error } = supabase.storage
+          .from('VegEvery-backet')
+          .remove(oldPath)
+          .then(response => {
+            console.log('Delete step_image successful:', response.data)
           })
           .catch(error => {
-            console.error('Error uploading step images:', error)
+            console.error('Error delete step_image:', error)
           })
+      }
+
+      console.log({
+        values,
+        thumbnail_path,
+        thumbnail_url,
+        stepImages,
       })
-      .catch(error => {
-        console.error('Error uploading thumbnail:', error)
-      })
+    })
+
+    Promise.all(stepImages, thumbnail_path, thumbnail_url)
+    console.log({
+      values,
+      thumbnail_path,
+      thumbnail_url,
+      stepImages,
+    })
+    // axios
+    //   .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
+    //     values,
+    //     thumbnailUrl,
+    //     stepImageUrls,
+    //   })
+    //   .then(res => {
+    //     console.log(res.data)
+    //     form.reset()
+    //     console.log('画面遷移')
+    //     router.push('/recipes')
+    //   })
+    //   .catch(error => {
+    //     console.error('Error sending data to backend:', error)
+    //   })
   }
+
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
@@ -306,7 +270,7 @@ const page = () => {
 
         <div className="bg-orange">
           {image ? (
-            <div className="image-preview relative flex w-full">
+            <div className="image-preview relative flex w-full h-64">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
@@ -320,7 +284,7 @@ const page = () => {
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="h-52">
+            <div {...getRootProps()} className="h-64">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
