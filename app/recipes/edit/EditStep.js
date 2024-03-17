@@ -23,7 +23,7 @@ const EditStep = ({
     control,
   })
 
-  // console.log(fields)
+  console.log(fields)
 
   return (
     <div className="container pb-8">

@@ -5,6 +5,7 @@ import { PiHeart } from 'react-icons/pi'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PiNotePencilLight } from 'react-icons/pi'
 
 const page = async ({ params }) => {
   const id = params.id
@@ -41,11 +42,20 @@ const page = async ({ params }) => {
 
   return (
     <main className="pb-20">
+      {user.id === 1 && (
+        <Link
+          href={`/food_items/edit?id=${data.article.id}`}
+          className="fixed top-3 right-3">
+          <div className="rounded-full p-1 side_icon">
+            <PiNotePencilLight size="28px" />
+          </div>
+        </Link>
+      )}
       <div className="flex justify-center mt-4 mb-2">
         <VegeTag vegeTags={vegeTags} />
       </div>
       <Image
-        src={data.article.thumbnail}
+        src={data.article.thumbnail_url}
         width={400}
         height={300}
         alt="レシピ画像1"
@@ -55,7 +65,6 @@ const page = async ({ params }) => {
       <div className="flex flex-row flex-wrap container space-x-1">
         {tags &&
           tags.map(tag => {
-            console.log(tag)
             return (
               <div
                 key={tag.id}
@@ -113,12 +122,13 @@ const page = async ({ params }) => {
       <div className="container py-8">
         <h3 className="mb-4">レポート</h3>
         {reports.map(report => {
+          console.log(report)
           return (
             <div key={report.id} className="pb-4">
               <p>{report.order}.</p>
-              {report.image && (
+              {report.image_url && (
                 <Image
-                  src={report.image}
+                  src={report.image_url}
                   width={400}
                   height={300}
                   alt="レシピ画像1"
@@ -143,11 +153,11 @@ const page = async ({ params }) => {
                       <AvatarImage src={commentToItem.userIcon} alt="@shadcn" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
-                    <div className="text-md self-center">
+                    <div className="text-md self-center text-sm">
                       {commentToItem.userName}
                     </div>
                   </div>
-                  <div className="mx-4 my-2">{commentToItem.text}</div>
+                  <div className="mx-4 my-2 text-sm">{commentToItem.text}</div>
                   <div className="flex text-sm justify-end mr-4">
                     <PiHeart className="self-center" />
                     <p>{commentToItem.likes}</p>
