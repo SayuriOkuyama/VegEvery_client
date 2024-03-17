@@ -1,14 +1,8 @@
 'use client'
 
 import { Avatar } from '@/components/ui/avatar'
-import { useFieldArray } from 'react-hook-form'
 
 const FormVegeType = ({ register, control }) => {
-  const { fields } = useFieldArray({
-    name: 'vegeTags',
-    control,
-  })
-  console.log(fields)
   return (
     <div>
       <h3 className="text-center">対応のベジタリアンを選択</h3>

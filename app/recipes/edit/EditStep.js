@@ -35,28 +35,40 @@ const EditStep = ({
         {fields.map((field, index) => {
           return (
             <div key={field.id} className="my-4">
-              <h4>{field.order}.</h4>
+              <h4>{index + 1}.</h4>
+              <input
+                type="text"
+                value={index + 1}
+                hidden
+                {...register(`steps.${index}.order`)}
+              />
               <div className="bg-orange h-52 w-full mx-auto">
                 {stepsData[field.order] && stepsData[field.order].image_url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                       type="button"
-                      // defaultValue={field.image}
-                      onClick={e =>
-                        // setStepImage(prevState => ({ ...prevState, [index]: '' }))
+                      onClick={e => {
                         setStepsData(prevState => {
-                          setValue(`steps.${index}.image`, '')
+                          console.log({
+                            ...prevState,
+                            [field.order]: {
+                              ...prevState[field.order],
+                              image_url: '',
+                            },
+                          })
                           return {
                             ...prevState,
                             [field.order]: {
+                              ...prevState[field.order],
                               order: field.order,
                               image_url: '',
                               text: field.text,
                             },
                           }
                         })
-                      }>
+                        setValue(`steps.${index}.image`, '')
+                      }}>
                       ✕
                     </button>
                     {stepsData[field.order].image_url && (
@@ -121,7 +133,19 @@ const EditStep = ({
                 <button
                   className="border"
                   type="button"
-                  onClick={() => remove(index)}>
+                  onClick={() => {
+                    remove(index)
+                    setStepsData(prevState => {
+                      return {
+                        ...prevState,
+                        [field.order]: {
+                          order: field.order,
+                          image_url: '',
+                          text: field.text,
+                        },
+                      }
+                    })
+                  }}>
                   ✕
                 </button>
               )}
