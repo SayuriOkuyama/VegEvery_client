@@ -29,7 +29,9 @@ const page = () => {
   const [image, setImage] = useState(null)
   const [reportsData, setReportsData] = useState([])
   const { register, setValue, handleSubmit, control, getValues, reset } =
-    useForm()
+    useForm({
+      mode: 'onChange', // リアルタイムで入力値を取得する
+    })
   const form = useForm()
 
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
@@ -53,20 +55,17 @@ const page = () => {
           })
           data.article.reports[index].order = index + 1
 
-          setValue(`reports.${index + 1}`, {
+          setValue(`reports.${index}`, {
             order: report.order,
             image_url: report.image_url,
             text: report.text,
           })
           // 画像出力用
-          setReportsData(prevState => ({
-            ...prevState,
-            [index + 1]: {
-              order: report.order,
-              image_url: report.image_url,
-              text: report.text,
-            },
-          }))
+          setReportsData(prevState => {
+            const newState = prevState
+            newState.push({ url: report.image_url, path: report.image_path })
+            return newState
+          })
           // 比較用
           arrayPath.push(report.image_path)
         }
@@ -127,7 +126,7 @@ const page = () => {
         // サムネイルのアップロード
         const response = await supabase.storage.from('VegEvery-backet').upload(
           // ランダムな文字列に拡張子を付けたものをパスとする
-          `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
+          `items/thumbnail/${uuidv4()}.${fileExtension}`,
           values.thumbnail,
         )
         console.log('Thumbnail upload successful:', response.data)
@@ -144,8 +143,8 @@ const page = () => {
 
       await Promise.all(
         // 新しい画像をストレージに保存
-        values.reports.map(async (report, index) => {
-          if (report && report.image_url.substr(0, 4) === 'blob') {
+        reportsData.map(async (report, index) => {
+          if (report && report.file && report.url.substr(0, 4) === 'blob') {
             const fileExtension = report.file.name.split('.').pop()
 
             const response = await supabase.storage
@@ -163,11 +162,11 @@ const page = () => {
             pathOnly.push(response.data.path)
           } else {
             reportImages[index] = {
-              image_path: report.image_path,
-              image_url: report.image_url,
+              image_path: report.path,
+              image_url: report.url,
             }
             console.log(reportImages)
-            pathOnly.push(report.image_path)
+            pathOnly.push(report.path)
           }
         }),
       )
@@ -175,7 +174,6 @@ const page = () => {
       // 要らなくなった画像をストレージから削除
       await Promise.all(
         arrayOldPath.map(oldPath => {
-          console.log(oldPath)
           if (!pathOnly.includes(oldPath)) {
             supabase.storage
               .from('VegEvery-backet')
@@ -217,9 +215,8 @@ const page = () => {
       )
 
       console.log(res.data)
-      // form.reset()
       console.log('画面遷移')
-      // router.push('/recipes')
+      router.push('/items')
     } catch (error) {
       console.error('Error handling form submission:', error)
     }

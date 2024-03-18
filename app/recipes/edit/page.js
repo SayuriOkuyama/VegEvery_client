@@ -1,16 +1,15 @@
 'use client'
 
-import { set, useForm, useFieldArray } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
 import { v4 as uuidv4 } from 'uuid'
-import { Input } from '@/components/ui/input'
 import EditTags from '@/app/recipes/edit/EditTags.js'
 import EditMaterials from '@/app/recipes/edit/EditMaterials.js'
 import EditStep from '@/app/recipes/edit/EditStep.js'
 import EditFormVegeTypes from '@/app/recipes/edit/EditFormVegeTypes.js'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
@@ -25,7 +24,7 @@ const page = () => {
   const path = 'recipes'
 
   const [oldThumbnail, setOldThumbnail] = useState()
-  const [oldStepImages, setOldStepImages] = useState()
+  // const [oldStepImages, setOldStepImages] = useState()
   const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
   const [stepsData, setStepsData] = useState([])
@@ -61,7 +60,7 @@ const page = () => {
           // 画像出力用
           setStepsData(prevState => {
             const newState = prevState
-            newState.push(step.image_url)
+            newState.push({ url: step.image_url, path: step.image_path })
             return newState
           })
           // 比較用
@@ -70,7 +69,7 @@ const page = () => {
       })
       setArrayOldPath(arrayPath)
       // 編集キャンセルに備えて、元の画像を保持しておく
-      setOldStepImages(preOldStepImages)
+      // setOldStepImages(preOldStepImages)
 
       reset({
         title: data.article.title,
@@ -141,18 +140,10 @@ const page = () => {
         thumbnail_url = values.thumbnail_url
       }
 
-      // const max = Math.max(oldStepImages.length, values.steps.length)
       await Promise.all(
         // 新しい画像をストレージに保存
-        // for (let i = 0; i < max; i++) {
-        values.steps.map(async (step, index) => {
-          // if (oldStepImages[i] && step) {
-          if (
-            // oldStepImages[i] &&
-            step &&
-            // oldStepImages[i].url !== step.image_url &&
-            step.image_url.substr(0, 4) === 'blob'
-          ) {
+        stepsData.map(async (step, index) => {
+          if (step && step.file && step.url.substr(0, 4) === 'blob') {
             const fileExtension = step.file.name.split('.').pop()
 
             const response = await supabase.storage
@@ -170,26 +161,18 @@ const page = () => {
             pathOnly.push(response.data.path)
           } else {
             stepImages[index] = {
-              image_path: step.image_path,
-              image_url: step.image_url,
+              image_path: step.path,
+              image_url: step.url,
             }
             console.log(stepImages)
-            pathOnly.push(step.image_path)
+            pathOnly.push(step.path)
           }
         }),
       )
-      // すべて);のアップロードが完了した後に次の処理を行う
-      // console.log({
-      //   values,
-      //   thumbnail_path,
-      //   thumbnail_url,
-      //   stepImages,
-      // }),
 
       // 要らなくなった画像をストレージから削除
       await Promise.all(
         arrayOldPath.map(oldPath => {
-          console.log(oldPath)
           if (!pathOnly.includes(oldPath)) {
             supabase.storage
               .from('VegEvery-backet')
@@ -233,9 +216,8 @@ const page = () => {
       )
 
       console.log(res.data)
-      // form.reset()
       console.log('画面遷移')
-      // router.push('/recipes')
+      router.push('/recipes')
     } catch (error) {
       console.error('Error handling form submission:', error)
     }
@@ -244,7 +226,6 @@ const page = () => {
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
-    // <RecoilRoot>
     <main className="pb-32">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <EditFormVegeTypes register={register} control={control} />
@@ -323,9 +304,7 @@ const page = () => {
           </Button>
         </div>
       </form>
-      {/* </Form> */}
     </main>
-    // </RecoilRoot>
   )
 }
 

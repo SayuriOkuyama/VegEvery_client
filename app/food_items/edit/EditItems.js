@@ -15,8 +15,8 @@ const Items = ({ register, control }) => {
       <div className="space-y-2">
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
-          <>
-            <hr key={`${field.id}+${index}`} className="" />
+          <div key={field.id}>
+            <hr className="" />
             <div className="space-y-4 py-2" key={field.id}>
               <label className="block">
                 アイテム名
@@ -58,7 +58,7 @@ const Items = ({ register, control }) => {
                 </button>
               )}
             </div>
-          </>
+          </div>
         ))}
         <hr className="" />
       </div>

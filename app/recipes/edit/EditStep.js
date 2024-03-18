@@ -13,25 +13,6 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
     name: 'steps',
     control,
   })
-  // フィールドを削除する関数
-  const handleRemoveField = indexToRemove => {
-    console.log(indexToRemove)
-    // フィールドを削除
-    remove(indexToRemove)
-
-    // 削除されたフィールドより大きなインデックスを持つフィールドの order 値を更新
-    fields.forEach((field, index) => {
-      if (index >= indexToRemove) {
-        setValue(`steps.${index}.order`, index + 1)
-      }
-    })
-  }
-
-  // useEffectフック内でhandleDrop関数を参照するよう修正
-  useEffect(() => {
-    console.log(fields)
-    console.log(stepsData)
-  }, [fields, stepsData])
 
   console.log(fields)
   console.log(stepsData)
@@ -41,7 +22,7 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
       <div className="flex">
         <h3>作り方</h3>
       </div>
-      <div className="">
+      <div>
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => {
           return (
@@ -54,31 +35,23 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                 {...register(`steps.${index}.order`)}
               />
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepsData[index] ? (
+                {stepsData[index].url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                       type="button"
                       onClick={e => {
                         setStepsData(prevState => {
-                          console.log(index)
                           const newState = [...prevState]
-                          newState.splice(index, 1)
-                          console.log(newState)
+                          newState[index] = ''
                           return newState
-                        })
-                        setValue(`steps.${index}`, {
-                          image: '',
-                          image_path: '',
-                          image_url: '',
                         })
                       }}>
                       ✕
                     </button>
-                    {stepsData[index] && (
+                    {stepsData[index].url && (
                       <img
-                        src={stepsData[index]}
-                        name={field.image_url}
+                        src={stepsData[index].url}
                         className="object-cover w-full h-full block"
                         alt="Uploaded Image"
                       />
@@ -90,27 +63,18 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                     onDrop={acceptedFiles => {
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      console.log(field)
-                      console.log(field.text)
+                      setStepsData(prevState => {
+                        const newState = [...prevState]
+                        newState[index] = { url: createdUrl, file: file }
+                        return newState
+                      })
+                      // ↓これ入れたらテキスト消える
                       // setValue(`steps.${index}`, {
                       //   order: field.order,
-                      //   file: file,
+                      //   file,
                       //   image_url: createdUrl,
                       //   text: field.text,
                       // })
-                      console.log(
-                        `setValue called for steps[${index}].image_url with value:`,
-                        createdUrl,
-                      )
-                      setStepsData(prevState => {
-                        console.log(prevState)
-                        const newState = [...prevState]
-                        console.log(newState)
-                        newState[index] = createdUrl
-                        console.log(newState)
-                        console.log(newState === prevState)
-                        return newState
-                      })
                     }}>
                     {({ getRootProps, getInputProps }) => (
                       <>
@@ -152,98 +116,9 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                         if (i !== index) {
                           newData.push(prevState[i])
                         }
-                        console.log(newData)
                       }
                       return newData
                     })
-
-                    console.log(fields)
-                    console.log(stepsData)
-
-                    // for (let i = 0; i < fields.length; i++) {
-                    //   if (i !== fields.length - 1) {
-                    //     if (i >= index) {
-                    //       console.log(`index.${index}`)
-                    //       console.log(`steps.${i}`)
-                    //       console.log(fields[i + 1])
-                    //       setValue(`steps.${i}`, {
-                    //         order: i + 1,
-                    //         image_url: fields[i + 1].image_url,
-                    //         text: fields[i + 1].text,
-                    //       })
-                    //       // setStepsData(prevState => {
-                    //       //   return {
-
-                    //       //   }
-                    //       // })
-                    //     }
-                    //   }
-                    // }
-                    // fields.forEach((field, num) => {
-                    //   if (num >= index) {
-                    //     console.log(num)
-                    //     console.log(index)
-                    //     console.log(field)
-                    //     // setValue(`steps.${num}.order`, num + 1)
-                    //     setValue(`steps.${num}`, {
-                    //       order: num + 1,
-                    //       image_url: '',
-                    //       text: '',
-                    //     })
-                    //     setStepsData(prevState => {
-                    //       return {
-                    //         ...prevState,
-                    //         [num]: {
-                    //           order: num + 1,
-                    //           image_url:
-                    //             typeof stepsData[num + 1].image_url !=
-                    //             'undefined'
-                    //               ? stepsData[num + 1].image_url
-                    //               : '',
-                    //           text:
-                    //             typeof stepsData[num + 1].text != 'undefined'
-                    //               ? stepsData[num + 1].text
-                    //               : '',
-                    //         },
-                    //       }
-                    //     })
-                    //   }
-                    // })
-                    // 削除されたフィールドより大きなインデックスを持つフィールドの order 値を更新
-                    // fields.forEach((field, fieldIndex) => {
-                    //   console.log(field)
-                    //   console.log(fieldIndex > index)
-                    //   if (fieldIndex >= index) {
-                    //     // setValue(`steps.${index}.order`, index + 1)
-                    //     setValue(`steps.${index}`, {
-                    //       order: field.order + 1,
-                    //       image_url:
-                    //         typeof stepsData[field.order + 1] != 'undefined'
-                    //           ? stepsData[field.order + 1].image_url
-                    //           : '',
-                    //       text:
-                    //         typeof stepsData[index + 1] != 'undefined'
-                    //           ? stepsData[index + 1].text
-                    //           : '',
-                    //     })
-                    //     setStepsData(prevState => {
-                    //       return {
-                    //         ...prevState,
-                    //         [index]: {
-                    //           order: field.order + 1,
-                    //           image_url:
-                    //             typeof stepsData[index + 1] != 'undefined'
-                    //               ? stepsData[index + 1].image_url
-                    //               : '',
-                    //           text:
-                    //             typeof stepsData[index + 1] != 'undefined'
-                    //               ? stepsData[index + 1].text
-                    //               : '',
-                    //         },
-                    //       }
-                    //     })
-                    //   }
-                    // })
                   }}>
                   ✕
                 </button>

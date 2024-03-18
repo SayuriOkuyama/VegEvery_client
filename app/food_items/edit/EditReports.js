@@ -22,11 +22,11 @@ const Reports = ({
       <div className="flex">
         <h3>レポート</h3>
       </div>
-      <div className="">
+      <div>
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
           <div key={field.id} className="my-4">
-            <hr className="" />
+            <hr />
             <h4>{index + 1}.</h4>
             <input
               type="text"
@@ -35,35 +35,23 @@ const Reports = ({
               {...register(`reports.${index}.order`)}
             />
             <div className="bg-orange h-52 w-full mx-auto">
-              {reportsData[field.order] &&
-              reportsData[field.order].image_url ? (
+              {reportsData[index].url ? (
                 <div className="image-preview relative flex h-52 mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
                     onClick={() => {
                       setReportsData(prevState => {
-                        return {
-                          ...prevState,
-                          [field.order]: {
-                            ...prevState[field.order],
-                            order: field.order,
-                            image_url: '',
-                            text: field.text,
-                          },
-                        }
-                      })
-                      setValue(`reports.${index}`, {
-                        order: field.order,
-                        image_url: '',
-                        text: field.text,
+                        const newState = [...prevState]
+                        newState[index] = ''
+                        return newState
                       })
                     }}>
                     ✕
                   </button>
-                  {reportsData[field.order].image_url && (
+                  {reportsData[index].url && (
                     <img
-                      src={reportsData[field.order].image_url}
+                      src={reportsData[index].url}
                       className="object-cover w-full h-full block"
                       alt="Uploaded Image"
                     />
@@ -75,21 +63,11 @@ const Reports = ({
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
                     const createdUrl = URL.createObjectURL(file)
-                    setValue(`reports.${index}`, {
-                      order: field.order,
-                      file,
-                      image_url: createdUrl,
-                      text: field.text,
+                    setReportsData(prevState => {
+                      const newState = [...prevState]
+                      newState[index] = { url: createdUrl, file: file }
+                      return newState
                     })
-                    setReportsData(prevState => ({
-                      ...prevState,
-                      [field.order]: {
-                        order: field.order,
-                        file,
-                        image_url: createdUrl,
-                        text: field.text,
-                      },
-                    }))
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>
@@ -124,15 +102,15 @@ const Reports = ({
                 type="button"
                 onClick={() => {
                   remove(index)
+
                   setReportsData(prevState => {
-                    return {
-                      ...prevState,
-                      [field.order]: {
-                        order: '',
-                        image_url: '',
-                        text: '',
-                      },
+                    const newData = []
+                    for (let i = 0; i < fields.length; i++) {
+                      if (i !== index) {
+                        newData.push(prevState[i])
+                      }
                     }
+                    return newData
                   })
                 }}>
                 ✕
@@ -148,6 +126,9 @@ const Reports = ({
           type="button"
           onClick={() => {
             let nextOrder = fields.length + 1
+            setReportsData(prevState => {
+              return [...prevState, '']
+            })
             return append({ order: nextOrder, image_url: '', text: '' })
           }}>
           レポートを追加
