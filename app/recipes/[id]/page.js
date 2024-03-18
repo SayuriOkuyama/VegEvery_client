@@ -102,7 +102,9 @@ const page = async ({ params }) => {
           <h3>{`材料（${data.article.servings}人前）`}</h3>
           {materials.map(material => {
             return (
-              <li key={material.id} className="flex justify-between">
+              <li
+                key={material.id}
+                className="flex justify-between border-b-slate-400 border-b">
                 <div>・{material.name}</div>
                 <div>
                   <span>{material.quantity}</span>
@@ -118,6 +120,7 @@ const page = async ({ params }) => {
         {recipe_steps.map(recipe_step => {
           return (
             <div key={recipe_step.id} className="pb-4">
+              <hr className="" />
               <p>{recipe_step.order}.</p>
               {recipe_step.image_url && (
                 <Image

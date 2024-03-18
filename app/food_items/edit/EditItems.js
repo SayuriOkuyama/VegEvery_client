@@ -15,8 +15,8 @@ const Items = ({ register, control }) => {
       <div className="space-y-2">
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
-          <div key={field.id}>
-            <hr className="" />
+          <>
+            <hr key={`${field.id}+${index}`} className="" />
             <div className="space-y-4 py-2" key={field.id}>
               <label className="block">
                 アイテム名
@@ -35,7 +35,7 @@ const Items = ({ register, control }) => {
                   type="text"
                   placeholder="〇〇ネットショップ"
                   // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
-                  {...register(`items.${index}.place`)}
+                  {...register(`items.${index}.where_to_buy`)}
                 />
               </label>
               <label className="block py-1">
@@ -58,7 +58,7 @@ const Items = ({ register, control }) => {
                 </button>
               )}
             </div>
-          </div>
+          </>
         ))}
         <hr className="" />
       </div>

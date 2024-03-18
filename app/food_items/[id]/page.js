@@ -58,8 +58,8 @@ const page = async ({ params }) => {
         src={data.article.thumbnail_url}
         width={400}
         height={300}
-        alt="レシピ画像1"
-        className="object-cover m-auto"
+        alt="フードアイテム画像"
+        className="object-cover m-auto h-72"
       />
       <h2 className="mx-2 mt-2">{data.article.title}</h2>
       <div className="flex flex-row flex-wrap container space-x-1">
@@ -125,6 +125,7 @@ const page = async ({ params }) => {
           console.log(report)
           return (
             <div key={report.id} className="pb-4">
+              <hr className="" />
               <p>{report.order}.</p>
               {report.image_url && (
                 <Image
@@ -132,7 +133,7 @@ const page = async ({ params }) => {
                   width={400}
                   height={300}
                   alt="レシピ画像1"
-                  className="object-cover m-auto mb-4 mt-2"
+                  className="object-cover m-auto mb-4 mt-2 h-60"
                 />
               )}
               {report.text && <div>{report.text}</div>}
@@ -143,7 +144,13 @@ const page = async ({ params }) => {
       <div className="bg-orange py-8">
         <div className="container">
           <h3 className="mb-4">コメント</h3>
-          <hr className="accent-color-border my-4" />
+          {(commentsToItem && commentsToItem.length) !== 0 ? (
+            <hr className="accent-color-border my-4" />
+          ) : (
+            <div className="text-center opacity-70 text-sm">
+              まだコメントがありません
+            </div>
+          )}
           {commentsToItem &&
             commentsToItem.map(commentToItem => {
               return (
@@ -166,7 +173,6 @@ const page = async ({ params }) => {
                 </div>
               )
             })}
-
           <div className="flex justify-center mt-8 mb-4">
             <Button className="mx-auto bg-button border-button-color">
               コメントする

@@ -1,23 +1,21 @@
 'use client'
-import { useForm, useFieldArray } from 'react-hook-form'
-import { createRef, useEffect, useRef, useState } from 'react'
+import { useFieldArray } from 'react-hook-form'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
-import { useDropzone } from 'react-dropzone'
 import Dropzone from 'react-dropzone'
 
 const EditStep = ({
   register,
   control,
   setValue,
-  stepsData,
-  setStepsData,
+  reportsData,
+  setReportsData,
   reset,
 }) => {
   // console.log(stepsData)
 
   const { fields, append, remove } = useFieldArray({
-    name: 'steps',
+    name: 'reports',
     control,
   })
 
@@ -26,10 +24,9 @@ const EditStep = ({
   return (
     <div className="container pb-8">
       <div className="flex">
-        <h3>作り方</h3>
+        <h3>レポート</h3>
       </div>
       <div className="">
-        {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => {
           return (
             <div key={field.id} className="my-4">
@@ -38,10 +35,11 @@ const EditStep = ({
                 type="text"
                 value={index + 1}
                 hidden
-                {...register(`steps.${index}.order`)}
+                {...register(`reports.${index}.order`)}
               />
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepsData[field.order] && stepsData[field.order].image_url ? (
+                {reportsData[field.order] &&
+                reportsData[field.order].image_url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
@@ -58,7 +56,7 @@ const EditStep = ({
                             },
                           }
                         })
-                        setValue(`steps.${index}`, {
+                        setValue(`reports.${index}`, {
                           image: '',
                           image_path: '',
                           image_url: '',
@@ -66,9 +64,9 @@ const EditStep = ({
                       }}>
                       ✕
                     </button>
-                    {stepsData[field.order].image_url && (
+                    {reportsData[field.order].image_url && (
                       <img
-                        src={stepsData[field.order].image_url}
+                        src={reportsData[field.order].image_url}
                         name={field.image_url}
                         className="object-cover w-full h-full block"
                         alt="Uploaded Image"
@@ -81,13 +79,13 @@ const EditStep = ({
                     onDrop={acceptedFiles => {
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      setValue(`steps.${index}`, {
+                      setValue(`reports.${index}`, {
                         order: field.order,
                         file,
                         image_url: createdUrl,
                         text: field.text,
                       })
-                      setStepsData(prevState => ({
+                      setReportsData(prevState => ({
                         ...prevState,
                         [field.order]: {
                           order: field.order,
@@ -121,7 +119,7 @@ const EditStep = ({
                   rows="10"
                   placeholder="手順を入力"
                   defaultValue={field.text}
-                  {...register(`steps.${index}.text`)}></textarea>
+                  {...register(`reports.${index}.text`)}></textarea>
               </div>
               {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
               {index !== 0 && (
@@ -130,7 +128,7 @@ const EditStep = ({
                   type="button"
                   onClick={() => {
                     remove(index)
-                    setStepsData(prevState => {
+                    setReportsData(prevState => {
                       return {
                         ...prevState,
                         [field.order]: {
@@ -155,7 +153,7 @@ const EditStep = ({
             let nextOrder = fields.length + 1
             return append({ order: nextOrder, image_url: '', text: '' })
           }}>
-          手順を追加
+          レポートを追加
         </button>
       </div>
     </div>

@@ -9,7 +9,7 @@ import Tags from './Tags'
 import Reports from './Reports'
 import Items from './Items'
 import FormVegeType from './FormVegeType.js'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
@@ -17,18 +17,16 @@ import { useRouter } from 'next/navigation.js'
 
 const page = () => {
   const [image, setImage] = useState(null)
-  const [stepImage, setStepImage] = useState([])
+  const [reportsData, setReportsData] = useState([])
   const router = useRouter()
 
   const { register, setValue, handleSubmit, control, getValues } = useForm({
     defaultValues: {
       title: '',
       tags: [{ tag: '' }],
-      items: [{ material: '', quantity: '', unit: '' }],
-      time: '',
+      items: [{ name: '', place: '', price: '' }],
       thumbnail: '',
-      servings: '',
-      steps: [{ text: '' }],
+      reports: [{ order: 1, image_url: '', text: '' }],
     },
   })
   const form = useForm()
@@ -44,69 +42,83 @@ const page = () => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log(values)
 
     const fileExtension = values.thumbnail.name.split('.').pop()
-    let thumbnailUrl = ''
-    const stepImageUrls = []
+    let thumbnail_path
+    let thumbnail_url
+    const reportImages = []
 
-    supabase.storage
-      .from('VegEvery-backet')
-      .upload(
-        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
-        values.thumbnail,
-      )
-      .then(response => {
-        console.log('Insert successful:', response.data)
-        const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-        thumbnailUrl = `${supabase_url}/object/public/${response.data.fullPath}`
-
-        // すべてのステップ画像のアップロードが完了したかどうかを追跡するPromiseの配列
-        const uploadPromises = values.stepImages.map(image =>
-          supabase.storage
-            .from('VegEvery-backet')
-            .upload(`recipes/step_image/${uuidv4()}.${fileExtension}`, image),
+    try {
+      const response = await supabase.storage
+        .from('VegEvery-backet')
+        .upload(
+          `items/thumbnail/${uuidv4()}.${fileExtension}`,
+          values.thumbnail,
         )
-        // すべてのアップロードが完了した後に次の処理を行う
-        Promise.all(uploadPromises)
-          .then(responses => {
-            console.log('All images uploaded successfully')
 
-            // すべてのステップ画像のURLを配列に追加
-            responses.forEach(response => {
-              const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
-              stepImageUrls.push(stepImageUrl)
-            })
+      console.log('Insert successful:', response.data)
+      const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
+      thumbnail_path = response.data.path
+      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
-            console.log({
-              values,
-              thumbnailUrl,
-              stepImageUrls,
-            })
-            axios
-              .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
-                values,
-                thumbnailUrl,
-                stepImageUrls,
-              })
-              .then(res => {
-                console.log(res.data)
-                form.reset()
-                console.log('画面遷移')
-                router.push('/recipes')
-              })
-              .catch(error => {
-                console.error('Error sending data to backend:', error)
-              })
-          })
-          .catch(error => {
-            console.error('Error uploading step images:', error)
-          })
+      await Promise.all(
+        values.reports.map(async (report, index) => {
+          if (report.image_url) {
+            console.log('画像あり')
+            const fileExtension = report.file.name.split('.').pop()
+
+            const response = await supabase.storage
+              .from('VegEvery-backet')
+              .upload(
+                `items/report_image/${uuidv4()}.${fileExtension}`,
+                report.file,
+              )
+            console.log('Report image upload successful:', response.data)
+            reportImages[index] = {
+              image_path: response.data.path,
+              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
+            }
+          }
+        }),
+      )
+      console.log({
+        values,
+        thumbnail_path,
+        thumbnail_url,
+        reportImages,
       })
-      .catch(error => {
-        console.error('Error uploading thumbnail:', error)
-      })
+
+      await axios
+        .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items`, {
+          values: {
+            title: values.title,
+            thumbnail: {
+              thumbnail_path: thumbnail_path,
+              thumbnail_url: thumbnail_url,
+            },
+            tags: values.tags,
+            vegeTags: values.vege_type,
+            items: values.items,
+            reports: {
+              reports_order_text: values.reports,
+              reportImages: reportImages,
+            },
+          },
+        })
+        .then(res => {
+          console.log(res.data)
+          // form.reset()
+          console.log('画面遷移')
+          // router.push('/food_items')
+        })
+        .catch(error => {
+          console.error('Error sending data to backend:', error)
+        })
+    } catch (err) {
+      console.error('Error handling form submission:', err)
+    }
   }
 
   return (
@@ -159,8 +171,8 @@ const page = () => {
         <Reports
           register={register}
           control={control}
-          stepImage={stepImage}
-          setStepImage={setStepImage}
+          reportsData={reportsData}
+          setReportsData={setReportsData}
           setValue={setValue}
         />
         <hr className="mx-4" />
