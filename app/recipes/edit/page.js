@@ -57,14 +57,11 @@ const page = () => {
             text: step.text,
           })
           // 画像出力用
-          setStepsData(prevState => ({
-            ...prevState,
-            [index]: {
-              order: step.order,
-              image_url: step.image_url,
-              text: step.text,
-            },
-          }))
+          setStepsData(prevState => {
+            const newState = prevState
+            newState.push(step.image_url)
+            return newState
+          })
           // 比較用
           arrayPath.push(step.image_path)
         }

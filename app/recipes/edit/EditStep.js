@@ -48,7 +48,7 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                 {...register(`steps.${index}.order`)}
               />
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepsData[field.order] && stepsData[field.order].image_url ? (
+                {stepsData[index] ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
@@ -56,20 +56,10 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                       onClick={e => {
                         setStepsData(prevState => {
                           console.log(index)
-                          console.log({
-                            order: field.order,
-                            image_url: '',
-                            text: field.text,
-                          })
-                          return {
-                            ...prevState,
-                            [field.order]: {
-                              ...prevState[field.order],
-                              order: field.order,
-                              image_url: '',
-                              text: field.text,
-                            },
-                          }
+                          const newState = prevState
+                          newState.splice(index, 1)
+                          console.log(newState)
+                          return newState
                         })
                         setValue(`steps.${index}`, {
                           image: '',
@@ -79,9 +69,9 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                       }}>
                       ✕
                     </button>
-                    {stepsData[field.order].image_url && (
+                    {stepsData[index] && (
                       <img
-                        src={stepsData[field.order].image_url}
+                        src={stepsData[index]}
                         name={field.image_url}
                         className="object-cover w-full h-full block"
                         alt="Uploaded Image"
@@ -92,52 +82,26 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                   <Dropzone
                     className="h-52"
                     onDrop={acceptedFiles => {
-                      console.log('ドロップゾーン')
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      setValue(
-                        `steps.${index}`,
-                        {
-                          order: field.order,
-                          file,
-                          image_url: createdUrl,
-                          text: field.text,
-                        },
-                        // { shouldDirty: true },
-                      )
+                      setValue(`steps.${index}`, {
+                        order: field.order,
+                        file,
+                        image_url: createdUrl,
+                        text: field.text,
+                      })
                       console.log(
                         `setValue called for steps[${index}].image_url with value:`,
                         createdUrl,
                       )
                       setStepsData(prevState => {
-                        console.log(index)
-                        console.log({
-                          order: field.order,
-                          file,
-                          image_url: createdUrl,
-                          text: field.text,
-                        })
-                        return {
-                          ...prevState,
-                          [field.order]: {
-                            // ...prevState[field.order],
-                            order: field.order,
-                            file,
-                            image_url: createdUrl,
-                            text: field.text,
-                          },
-                        }
-                      })
-                      console.log(
-                        `setStepsData called for steps[${index}].image_url with value:`,
-                        createdUrl,
-                      )
-                      console.log(index)
-                      console.log({
-                        order: field.order,
-                        file,
-                        image_url: createdUrl,
-                        text: field.text,
+                        console.log(prevState)
+                        const newState = [...prevState]
+                        console.log(newState)
+                        newState[index] = createdUrl
+                        console.log(newState)
+                        console.log(newState === prevState)
+                        return newState
                       })
                     }}>
                     {({ getRootProps, getInputProps }) => (
@@ -173,52 +137,34 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                   type="button"
                   onClick={() => {
                     remove(index)
+
                     setStepsData(prevState => {
-                      return {
-                        ...prevState,
-                        [index]: {
-                          order: '',
-                          image_url: '',
-                          text: '',
-                        },
+                      const newData = []
+                      for (let i = 0; i < fields.length; i++) {
+                        if (i !== index) {
+                          newData.push(prevState[i])
+                        }
+                        console.log(newData)
                       }
+                      return newData
                     })
+
                     console.log(fields)
                     console.log(stepsData)
 
                     for (let i = 0; i < fields.length; i++) {
-                      console.log('for内')
-
                       if (i !== fields.length - 1) {
-                        console.log('not-1内')
-
                         if (i >= index) {
-                          console.log(i)
-                          console.log(index)
-                          console.log(field)
-
                           setValue(`steps.${i}`, {
                             order: i + 1,
-                            image_url: '',
-                            text: '',
+                            image_url: stepsData[i].image_url,
+                            text: stepsData[i].text,
                           })
-                          setStepsData(prevState => {
-                            return {
-                              ...prevState,
-                              [i]: {
-                                order: i + 1,
-                                image_url:
-                                  typeof stepsData[i + 1].image_url !=
-                                  'undefined'
-                                    ? stepsData[i + 1].image_url
-                                    : '',
-                                text:
-                                  typeof stepsData[i + 1].text != 'undefined'
-                                    ? stepsData[i + 1].text
-                                    : '',
-                              },
-                            }
-                          })
+                          // setStepsData(prevState => {
+                          //   return {
+
+                          //   }
+                          // })
                         }
                       }
                     }
@@ -301,14 +247,7 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
           onClick={() => {
             let nextOrder = fields.length + 1
             setStepsData(prevState => {
-              return {
-                ...prevState,
-                [fields.length]: {
-                  order: nextOrder,
-                  image_url: '',
-                  text: '',
-                },
-              }
+              return [...prevState, '']
             })
             return append({ order: nextOrder, image_url: '', text: '' })
           }}>
