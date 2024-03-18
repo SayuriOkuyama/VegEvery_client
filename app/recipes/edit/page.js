@@ -30,7 +30,9 @@ const page = () => {
   const [image, setImage] = useState(null)
   const [stepsData, setStepsData] = useState([])
   const { register, setValue, handleSubmit, control, getValues, reset } =
-    useForm()
+    useForm({
+      mode: 'onChange', // リアルタイムで入力値を取得する
+    })
   const form = useForm()
 
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
@@ -51,20 +53,17 @@ const page = () => {
           preOldStepImages.push({ path: step.image_path, url: step.image_url })
           data.article.recipe_steps[index].order = index + 1
 
-          setValue(`steps.${index + 1}`, {
+          setValue(`steps.${index}`, {
             order: step.order,
             image_url: step.image_url,
             text: step.text,
           })
           // 画像出力用
-          setStepsData(prevState => ({
-            ...prevState,
-            [index + 1]: {
-              order: step.order,
-              image_url: step.image_url,
-              text: step.text,
-            },
-          }))
+          setStepsData(prevState => {
+            const newState = prevState
+            newState.push(step.image_url)
+            return newState
+          })
           // 比較用
           arrayPath.push(step.image_path)
         }

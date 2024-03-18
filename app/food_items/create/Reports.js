@@ -54,9 +54,9 @@ const Reports = ({
                         }
                       })
                       setValue(`reports.${index}`, {
-                        image: '',
-                        image_path: '',
+                        order: field.order,
                         image_url: '',
+                        text: field.text,
                       })
                     }}>
                     ✕
@@ -128,9 +128,9 @@ const Reports = ({
                     return {
                       ...prevState,
                       [field.order]: {
-                        order: field.order,
+                        order: '',
                         image_url: '',
-                        text: field.text,
+                        text: '',
                       },
                     }
                   })
@@ -148,6 +148,17 @@ const Reports = ({
           type="button"
           onClick={() => {
             let nextOrder = fields.length + 1
+
+            setReportsData(prevState => {
+              return {
+                ...prevState,
+                [fields.length]: {
+                  order: nextOrder,
+                  image_url: '',
+                  text: '',
+                },
+              }
+            })
             return append({ order: nextOrder, image_url: '', text: '' })
           }}>
           レポートを追加

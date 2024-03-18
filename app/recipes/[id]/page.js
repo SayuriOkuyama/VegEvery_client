@@ -46,7 +46,7 @@ const page = async ({ params }) => {
 
   return (
     <main className="pb-20">
-      {user.id === 2 && (
+      {user.id === 1 && (
         <Link
           href={`/recipes/edit?id=${data.article.id}`}
           className="fixed top-3 right-3">
