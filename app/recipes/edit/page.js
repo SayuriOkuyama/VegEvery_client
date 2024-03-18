@@ -30,7 +30,9 @@ const page = () => {
   const [image, setImage] = useState(null)
   const [stepsData, setStepsData] = useState([])
   const { register, setValue, handleSubmit, control, getValues, reset } =
-    useForm()
+    useForm({
+      mode: 'onChange', // リアルタイムで入力値を取得する
+    })
   const form = useForm()
 
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)

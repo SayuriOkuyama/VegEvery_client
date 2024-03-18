@@ -27,6 +27,12 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
     })
   }
 
+  // useEffectフック内でhandleDrop関数を参照するよう修正
+  useEffect(() => {
+    console.log(fields)
+    console.log(stepsData)
+  }, [fields, stepsData])
+
   console.log(fields)
   console.log(stepsData)
 
@@ -56,7 +62,7 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                       onClick={e => {
                         setStepsData(prevState => {
                           console.log(index)
-                          const newState = prevState
+                          const newState = [...prevState]
                           newState.splice(index, 1)
                           console.log(newState)
                           return newState
@@ -84,12 +90,14 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                     onDrop={acceptedFiles => {
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      setValue(`steps.${index}`, {
-                        order: field.order,
-                        file,
-                        image_url: createdUrl,
-                        text: field.text,
-                      })
+                      console.log(field)
+                      console.log(field.text)
+                      // setValue(`steps.${index}`, {
+                      //   order: field.order,
+                      //   file: file,
+                      //   image_url: createdUrl,
+                      //   text: field.text,
+                      // })
                       console.log(
                         `setValue called for steps[${index}].image_url with value:`,
                         createdUrl,
@@ -152,22 +160,25 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                     console.log(fields)
                     console.log(stepsData)
 
-                    for (let i = 0; i < fields.length; i++) {
-                      if (i !== fields.length - 1) {
-                        if (i >= index) {
-                          setValue(`steps.${i}`, {
-                            order: i + 1,
-                            image_url: stepsData[i].image_url,
-                            text: stepsData[i].text,
-                          })
-                          // setStepsData(prevState => {
-                          //   return {
+                    // for (let i = 0; i < fields.length; i++) {
+                    //   if (i !== fields.length - 1) {
+                    //     if (i >= index) {
+                    //       console.log(`index.${index}`)
+                    //       console.log(`steps.${i}`)
+                    //       console.log(fields[i + 1])
+                    //       setValue(`steps.${i}`, {
+                    //         order: i + 1,
+                    //         image_url: fields[i + 1].image_url,
+                    //         text: fields[i + 1].text,
+                    //       })
+                    //       // setStepsData(prevState => {
+                    //       //   return {
 
-                          //   }
-                          // })
-                        }
-                      }
-                    }
+                    //       //   }
+                    //       // })
+                    //     }
+                    //   }
+                    // }
                     // fields.forEach((field, num) => {
                     //   if (num >= index) {
                     //     console.log(num)
