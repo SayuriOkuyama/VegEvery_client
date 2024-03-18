@@ -38,7 +38,7 @@ async function fetchItems() {
 export default async function Home() {
   const articlesOfRecipes = await fetchRecipes()
   const articlesOfItems = await fetchItems()
-  console.log(articlesOfRecipes)
+  console.log(articlesOfItems)
 
   return (
     <main className="pb-24">
@@ -90,6 +90,7 @@ export default async function Home() {
               return (
                 <ArticleCard
                   key={articlesOfItem.id}
+                  tagSize="small"
                   id={articlesOfItem.id}
                   title={articlesOfItem.title}
                   thumbnail={articlesOfItem.thumbnail_url}

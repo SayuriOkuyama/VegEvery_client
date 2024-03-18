@@ -1,16 +1,15 @@
 'use client'
 
-import { set, useForm, useFieldArray } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
 import { v4 as uuidv4 } from 'uuid'
-import { Input } from '@/components/ui/input'
-import EditTags from '@/app/recipes/edit/EditTags.js'
-import EditMaterials from '@/app/recipes/edit/EditMaterials.js'
-import EditStep from '@/app/recipes/edit/EditStep.js'
+import EditTags from '@/app/food_items/edit/EditTags.js'
+import EditItems from '@/app/food_items/edit/EditItems.js'
+import EditReports from '@/app/food_items/edit/EditReports.js'
 import EditFormVegeTypes from '@/app/recipes/edit/EditFormVegeTypes.js'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
@@ -22,13 +21,13 @@ const page = () => {
   const router = useRouter()
   const query = useSearchParams()
   const articleId = query.get('id')
-  const path = 'recipes'
+  const path = 'food_items'
 
   const [oldThumbnail, setOldThumbnail] = useState()
-  const [oldStepImages, setOldStepImages] = useState()
+  // const [oldStepImages, setOldStepImages] = useState()
   const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
-  const [stepsData, setStepsData] = useState([])
+  const [reportsData, setReportsData] = useState([])
   const { register, setValue, handleSubmit, control, getValues, reset } =
     useForm()
   const form = useForm()
@@ -45,43 +44,44 @@ const page = () => {
         url: data.article.thumbnail_url,
       })
       const arrayPath = []
-      const preOldStepImages = []
-      data.article.recipe_steps.forEach((step, index) => {
-        if (step) {
-          preOldStepImages.push({ path: step.image_path, url: step.image_url })
-          data.article.recipe_steps[index].order = index + 1
+      const preOldReportImages = []
+      data.article.reports.forEach((report, index) => {
+        if (report) {
+          preOldReportImages.push({
+            path: report.image_path,
+            url: report.image_url,
+          })
+          data.article.reports[index].order = index + 1
 
-          setValue(`steps.${index + 1}`, {
-            order: step.order,
-            image_url: step.image_url,
-            text: step.text,
+          setValue(`reports.${index + 1}`, {
+            order: report.order,
+            image_url: report.image_url,
+            text: report.text,
           })
           // 画像出力用
-          setStepsData(prevState => ({
+          setReportsData(prevState => ({
             ...prevState,
             [index + 1]: {
-              order: step.order,
-              image_url: step.image_url,
-              text: step.text,
+              order: report.order,
+              image_url: report.image_url,
+              text: report.text,
             },
           }))
           // 比較用
-          arrayPath.push(step.image_path)
+          arrayPath.push(report.image_path)
         }
       })
       setArrayOldPath(arrayPath)
       // 編集キャンセルに備えて、元の画像を保持しておく
-      setOldStepImages(preOldStepImages)
+      // setOldStepImages(preOldStepImages)
 
       reset({
         title: data.article.title,
         thumbnail_path: data.article.thumbnail_path,
         thumbnail_url: data.article.thumbnail_url,
         tags: data.article.tags,
-        materials: data.article.materials,
-        steps: data.article.recipe_steps,
-        servings: data.article.servings,
-        time: data.article.cooking_time,
+        items: data.article.items,
+        reports: data.article.reports,
         vegeTags: {
           vegan: data.article.vegan,
           oriental_vegetarian: data.article.oriental_vegetarian,
@@ -116,7 +116,7 @@ const page = () => {
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
-    const stepImages = []
+    const reportImages = []
     const pathOnly = []
     try {
       // サムネイルに変更があった場合のみ、ストレージにアップロード
@@ -142,50 +142,35 @@ const page = () => {
         thumbnail_url = values.thumbnail_url
       }
 
-      // const max = Math.max(oldStepImages.length, values.steps.length)
       await Promise.all(
         // 新しい画像をストレージに保存
-        // for (let i = 0; i < max; i++) {
-        values.steps.map(async (step, index) => {
-          // if (oldStepImages[i] && step) {
-          if (
-            // oldStepImages[i] &&
-            step &&
-            // oldStepImages[i].url !== step.image_url &&
-            step.image_url.substr(0, 4) === 'blob'
-          ) {
-            const fileExtension = step.file.name.split('.').pop()
+        values.reports.map(async (report, index) => {
+          if (report && report.image_url.substr(0, 4) === 'blob') {
+            const fileExtension = report.file.name.split('.').pop()
 
             const response = await supabase.storage
               .from('VegEvery-backet')
               .upload(
-                `recipes/step_image/${uuidv4()}.${fileExtension}`,
-                step.file,
+                `items/report_image/${uuidv4()}.${fileExtension}`,
+                report.file,
               )
-            console.log('Step image upload successful:', response.data)
+            console.log('Report image upload successful:', response.data)
 
-            stepImages[index] = {
+            reportImages[index] = {
               image_path: response.data.path,
               image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
             }
             pathOnly.push(response.data.path)
           } else {
-            stepImages[index] = {
-              image_path: step.image_path,
-              image_url: step.image_url,
+            reportImages[index] = {
+              image_path: report.image_path,
+              image_url: report.image_url,
             }
-            console.log(stepImages)
-            pathOnly.push(step.image_path)
+            console.log(reportImages)
+            pathOnly.push(report.image_path)
           }
         }),
       )
-      // すべて);のアップロードが完了した後に次の処理を行う
-      // console.log({
-      //   values,
-      //   thumbnail_path,
-      //   thumbnail_url,
-      //   stepImages,
-      // }),
 
       // 要らなくなった画像をストレージから削除
       await Promise.all(
@@ -196,10 +181,10 @@ const page = () => {
               .from('VegEvery-backet')
               .remove(oldPath)
               .then(response => {
-                console.log('Delete step_image successful:', response.data)
+                console.log('Delete report_image successful:', response.data)
               })
               .catch(error => {
-                console.error('Error delete step_image:', error)
+                console.error('Error delete report_image:', error)
               })
           }
         }),
@@ -208,11 +193,11 @@ const page = () => {
         values,
         thumbnail_path,
         thumbnail_url,
-        stepImages,
+        reportImages,
       })
 
       const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
         {
           values: {
             title: values.title,
@@ -220,14 +205,12 @@ const page = () => {
               thumbnail_path: thumbnail_path,
               thumbnail_url: thumbnail_url,
             },
-            cooking_time: values.time,
-            servings: values.servings,
             tags: values.tags,
             vegeTags: values.vegeTags,
-            materials: values.materials,
-            recipe_step: {
-              step_order_text: values.steps,
-              stepImages: stepImages,
+            items: values.items,
+            reports: {
+              report_order_text: values.reports,
+              reportImages: reportImages,
             },
           },
         },
@@ -245,7 +228,6 @@ const page = () => {
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
-    // <RecoilRoot>
     <main className="pb-32">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <EditFormVegeTypes register={register} control={control} />
@@ -279,38 +261,32 @@ const page = () => {
 
         <div className="container py-4 space-y-4">
           <div>
-            <h3>レシピタイトル</h3>
-            <input className="border" type="text" {...register(`title`)} />
+            <h3>タイトル</h3>
+            <input
+              className="border w-full"
+              type="text"
+              {...register(`title`)}
+            />
           </div>
           <EditTags
             register={register}
             control={control}
             getValues={getValues}
           />
-          <div>
-            <h3>調理目安時間</h3>
-            <input
-              className="border w-8"
-              type="number"
-              placeholder="20"
-              {...register(`time`)}
-            />
-            分
-          </div>
         </div>
 
-        <EditMaterials
+        <EditItems
           register={register}
           control={control}
           getValues={getValues}
           setValue={setValue}
         />
 
-        <EditStep
+        <EditReports
           register={register}
           control={control}
-          stepsData={stepsData}
-          setStepsData={setStepsData}
+          reportsData={reportsData}
+          setReportsData={setReportsData}
           setValue={setValue}
           reset={reset}
         />
@@ -326,7 +302,6 @@ const page = () => {
       </form>
       {/* </Form> */}
     </main>
-    // </RecoilRoot>
   )
 }
 
