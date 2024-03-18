@@ -148,6 +148,17 @@ const Reports = ({
           type="button"
           onClick={() => {
             let nextOrder = fields.length + 1
+
+            setReportsData(prevState => {
+              return {
+                ...prevState,
+                [fields.length]: {
+                  order: nextOrder,
+                  image_url: '',
+                  text: '',
+                },
+              }
+            })
             return append({ order: nextOrder, image_url: '', text: '' })
           }}>
           レポートを追加

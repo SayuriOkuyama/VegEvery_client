@@ -51,7 +51,7 @@ const page = () => {
           preOldStepImages.push({ path: step.image_path, url: step.image_url })
           data.article.recipe_steps[index].order = index + 1
 
-          setValue(`steps.${index + 1}`, {
+          setValue(`steps.${index}`, {
             order: step.order,
             image_url: step.image_url,
             text: step.text,
@@ -59,7 +59,7 @@ const page = () => {
           // 画像出力用
           setStepsData(prevState => ({
             ...prevState,
-            [index + 1]: {
+            [index]: {
               order: step.order,
               image_url: step.image_url,
               text: step.text,

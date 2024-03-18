@@ -186,14 +186,72 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                     console.log(fields)
                     console.log(stepsData)
 
-                    fields.forEach((field, num) => {
-                      if (num >= index) {
-                        console.log(num)
-                        console.log(index)
-                        console.log(field)
-                        setValue(`steps.${num}.order`, num + 1)
+                    for (let i = 0; i < fields.length; i++) {
+                      console.log('for内')
+
+                      if (i !== fields.length - 1) {
+                        console.log('not-1内')
+
+                        if (i >= index) {
+                          console.log(i)
+                          console.log(index)
+                          console.log(field)
+
+                          setValue(`steps.${i}`, {
+                            order: i + 1,
+                            image_url: '',
+                            text: '',
+                          })
+                          setStepsData(prevState => {
+                            return {
+                              ...prevState,
+                              [i]: {
+                                order: i + 1,
+                                image_url:
+                                  typeof stepsData[i + 1].image_url !=
+                                  'undefined'
+                                    ? stepsData[i + 1].image_url
+                                    : '',
+                                text:
+                                  typeof stepsData[i + 1].text != 'undefined'
+                                    ? stepsData[i + 1].text
+                                    : '',
+                              },
+                            }
+                          })
+                        }
                       }
-                    })
+                    }
+                    // fields.forEach((field, num) => {
+                    //   if (num >= index) {
+                    //     console.log(num)
+                    //     console.log(index)
+                    //     console.log(field)
+                    //     // setValue(`steps.${num}.order`, num + 1)
+                    //     setValue(`steps.${num}`, {
+                    //       order: num + 1,
+                    //       image_url: '',
+                    //       text: '',
+                    //     })
+                    //     setStepsData(prevState => {
+                    //       return {
+                    //         ...prevState,
+                    //         [num]: {
+                    //           order: num + 1,
+                    //           image_url:
+                    //             typeof stepsData[num + 1].image_url !=
+                    //             'undefined'
+                    //               ? stepsData[num + 1].image_url
+                    //               : '',
+                    //           text:
+                    //             typeof stepsData[num + 1].text != 'undefined'
+                    //               ? stepsData[num + 1].text
+                    //               : '',
+                    //         },
+                    //       }
+                    //     })
+                    //   }
+                    // })
                     // 削除されたフィールドより大きなインデックスを持つフィールドの order 値を更新
                     // fields.forEach((field, fieldIndex) => {
                     //   console.log(field)
@@ -242,6 +300,16 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
           type="button"
           onClick={() => {
             let nextOrder = fields.length + 1
+            setStepsData(prevState => {
+              return {
+                ...prevState,
+                [fields.length]: {
+                  order: nextOrder,
+                  image_url: '',
+                  text: '',
+                },
+              }
+            })
             return append({ order: nextOrder, image_url: '', text: '' })
           }}>
           手順を追加
