@@ -6,22 +6,29 @@ import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
 import Dropzone from 'react-dropzone'
 
-const EditStep = ({
-  register,
-  control,
-  setValue,
-  stepsData,
-  setStepsData,
-  reset,
-}) => {
+const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
   // console.log(stepsData)
 
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
   })
+  // フィールドを削除する関数
+  const handleRemoveField = indexToRemove => {
+    console.log(indexToRemove)
+    // フィールドを削除
+    remove(indexToRemove)
+
+    // 削除されたフィールドより大きなインデックスを持つフィールドの order 値を更新
+    fields.forEach((field, index) => {
+      if (index >= indexToRemove) {
+        setValue(`steps.${index}.order`, index + 1)
+      }
+    })
+  }
 
   console.log(fields)
+  console.log(stepsData)
 
   return (
     <div className="container pb-8">
@@ -48,6 +55,12 @@ const EditStep = ({
                       type="button"
                       onClick={e => {
                         setStepsData(prevState => {
+                          console.log(index)
+                          console.log({
+                            order: field.order,
+                            image_url: '',
+                            text: field.text,
+                          })
                           return {
                             ...prevState,
                             [field.order]: {
@@ -79,23 +92,53 @@ const EditStep = ({
                   <Dropzone
                     className="h-52"
                     onDrop={acceptedFiles => {
+                      console.log('ドロップゾーン')
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      setValue(`steps.${index}`, {
-                        order: field.order,
-                        file,
-                        image_url: createdUrl,
-                        text: field.text,
-                      })
-                      setStepsData(prevState => ({
-                        ...prevState,
-                        [field.order]: {
+                      setValue(
+                        `steps.${index}`,
+                        {
                           order: field.order,
                           file,
                           image_url: createdUrl,
                           text: field.text,
                         },
-                      }))
+                        // { shouldDirty: true },
+                      )
+                      console.log(
+                        `setValue called for steps[${index}].image_url with value:`,
+                        createdUrl,
+                      )
+                      setStepsData(prevState => {
+                        console.log(index)
+                        console.log({
+                          order: field.order,
+                          file,
+                          image_url: createdUrl,
+                          text: field.text,
+                        })
+                        return {
+                          ...prevState,
+                          [field.order]: {
+                            // ...prevState[field.order],
+                            order: field.order,
+                            file,
+                            image_url: createdUrl,
+                            text: field.text,
+                          },
+                        }
+                      })
+                      console.log(
+                        `setStepsData called for steps[${index}].image_url with value:`,
+                        createdUrl,
+                      )
+                      console.log(index)
+                      console.log({
+                        order: field.order,
+                        file,
+                        image_url: createdUrl,
+                        text: field.text,
+                      })
                     }}>
                     {({ getRootProps, getInputProps }) => (
                       <>
@@ -133,13 +176,59 @@ const EditStep = ({
                     setStepsData(prevState => {
                       return {
                         ...prevState,
-                        [field.order]: {
-                          order: field.order,
+                        [index]: {
+                          order: '',
                           image_url: '',
-                          text: field.text,
+                          text: '',
                         },
                       }
                     })
+                    console.log(fields)
+                    console.log(stepsData)
+
+                    fields.forEach((field, num) => {
+                      if (num >= index) {
+                        console.log(num)
+                        console.log(index)
+                        console.log(field)
+                        setValue(`steps.${num}.order`, num + 1)
+                      }
+                    })
+                    // 削除されたフィールドより大きなインデックスを持つフィールドの order 値を更新
+                    // fields.forEach((field, fieldIndex) => {
+                    //   console.log(field)
+                    //   console.log(fieldIndex > index)
+                    //   if (fieldIndex >= index) {
+                    //     // setValue(`steps.${index}.order`, index + 1)
+                    //     setValue(`steps.${index}`, {
+                    //       order: field.order + 1,
+                    //       image_url:
+                    //         typeof stepsData[field.order + 1] != 'undefined'
+                    //           ? stepsData[field.order + 1].image_url
+                    //           : '',
+                    //       text:
+                    //         typeof stepsData[index + 1] != 'undefined'
+                    //           ? stepsData[index + 1].text
+                    //           : '',
+                    //     })
+                    //     setStepsData(prevState => {
+                    //       return {
+                    //         ...prevState,
+                    //         [index]: {
+                    //           order: field.order + 1,
+                    //           image_url:
+                    //             typeof stepsData[index + 1] != 'undefined'
+                    //               ? stepsData[index + 1].image_url
+                    //               : '',
+                    //           text:
+                    //             typeof stepsData[index + 1] != 'undefined'
+                    //               ? stepsData[index + 1].text
+                    //               : '',
+                    //         },
+                    //       }
+                    //     })
+                    //   }
+                    // })
                   }}>
                   ✕
                 </button>

@@ -288,7 +288,6 @@ const page = () => {
           reportsData={reportsData}
           setReportsData={setReportsData}
           setValue={setValue}
-          reset={reset}
         />
         <hr className="mx-4" />
 

@@ -54,9 +54,9 @@ const Reports = ({
                         }
                       })
                       setValue(`reports.${index}`, {
-                        image: '',
-                        image_path: '',
+                        order: field.order,
                         image_url: '',
+                        text: field.text,
                       })
                     }}>
                     ✕
@@ -128,9 +128,9 @@ const Reports = ({
                     return {
                       ...prevState,
                       [field.order]: {
-                        order: field.order,
+                        order: '',
                         image_url: '',
-                        text: field.text,
+                        text: '',
                       },
                     }
                   })
