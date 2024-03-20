@@ -60,6 +60,7 @@ export default async function Home() {
                   user={articleOfRecipe.user}
                   likes={articleOfRecipe.number_of_likes}
                   time={articleOfRecipe.cooking_time}
+                  tags={articleOfRecipe.tags}
                   vegeTags={[
                     articleOfRecipe.vegan,
                     articleOfRecipe.oriental_vegetarian,
@@ -97,6 +98,7 @@ export default async function Home() {
                   user={articlesOfItem.user}
                   likes={articlesOfItem.number_of_likes}
                   time={articlesOfItem.cooking_time}
+                  tags={articlesOfItem.tags}
                   vegeTags={[
                     articlesOfItem.vegan,
                     articlesOfItem.oriental_vegetarian,

@@ -15,6 +15,7 @@ const ArticleCard = ({
   time,
   vegeTags,
   tagSize,
+  tags,
 }) => {
   const url = time ? 'recipes' : 'food_items'
 

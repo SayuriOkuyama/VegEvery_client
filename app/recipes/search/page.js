@@ -4,8 +4,7 @@ import { PiNotePencilLight } from 'react-icons/pi'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import axios from '@/lib/axios'
-import { useEffect, useRef, useState } from 'react'
-import Popular from '@/components/layouts/recipes/Popular.js'
+import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 const page = () => {
@@ -24,16 +23,17 @@ const page = () => {
     const getArticles = async () => {
       try {
         const response = await axios.get(
-          `/recipes/search?search=${search}&page=${page}`,
+          `/recipes/search?type=${type}&search=${search}&page=${page}`,
         )
 
         const data = await response.data
+
         setArticles(data.data)
         setPageData(data)
       } catch (err) {}
     }
     getArticles()
-  }, [page, search])
+  }, [page, search, type])
 
   return (
     <main className="pb-24">
@@ -56,7 +56,7 @@ const page = () => {
           <TabsTrigger
             value="search"
             onClick={() => router.push('/recipes/search/vegan?page=1')}>
-            タグ・ワード検索
+            ワード検索
           </TabsTrigger>
         </TabsList>
         <TabsContent value="search">
@@ -65,6 +65,7 @@ const page = () => {
             pageData={pageData}
             articles={articles}
             path={'recipes'}
+            search={search}
           />
         </TabsContent>
       </Tabs>

@@ -7,7 +7,6 @@ import axios from '@/lib/axios'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
-import { IconContext } from 'react-icons'
 
 const page = async ({ params }) => {
   const id = params.id
@@ -72,8 +71,10 @@ const page = async ({ params }) => {
             return (
               <div
                 key={tag.id}
-                className="border rounded-full text-xs px-1 mt-2">
-                #{tag.name}
+                className="border rounded-full text-sm px-1 mt-2">
+                <Link href={`/recipes/search?search=${tag.name}`}>
+                  #{tag.name}
+                </Link>
               </div>
             )
           })}
@@ -82,7 +83,7 @@ const page = async ({ params }) => {
         <div className="flex">
           <Avatar className="self-end mr-2">
             <AvatarImage src={user.icon} alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback></AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{user.name}</div>
         </div>
@@ -104,7 +105,7 @@ const page = async ({ params }) => {
             return (
               <li
                 key={material.id}
-                className="flex justify-between border-b-slate-400 border-b">
+                className="flex justify-between border-b-slate-200 border-b">
                 <div>・{material.name}</div>
                 <div>
                   <span>{material.quantity}</span>
@@ -153,7 +154,10 @@ const page = async ({ params }) => {
                 <>
                   <div key={commentToRecipe.id} className="flex">
                     <Avatar className="self-end mr-2">
-                      <AvatarImage src={user.icon} alt="@shadcn" />
+                      <AvatarImage
+                        src={commentToRecipe.userIcon}
+                        alt="@shadcn"
+                      />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="text-md self-center">

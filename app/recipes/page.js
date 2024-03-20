@@ -30,7 +30,7 @@ const page = () => {
           <TabsTrigger
             value="search"
             onClick={() => router.push('/recipes/search')}>
-            タグ・ワード検索
+            ワード検索
           </TabsTrigger>
         </TabsList>
         <TabsContent value="popular">
