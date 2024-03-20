@@ -131,19 +131,19 @@ body {
   /* font-family: var(--system-text-en); */
   background-color: var(--main-bg-color);
   color: var(--text-color);
-  min-height: 100vh;
+  /* min-height: 100vh; */
 }
 
 main {
-  max-width: 1240px;
+  /* max-width: 1240px; */
   margin: 0 auto;
-  min-height: 83vh;
+  /* min-height: 83vh; */
 }
 
-main.create {
-  min-height: 83vh;
+/* main.create { */
+/* min-height: 83vh;
   height: 83vh;
-}
+} */
 
 h2 {
   font-size: calc(20 / var(--root-font-size) * 1rem);
