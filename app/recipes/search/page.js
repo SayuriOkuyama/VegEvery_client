@@ -59,9 +59,6 @@ const page = () => {
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>
-        {/* <TabsContent value="popular">
-          <Popular />
-        </TabsContent> */}
         <TabsContent value="search">
           <VegeTypeSort
             type={type}

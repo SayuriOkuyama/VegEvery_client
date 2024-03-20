@@ -29,12 +29,12 @@ const page = () => {
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/recipes/search/vegan')}>
+            onClick={() => router.push('/recipes/search')}>
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>
         <TabsContent value="popular">
-          <Popular pageType={'recipes'} />
+          <Popular path={'recipes'} />
         </TabsContent>
       </Tabs>
     </main>

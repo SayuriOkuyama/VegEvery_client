@@ -40,7 +40,7 @@ const page = () => {
           <Popular pageType={'food_items'} />
         </TabsContent>
         <TabsContent value="vegetarian_type">
-          <VegeTypeSort pageType={'food_items'} />
+          <VegeTypeSort path={'food_items'} />
         </TabsContent>
       </Tabs>
     </main>

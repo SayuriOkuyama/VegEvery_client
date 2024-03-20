@@ -30,7 +30,7 @@ const VegeTypeSort = ({ type, pageData, articles, path }) => {
   }
 
   return (
-    <Tabs defaultValue={type} className="flex flex-col">
+    <Tabs defaultValue={type ? type : 'vegan'} className="flex flex-col">
       <TabsList className="">
         <TabsTrigger
           value="vegan"
@@ -97,37 +97,23 @@ const VegeTypeSort = ({ type, pageData, articles, path }) => {
           Oth
         </TabsTrigger>
       </TabsList>
+      <div className="container flex items-center justify-end">
+        <Input
+          ref={refInput}
+          type="text"
+          placeholder="search"
+          className="pr-0 block w-64"
+        />
+        <Button onClick={() => handleSearch()} className="p-0 ml-0">
+          <IconContext.Provider
+            value={{ size: '25px', className: 'p-0 ml-0 mr-0' }}>
+            <PiMagnifyingGlassLight className="self-center text-lg ml-4 mr-2" />
+          </IconContext.Provider>
+        </Button>
+      </div>
       {vegeTags.map(vegeTag => {
         return (
           <TabsContent key={vegeTag} value={vegeTag}>
-            <div className="container flex items-center justify-end">
-              {/* <Input ref={refInput} /> */}
-              {/* <Button type="submit">
-                  <CiSearch />
-                </Button> */}
-              <Input
-                ref={refInput}
-                type="text"
-                placeholder="search"
-                className="pr-0 block w-64"
-              />
-              {/* <Button type="submit">
-                  <CiSearch />
-                </Button> */}
-              <Button
-                // onClick={e =>
-                //   router.push(
-                //     `/${path}/search?type=${type}&search=${e.target.value}&page=1`,
-                //   )
-                // }
-                onClick={() => handleSearch()}
-                className="p-0 ml-0">
-                <IconContext.Provider
-                  value={{ size: '25px', className: 'p-0 ml-0 mr-0' }}>
-                  <PiMagnifyingGlassLight className="self-center text-lg ml-4 mr-2" />
-                </IconContext.Provider>
-              </Button>
-            </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
               {articles &&
                 articles.map(article => {
