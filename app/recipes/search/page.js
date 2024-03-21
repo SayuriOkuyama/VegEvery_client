@@ -64,7 +64,7 @@ const page = () => {
             type={type}
             pageData={pageData}
             articles={articles}
-            path={'recipes'}
+            path={'recipes/search'}
             search={search}
           />
         </TabsContent>

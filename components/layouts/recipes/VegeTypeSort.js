@@ -24,12 +24,16 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
   ]
 
   useEffect(() => {
-    refInput.current.value = search
+    if (!search || search === 'null') {
+      refInput.current.value = ''
+    } else {
+      refInput.current.value = search
+    }
   }, [search])
 
   const handleSearch = () => {
     const search = refInput.current.value
-    router.push(`/${path}/search?type=${type}&search=${search}&page=1`)
+    router.push(`/${path}?type=${type}&search=${search}&page=1`)
   }
 
   return (
@@ -39,7 +43,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="vegan"
           className="rounded-full bg-color-v opacity-60 mr-1 text-xs h-8"
           onClick={() => {
-            router.push(`/${path}/search?type=vegan&search=${search}&page=1`)
+            router.push(`/${path}?type=vegan&search=${search}&page=1`)
           }}>
           V
         </TabsTrigger>
@@ -48,7 +52,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-ori opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=oriental_vegetarian&search=${search}&page=1`,
+              `/${path}?type=oriental_vegetarian&search=${search}&page=1`,
             )
           }}>
           Ori
@@ -57,9 +61,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="ovo_vegetarian"
           className="rounded-full bg-color-ovo opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(
-              `/${path}/search?type=ovo_vegetarian&search=${search}&page=1`,
-            )
+            router.push(`/${path}?type=ovo_vegetarian&search=${search}&page=1`)
           }}>
           Ovo
         </TabsTrigger>
@@ -67,9 +69,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="pescatarian"
           className="rounded-full bg-color-psc opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(
-              `/${path}/search?type=pescatarian&search=${search}&page=1`,
-            )
+            router.push(`/${path}?type=pescatarian&search=${search}&page=1`)
           }}>
           Psc
         </TabsTrigger>
@@ -78,7 +78,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-lct opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=lacto_vegetarian&search=${search}&page=1`,
+              `/${path}?type=lacto_vegetarian&search=${search}&page=1`,
             )
           }}>
           Lct
@@ -88,7 +88,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-pol opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=pollo_vegetarian&search=${search}&page=1`,
+              `/${path}?type=pollo_vegetarian&search=${search}&page=1`,
             )
           }}>
           Pol
@@ -97,9 +97,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="fruitarian"
           className="rounded-full bg-color-flu opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(
-              `/${path}/search?type=fruitarian&search=${search}&page=1`,
-            )
+            router.push(`/${path}?type=fruitarian&search=${search}&page=1`)
           }}>
           Flu
         </TabsTrigger>
@@ -108,7 +106,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-oth opacity-60 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=other_vegetarian&search=${search}&page=1`,
+              `/${path}?type=other_vegetarian&search=${search}&page=1`,
             )
           }}>
           Oth
@@ -128,37 +126,43 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           </IconContext.Provider>
         </Button>
       </div>
-      {/* <div className="container text-xs">おすすめ</div> */}
       {vegeTags.map(vegeTag => {
         return (
           <TabsContent key={vegeTag} value={vegeTag}>
-            <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-              {articles &&
-                articles.map(article => {
-                  return (
-                    <ArticleCard
-                      key={article.id}
-                      tagSize="small"
-                      id={article.id}
-                      title={article.title}
-                      thumbnail={article.thumbnail_url}
-                      user={article.user}
-                      likes={article.number_of_likes}
-                      time={article.cooking_time}
-                      vegeTags={[
-                        article.vegan,
-                        article.oriental_vegetarian,
-                        article.ovo_vegetarian,
-                        article.pescatarian,
-                        article.lacto_vegetarian,
-                        article.pollo_vegetarian,
-                        article.fruitarian,
-                        article.other_vegetarian,
-                      ]}
-                    />
-                  )
-                })}
-            </div>
+            {articles && articles.length ? (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+                  {articles.map(article => {
+                    return (
+                      <ArticleCard
+                        key={article.id}
+                        tagSize="small"
+                        id={article.id}
+                        title={article.title}
+                        thumbnail={article.thumbnail_url}
+                        user={article.user}
+                        likes={article.number_of_likes}
+                        time={article.cooking_time}
+                        vegeTags={[
+                          article.vegan,
+                          article.oriental_vegetarian,
+                          article.ovo_vegetarian,
+                          article.pescatarian,
+                          article.lacto_vegetarian,
+                          article.pollo_vegetarian,
+                          article.fruitarian,
+                          article.other_vegetarian,
+                        ]}
+                      />
+                    )
+                  })}
+                </div>
+              </>
+            ) : (
+              <div className="text-center mx-auto my-8 text-sm">
+                見つかりませんでした
+              </div>
+            )}
             {pageData && (
               <PaginationParts pageData={pageData} type={type} path={path} />
             )}

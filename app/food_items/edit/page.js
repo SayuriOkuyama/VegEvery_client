@@ -197,26 +197,24 @@ const page = () => {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
         {
-          values: {
-            title: values.title,
-            thumbnail: {
-              thumbnail_path: thumbnail_path,
-              thumbnail_url: thumbnail_url,
-            },
-            tags: values.tags,
-            vegeTags: values.vegeTags,
-            items: values.items,
-            reports: {
-              report_order_text: values.reports,
-              reportImages: reportImages,
-            },
+          title: values.title,
+          thumbnail: {
+            thumbnail_path: thumbnail_path,
+            thumbnail_url: thumbnail_url,
+          },
+          tags: values.tags,
+          vegeTags: values.vegeTags,
+          items: values.items,
+          reports: {
+            report_order_text: values.reports,
+            reportImages: reportImages,
           },
         },
       )
 
       console.log(res.data)
       console.log('画面遷移')
-      router.push('/items')
+      router.push('/food_items')
     } catch (error) {
       console.error('Error handling form submission:', error)
     }

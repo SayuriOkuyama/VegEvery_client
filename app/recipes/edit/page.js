@@ -24,15 +24,14 @@ const page = () => {
   const path = 'recipes'
 
   const [oldThumbnail, setOldThumbnail] = useState()
-  // const [oldStepImages, setOldStepImages] = useState()
   const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
-  const [stepsData, setStepsData] = useState([])
+  const [stepImages, setStepImages] = useState([])
   const { register, setValue, handleSubmit, control, getValues, reset } =
     useForm({
       mode: 'onChange', // リアルタイムで入力値を取得する
     })
-  const form = useForm()
+  // const form = useForm()
 
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
   console.log(data)
@@ -58,7 +57,7 @@ const page = () => {
             text: step.text,
           })
           // 画像出力用
-          setStepsData(prevState => {
+          setStepImages(prevState => {
             const newState = prevState
             newState.push({ url: step.image_url, path: step.image_path })
             return newState
@@ -142,8 +141,8 @@ const page = () => {
 
       await Promise.all(
         // 新しい画像をストレージに保存
-        stepsData.map(async (step, index) => {
-          if (step && step.file && step.url.substr(0, 4) === 'blob') {
+        stepImages.map(async (step, index) => {
+          if (step.file && step.url.substr(0, 4) === 'blob') {
             const fileExtension = step.file.name.split('.').pop()
 
             const response = await supabase.storage
@@ -289,8 +288,8 @@ const page = () => {
         <EditStep
           register={register}
           control={control}
-          stepsData={stepsData}
-          setStepsData={setStepsData}
+          stepImages={stepImages}
+          setStepImages={setStepImages}
           setValue={setValue}
           reset={reset}
         />

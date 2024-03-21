@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation.js'
 
 const page = () => {
   const [image, setImage] = useState(null)
-  const [reportsData, setReportsData] = useState([])
+  const [reportImages, setReportImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
 
   const { register, setValue, handleSubmit, control, getValues } = useForm({
@@ -26,16 +26,16 @@ const page = () => {
       tags: [{ tag: '' }],
       items: [{ name: '', place: '', price: '' }],
       thumbnail: '',
-      reports: [{ order: 1, image_url: '', text: '' }],
+      reports: [{ text: '' }],
     },
+    mode: 'onChange', // リアルタイムで入力値を取得する
   })
-  const form = useForm()
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
     setImage({
       file,
-      preview: URL.createObjectURL(file),
+      image: URL.createObjectURL(file),
     })
     setValue('thumbnail', file)
   }
@@ -45,28 +45,26 @@ const page = () => {
   async function onSubmit(values) {
     console.log(values)
 
-    const fileExtension = values.thumbnail.name.split('.').pop()
+    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
-    const reportImages = []
+    const reportImagesData = []
 
     try {
+      const fileExtension = values.thumbnail.name.split('.').pop()
+
       const response = await supabase.storage
         .from('VegEvery-backet')
         .upload(
           `items/thumbnail/${uuidv4()}.${fileExtension}`,
           values.thumbnail,
         )
-
-      console.log('Insert successful:', response.data)
-      const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
       thumbnail_path = response.data.path
       thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
       await Promise.all(
-        values.reports.map(async (report, index) => {
-          if (report.image_url) {
-            console.log('画像あり')
+        reportImages.map(async (report, index) => {
+          if (report && report.file) {
             const fileExtension = report.file.name.split('.').pop()
 
             const response = await supabase.storage
@@ -76,7 +74,7 @@ const page = () => {
                 report.file,
               )
             console.log('Report image upload successful:', response.data)
-            reportImages[index] = {
+            reportImagesData[index] = {
               image_path: response.data.path,
               image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
             }
@@ -87,37 +85,32 @@ const page = () => {
         values,
         thumbnail_path,
         thumbnail_url,
-        reportImages,
+        reportImagesData,
       })
 
-      await axios
-        .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items`, {
-          values: {
-            title: values.title,
-            thumbnail: {
-              thumbnail_path: thumbnail_path,
-              thumbnail_url: thumbnail_url,
-            },
-            tags: values.tags,
-            vegeTags: values.vege_type,
-            items: values.items,
-            reports: {
-              reports_order_text: values.reports,
-              reportImages: reportImages,
-            },
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items`,
+        {
+          title: values.title,
+          thumbnail: {
+            thumbnail_path: thumbnail_path,
+            thumbnail_url: thumbnail_url,
           },
-        })
-        .then(res => {
-          console.log(res.data)
-          // form.reset()
-          console.log('画面遷移')
-          // router.push('/food_items')
-        })
-        .catch(error => {
-          console.error('Error sending data to backend:', error)
-        })
-    } catch (err) {
-      console.error('Error handling form submission:', err)
+          tags: values.tags,
+          vegeTags: values.vege_type,
+          items: values.items,
+          reports: {
+            reports_order_text: values.reports,
+            reportImages: reportImagesData,
+          },
+        },
+      )
+
+      console.log(res.data)
+      console.log('画面遷移')
+      router.push(`/food_items/${res.data.article.id}`)
+    } catch (error) {
+      console.error('Error handling form submission:', error)
     }
   }
 
@@ -128,7 +121,7 @@ const page = () => {
 
         <div className="bg-orange">
           {image ? (
-            <div className="image-preview relative flex w-full">
+            <div className="image-preview relative flex w-full h-64">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
@@ -136,13 +129,13 @@ const page = () => {
                 ✕
               </button>
               <img
-                src={image.preview}
+                src={image.image}
                 className="object-cover w-full h-full block"
                 alt="Uploaded Image"
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="h-52">
+            <div {...getRootProps()} className="h-64">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
@@ -171,8 +164,8 @@ const page = () => {
         <Reports
           register={register}
           control={control}
-          reportsData={reportsData}
-          setReportsData={setReportsData}
+          reportImages={reportImages}
+          setReportImages={setReportImages}
           setValue={setValue}
         />
         <hr className="mx-4" />

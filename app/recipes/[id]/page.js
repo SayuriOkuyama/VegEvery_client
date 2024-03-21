@@ -14,7 +14,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import CommentSubmit from '@/components/functions/CommentSubmit'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
@@ -92,11 +91,9 @@ const page = ({ params }) => {
   const router = useRouter()
 
   const onSubmit = async value => {
-    console.log('サブミット！')
-    console.log('サブミット！')
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${articlesData.article_id}/comment`,
-      { userId: 2, text: value.comment },
+      { text: value.comment },
     )
     console.log(response.data)
     const newComment = response.data
@@ -112,7 +109,6 @@ const page = ({ params }) => {
     })
     reset()
     setIsOpen(false)
-    // router.push(`/recipes/${articlesData.article.id}`)
   }
 
   return (
@@ -270,10 +266,6 @@ const page = ({ params }) => {
                 </form>
               </PopoverContent>
             </Popover>
-            {/*
-            <Button className="mx-auto bg-button border-button-color">
-              コメントする
-            </Button> */}
           </div>
         </div>
       </div>
