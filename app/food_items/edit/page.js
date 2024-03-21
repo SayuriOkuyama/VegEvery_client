@@ -159,6 +159,7 @@ const page = () => {
               image_path: response.data.path,
               image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
             }
+            console.log(reportImages)
             pathOnly.push(response.data.path)
           } else {
             reportImages[index] = {
@@ -214,7 +215,7 @@ const page = () => {
 
       console.log(res.data)
       console.log('画面遷移')
-      router.push('/food_items')
+      router.push(`/food_items/${res.data.article.id}`)
     } catch (error) {
       console.error('Error handling form submission:', error)
     }

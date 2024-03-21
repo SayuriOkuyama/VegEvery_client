@@ -32,7 +32,7 @@ const EditStep = ({ register, control, stepImages, setStepImages }) => {
                 {...register(`steps.${index}.order`)}
               />
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepImages[index].url ? (
+                {stepImages[index] && stepImages[index].url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
@@ -46,7 +46,7 @@ const EditStep = ({ register, control, stepImages, setStepImages }) => {
                       }}>
                       ✕
                     </button>
-                    {stepImages[index].url && (
+                    {stepImages[index] && stepImages[index].url && (
                       <img
                         src={stepImages[index].url}
                         className="object-cover w-full h-full block"
