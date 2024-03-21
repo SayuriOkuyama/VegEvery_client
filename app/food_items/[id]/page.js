@@ -26,7 +26,7 @@ const page = ({ params }) => {
     user: '',
     items: [],
     reports: [],
-    commentsToItems: [],
+    commentsToItem: [],
     tags: '',
     vegeTags: '',
   })
@@ -83,8 +83,6 @@ const page = ({ params }) => {
   })
 
   const onSubmit = async value => {
-    console.log('サブミット！')
-    console.log('サブミット！')
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${articlesData.article_id}/comment`,
       { text: value.comment },
@@ -94,11 +92,11 @@ const page = ({ params }) => {
     setArticlesData(prevState => {
       console.log({
         ...prevState,
-        commentsToRecipe: [...prevState.commentsToRecipe, newComment],
+        commentsToItem: [...prevState.commentsToItem, newComment],
       })
       return {
         ...prevState,
-        commentsToRecipe: [...prevState.commentsToRecipe, newComment],
+        commentsToItem: [...prevState.commentsToItem, newComment],
       }
     })
     reset()

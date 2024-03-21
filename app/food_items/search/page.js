@@ -54,7 +54,7 @@ const page = () => {
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/food_items/search/vegan?page=1')}>
+            onClick={() => router.push('/food_items/search?type=vegan&page=1')}>
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>

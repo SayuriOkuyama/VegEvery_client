@@ -32,7 +32,7 @@ const page = () => {
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/food_items/search/')}>
+            onClick={() => router.push('/food_items/search?type=vegan')}>
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>
