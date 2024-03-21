@@ -67,8 +67,6 @@ const page = () => {
         }
       })
       setArrayOldPath(arrayPath)
-      // 編集キャンセルに備えて、元の画像を保持しておく
-      // setOldStepImages(preOldStepImages)
 
       reset({
         title: data.article.title,
@@ -113,8 +111,9 @@ const page = () => {
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
-    const stepImages = []
+    const stepImagesData = []
     const pathOnly = []
+
     try {
       // サムネイルに変更があった場合のみ、ストレージにアップロード
       if (values.thumbnail && values.thumbnail.name) {
@@ -139,10 +138,12 @@ const page = () => {
         thumbnail_url = values.thumbnail_url
       }
 
+      console.log(stepImages)
       await Promise.all(
         // 新しい画像をストレージに保存
         stepImages.map(async (step, index) => {
-          if (step.file && step.url.substr(0, 4) === 'blob') {
+          console.log(step)
+          if (step && step.file && step.url.substr(0, 4) === 'blob') {
             const fileExtension = step.file.name.split('.').pop()
 
             const response = await supabase.storage
@@ -153,17 +154,19 @@ const page = () => {
               )
             console.log('Step image upload successful:', response.data)
 
-            stepImages[index] = {
+            stepImagesData[index] = {
               image_path: response.data.path,
               image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
             }
+            console.log(stepImagesData)
+
             pathOnly.push(response.data.path)
           } else {
-            stepImages[index] = {
+            stepImagesData[index] = {
               image_path: step.path,
               image_url: step.url,
             }
-            console.log(stepImages)
+            console.log(stepImagesData)
             pathOnly.push(step.path)
           }
         }),
@@ -189,34 +192,32 @@ const page = () => {
         values,
         thumbnail_path,
         thumbnail_url,
-        stepImages,
+        stepImagesData,
       })
 
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
         {
-          values: {
-            title: values.title,
-            thumbnail: {
-              thumbnail_path: thumbnail_path,
-              thumbnail_url: thumbnail_url,
-            },
-            cooking_time: values.time,
-            servings: values.servings,
-            tags: values.tags,
-            vegeTags: values.vegeTags,
-            materials: values.materials,
-            recipe_step: {
-              step_order_text: values.steps,
-              stepImages: stepImages,
-            },
+          title: values.title,
+          thumbnail: {
+            thumbnail_path: thumbnail_path,
+            thumbnail_url: thumbnail_url,
+          },
+          cooking_time: values.time,
+          servings: values.servings,
+          tags: values.tags,
+          vegeTags: values.vegeTags,
+          materials: values.materials,
+          recipe_step: {
+            step_order_text: values.steps,
+            stepImages: stepImagesData,
           },
         },
       )
 
       console.log(res.data)
       console.log('画面遷移')
-      router.push('/recipes')
+      router.push(`/recipes/${res.data.article.id}`)
     } catch (error) {
       console.error('Error handling form submission:', error)
     }
