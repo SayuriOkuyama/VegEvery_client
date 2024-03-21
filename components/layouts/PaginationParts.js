@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 
-const PaginationParts = ({ pageData, pageType }) => {
+const PaginationParts = ({ pageData, path }) => {
   return (
     <Pagination>
       <PaginationContent className="">
@@ -17,7 +17,7 @@ const PaginationParts = ({ pageData, pageType }) => {
             {pageData.current_page - 3 >= 0 && (
               <PaginationItem className="w-8">
                 <PaginationPrevious
-                  href={`/${pageType}?page=${pageData.current_page - 1}`}
+                  href={`/${path}/search?page=${pageData.current_page - 1}`}
                 />
               </PaginationItem>
             )}
@@ -32,7 +32,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <PaginationItem className="w-8">
                 <PaginationLink
                   className="w-8 h-8"
-                  href={`/${pageType}?page=${pageData.current_page - 2}`}>
+                  href={`/${path}/search?page=${pageData.current_page - 2}`}>
                   {pageData.current_page - 2}
                 </PaginationLink>
               </PaginationItem>
@@ -41,7 +41,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <PaginationItem className="w-8">
                 <PaginationLink
                   className="w-8 h-8"
-                  href={`/${pageType}?page=${pageData.current_page - 1}`}>
+                  href={`/${path}/search?page=${pageData.current_page - 1}`}>
                   {pageData.current_page - 1}
                 </PaginationLink>
               </PaginationItem>
@@ -51,7 +51,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <PaginationLink
                 className="w-8 h-8"
                 isActive
-                href={`/${pageType}?page=${pageData.current_page}`}>
+                href={`/${path}/search?page=${pageData.current_page}`}>
                 {pageData.current_page}
               </PaginationLink>
             </PaginationItem>
@@ -60,7 +60,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <PaginationItem className="w-8">
                 <PaginationLink
                   className="w-8 h-8"
-                  href={`/${pageType}?page=${pageData.current_page + 1}`}>
+                  href={`/${path}/search?page=${pageData.current_page + 1}`}>
                   {pageData.current_page + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -69,7 +69,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <PaginationItem className="w-8">
                 <PaginationLink
                   className="w-8 h-8"
-                  href={`/${pageType}?page=${pageData.current_page + 2}`}>
+                  href={`/${path}/search?page=${pageData.current_page + 2}`}>
                   {pageData.current_page + 2}
                 </PaginationLink>
               </PaginationItem>
@@ -85,7 +85,7 @@ const PaginationParts = ({ pageData, pageType }) => {
               <>
                 <PaginationItem className="w-8">
                   <PaginationNext
-                    href={`/${pageType}?page=${pageData.current_page + 1}`}
+                    href={`/${path}/search?page=${pageData.current_page + 1}`}
                   />
                 </PaginationItem>
               </>

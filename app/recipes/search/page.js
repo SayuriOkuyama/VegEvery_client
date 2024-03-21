@@ -4,8 +4,7 @@ import { PiNotePencilLight } from 'react-icons/pi'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import axios from '@/lib/axios'
-import { useEffect, useRef, useState } from 'react'
-import Popular from '@/components/layouts/recipes/Popular.js'
+import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 const page = () => {
@@ -14,21 +13,27 @@ const page = () => {
   const router = useRouter()
   const params = useSearchParams()
   const page = params.get('page')
+  const type = params.get('type')
+  const search = params.get('search')
+
+  console.log(articles)
+  console.log(pageData)
 
   useEffect(() => {
     const getArticles = async () => {
       try {
         const response = await axios.get(
-          `/recipes/search?page=${page}&vegeTag=ovo_vegetarian`,
+          `/recipes/search?type=${type}&search=${search}&page=${page}`,
         )
 
         const data = await response.data
+
         setArticles(data.data)
         setPageData(data)
       } catch (err) {}
     }
     getArticles()
-  }, [])
+  }, [page, search, type])
 
   return (
     <main className="pb-24">
@@ -51,18 +56,16 @@ const page = () => {
           <TabsTrigger
             value="search"
             onClick={() => router.push('/recipes/search/vegan?page=1')}>
-            タグ・ワード検索
+            ワード検索
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="popular">
-          <Popular />
-        </TabsContent>
         <TabsContent value="search">
           <VegeTypeSort
-            page={'ovo_vegetarian'}
+            type={type}
             pageData={pageData}
             articles={articles}
-            pageType={'recipes/search/ovo_vegetarian'}
+            path={'recipes'}
+            search={search}
           />
         </TabsContent>
       </Tabs>
