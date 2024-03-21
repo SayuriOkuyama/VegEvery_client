@@ -1,59 +1,76 @@
 'use client'
-import { useForm, useFieldArray } from 'react-hook-form'
-import { createRef, useEffect, useRef, useState } from 'react'
+
+import { useFieldArray } from 'react-hook-form'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
-import { useDropzone } from 'react-dropzone'
 import Dropzone from 'react-dropzone'
 
-const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
-  const itemsRef = useRef(null)
-
+const Steps = ({ register, control, stepImages, setStepImages }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
   })
+
+  console.log(fields)
+  console.log(stepImages)
 
   return (
     <div className="container pb-8">
       <div className="flex">
         <h3>作り方</h3>
       </div>
-      <div className="">
+      <div>
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
           <div key={field.id} className="my-4">
             <h4>{index + 1}.</h4>
+            <input
+              type="text"
+              value={index + 1}
+              hidden
+              {...register(`steps.${index}.order`)}
+            />
             <div className="bg-orange h-52 w-full mx-auto">
-              {stepImage[index] ? (
+              {stepImages[index] && stepImages[index].url ? (
                 <div className="image-preview relative flex h-52 mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
                     onClick={() =>
-                      setStepImage(prevState => ({ ...prevState, [index]: '' }))
+                      setStepImages(prevState => {
+                        const newState = [...prevState]
+                        newState[index] = ''
+                        return newState
+                      })
                     }>
                     ✕
                   </button>
-                  <img
-                    src={stepImage[index].preview}
-                    className="object-cover w-full h-full block"
-                    alt="Uploaded Image"
-                  />
+                  {stepImages[index].url && (
+                    <img
+                      src={stepImages[index].url}
+                      className="object-cover w-full h-full block"
+                      alt="Uploaded Image"
+                    />
+                  )}
                 </div>
               ) : (
                 <Dropzone
                   className="h-52"
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
-                    setValue(`stepImages.${index}`, file)
-                    setStepImage(prevState => ({
-                      ...prevState,
-                      [index]: {
-                        file,
-                        preview: URL.createObjectURL(file),
-                      },
-                    }))
+                    const createdUrl = URL.createObjectURL(file)
+                    setStepImages(prevState => {
+                      const newState = [...prevState]
+                      newState[index] = { url: createdUrl, file: file }
+                      return newState
+                    })
+                    // ↓これ入れたらテキスト消える
+                    // setValue(`steps.${index}`, {
+                    //   order: field.order,
+                    //   file,
+                    //   image_url: createdUrl,
+                    //   text: field.text,
+                    // })
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>
@@ -74,11 +91,10 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
             <div>
               <textarea
                 className="border mt-4 w-full"
-                name=""
-                id=""
                 cols="30"
                 rows="10"
                 placeholder="手順を入力"
+                defaultValue={field.text}
                 {...register(`steps.${index}.text`)}></textarea>
             </div>
             {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
@@ -86,7 +102,19 @@ const Steps = ({ register, control, setValue, stepImage, setStepImage }) => {
               <button
                 className="border"
                 type="button"
-                onClick={() => remove(index)}>
+                onClick={() => {
+                  remove(index)
+
+                  setStepImages(prevState => {
+                    const newData = []
+                    for (let i = 0; i < fields.length; i++) {
+                      if (i !== index) {
+                        newData.push(prevState[i])
+                      }
+                    }
+                    return newData
+                  })
+                }}>
                 ✕
               </button>
             )}

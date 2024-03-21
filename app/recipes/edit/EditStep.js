@@ -1,21 +1,18 @@
 'use client'
+
 import { useForm, useFieldArray } from 'react-hook-form'
-import { createRef, useEffect, useRef, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
-import { useDropzone } from 'react-dropzone'
 import Dropzone from 'react-dropzone'
 
-const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
-  // console.log(stepsData)
-
+const EditStep = ({ register, control, stepImages, setStepImages }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
   })
 
   console.log(fields)
-  console.log(stepsData)
+  console.log(stepImages)
 
   return (
     <div className="container pb-8">
@@ -35,13 +32,13 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                 {...register(`steps.${index}.order`)}
               />
               <div className="bg-orange h-52 w-full mx-auto">
-                {stepsData[index].url ? (
+                {stepImages[index].url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                       type="button"
-                      onClick={e => {
-                        setStepsData(prevState => {
+                      onClick={() => {
+                        setStepImages(prevState => {
                           const newState = [...prevState]
                           newState[index] = ''
                           return newState
@@ -49,9 +46,9 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                       }}>
                       ✕
                     </button>
-                    {stepsData[index].url && (
+                    {stepImages[index].url && (
                       <img
-                        src={stepsData[index].url}
+                        src={stepImages[index].url}
                         className="object-cover w-full h-full block"
                         alt="Uploaded Image"
                       />
@@ -61,9 +58,10 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                   <Dropzone
                     className="h-52"
                     onDrop={acceptedFiles => {
+                      console.log('drop')
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
-                      setStepsData(prevState => {
+                      setStepImages(prevState => {
                         const newState = [...prevState]
                         newState[index] = { url: createdUrl, file: file }
                         return newState
@@ -110,7 +108,7 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
                   onClick={() => {
                     remove(index)
 
-                    setStepsData(prevState => {
+                    setStepImages(prevState => {
                       const newData = []
                       for (let i = 0; i < fields.length; i++) {
                         if (i !== index) {
@@ -130,13 +128,7 @@ const EditStep = ({ register, control, setValue, stepsData, setStepsData }) => {
         <button
           className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
           type="button"
-          onClick={() => {
-            let nextOrder = fields.length + 1
-            setStepsData(prevState => {
-              return [...prevState, '']
-            })
-            return append({ order: nextOrder, image_url: '', text: '' })
-          }}>
+          onClick={() => append({ text: '' })}>
           手順を追加
         </button>
       </div>

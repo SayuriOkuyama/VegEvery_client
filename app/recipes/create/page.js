@@ -17,16 +17,14 @@ import { v4 as uuidv4 } from 'uuid'
 //   FormLabel,
 //   FormMessage,
 // } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import Tags from './Tags'
 import Materials from './Materials.js'
 import Steps from './Steps.js'
 import FormVegeType from './FormVegeType.js'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
-import useSWR from 'swr'
 import { useRouter } from 'next/navigation.js'
 
 // const formSchema = z.object({
@@ -87,7 +85,7 @@ import { useRouter } from 'next/navigation.js'
 
 const page = () => {
   const [image, setImage] = useState(null)
-  const [stepImage, setStepImage] = useState([])
+  const [stepImages, setStepImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
 
   const { register, setValue, handleSubmit, control, getValues } = useForm({
@@ -101,83 +99,93 @@ const page = () => {
       servings: '',
       steps: [{ text: '' }],
     },
+    mode: 'onChange', // リアルタイムで入力値を取得する
   })
-  const form = useForm()
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
     setImage({
       file,
-      preview: URL.createObjectURL(file),
+      image: URL.createObjectURL(file),
     })
     setValue('thumbnail', file)
   }
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log(values)
 
-    const fileExtension = values.thumbnail.name.split('.').pop()
-    let thumbnailUrl = ''
-    const stepImageUrls = []
+    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
+    let thumbnail_path
+    let thumbnail_url
+    const stepImagesData = []
 
-    supabase.storage
-      .from('VegEvery-backet')
-      .upload(
+    try {
+      const fileExtension = values.thumbnail.name.split('.').pop()
+
+      // サムネイルのアップロード
+      const response = await supabase.storage.from('VegEvery-backet').upload(
+        // ランダムな文字列に拡張子を付けたものをパスとする
         `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
         values.thumbnail,
       )
-      .then(response => {
-        console.log('Insert successful:', response.data)
-        const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-        thumbnailUrl = `${supabase_url}/object/public/${response.data.fullPath}`
+      thumbnail_path = response.data.path
+      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
-        // すべてのステップ画像のアップロードが完了したかどうかを追跡するPromiseの配列
-        const uploadPromises = values.stepImages.map(image =>
-          supabase.storage
-            .from('VegEvery-backet')
-            .upload(`recipes/step_image/${uuidv4()}.${fileExtension}`, image),
-        )
-        // すべてのアップロードが完了した後に次の処理を行う
-        Promise.all(uploadPromises)
-          .then(responses => {
-            console.log('All images uploaded successfully')
+      await Promise.all(
+        stepImages.map(async (step, index) => {
+          if (step.file) {
+            const fileExtension = step.file.name.split('.').pop()
 
-            // すべてのステップ画像のURLを配列に追加
-            responses.forEach(response => {
-              const stepImageUrl = `${supabase_url}/object/public/${response.data.fullPath}`
-              stepImageUrls.push(stepImageUrl)
-            })
+            const response = await supabase.storage
+              .from('VegEvery-backet')
+              .upload(
+                `recipes/step_image/${uuidv4()}.${fileExtension}`,
+                step.file,
+              )
+            console.log('Step image upload successful:', response.data)
 
-            console.log({
-              values,
-              thumbnailUrl,
-              stepImageUrls,
-            })
-            axios
-              .post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`, {
-                values,
-                thumbnailUrl,
-                stepImageUrls,
-              })
-              .then(res => {
-                console.log(res.data)
-                form.reset()
-                console.log('画面遷移')
-                router.push('/recipes')
-              })
-              .catch(error => {
-                console.error('Error sending data to backend:', error)
-              })
-          })
-          .catch(error => {
-            console.error('Error uploading step images:', error)
-          })
+            stepImagesData[index] = {
+              image_path: response.data.path,
+              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
+            }
+          }
+        }),
+      )
+      console.log({
+        values,
+        thumbnail_path,
+        thumbnail_url,
+        stepImagesData,
       })
-      .catch(error => {
-        console.error('Error uploading thumbnail:', error)
-      })
+
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`,
+        {
+          title: values.title,
+          thumbnail: {
+            thumbnail_path: thumbnail_path,
+            thumbnail_url: thumbnail_url,
+          },
+          cooking_time: values.time,
+          servings: values.servings,
+          tags: values.tags,
+          vege_type: values.vege_type,
+          materials: values.materials,
+          recipe_step: {
+            step_order_text: values.steps,
+            stepImages: stepImagesData,
+          },
+        },
+      )
+
+      console.log(res.data)
+      console.log('画面遷移')
+      router.push(`/recipes/${res.data.article.id}`)
+    } catch (error) {
+      console.error('Error handling form submission:', error)
+    }
   }
 
   return (
@@ -187,7 +195,7 @@ const page = () => {
 
         <div className="bg-orange">
           {image ? (
-            <div className="image-preview relative flex w-full">
+            <div className="image-preview relative flex w-full h-64">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
@@ -195,13 +203,13 @@ const page = () => {
                 ✕
               </button>
               <img
-                src={image.preview}
+                src={image.image}
                 className="object-cover w-full h-full block"
                 alt="Uploaded Image"
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="h-52">
+            <div {...getRootProps()} className="h-64">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
@@ -239,8 +247,8 @@ const page = () => {
         <Steps
           register={register}
           control={control}
-          stepImage={stepImage}
-          setStepImage={setStepImage}
+          stepImages={stepImages}
+          setStepImages={setStepImages}
           setValue={setValue}
         />
         <hr className="mx-4" />

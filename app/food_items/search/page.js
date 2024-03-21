@@ -23,11 +23,10 @@ const page = () => {
     const getArticles = async () => {
       try {
         const response = await axios.get(
-          `/recipes/search?type=${type}&search=${search}&page=${page}`,
+          `/food_items/search?type=${type}&search=${search}&page=${page}`,
         )
 
         const data = await response.data
-
         setArticles(data.data)
         setPageData(data)
       } catch (err) {}
@@ -37,7 +36,7 @@ const page = () => {
 
   return (
     <main className="pb-24">
-      <h3 className="text-center text-lg font-bold mt-8">レシピ一覧</h3>
+      <h3 className="text-center text-lg font-bold mt-8">フードアイテム情報</h3>
       <div className="flex justify-end mt-4 mb-1">
         <Button className="py-0 px-2 mr-2 bg-button border-button-color">
           <div className="flex items-end">
@@ -50,13 +49,13 @@ const page = () => {
         <TabsList className="w-100 self-center">
           <TabsTrigger
             value="popular"
-            onClick={() => router.push('/recipes?page=1')}>
-            人気のレシピ
+            onClick={() => router.push('/food_items?page=1')}>
+            人気の投稿
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/recipes/search/vegan?page=1')}>
-            ワード検索
+            onClick={() => router.push('/food_items/search/vegan?page=1')}>
+            タグ・ワード検索
           </TabsTrigger>
         </TabsList>
         <TabsContent value="search">
@@ -64,8 +63,8 @@ const page = () => {
             type={type}
             pageData={pageData}
             articles={articles}
-            path={'recipes/search'}
             search={search}
+            path={'food_items/search'}
           />
         </TabsContent>
       </Tabs>

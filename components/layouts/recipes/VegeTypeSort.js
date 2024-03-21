@@ -24,7 +24,11 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
   ]
 
   useEffect(() => {
-    refInput.current.value = search
+    if (!search || search === 'null') {
+      refInput.current.value = ''
+    } else {
+      refInput.current.value = search
+    }
   }, [search])
 
   const handleSearch = () => {
@@ -39,7 +43,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="vegan"
           className="rounded-full bg-color-v opacity-60 mr-1 text-xs h-8"
           onClick={() => {
-            router.push(`/${path}/search?type=vegan&search=${search}&page=1`)
+            router.push(`/${path}?type=vegan&search=${search}&page=1`)
           }}>
           V
         </TabsTrigger>
@@ -48,7 +52,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-ori opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=oriental_vegetarian&search=${search}&page=1`,
+              `/${path}?type=oriental_vegetarian&search=${search}&page=1`,
             )
           }}>
           Ori
@@ -57,9 +61,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="ovo_vegetarian"
           className="rounded-full bg-color-ovo opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(
-              `/${path}/search?type=ovo_vegetarian&search=${search}&page=1`,
-            )
+            router.push(`/${path}?type=ovo_vegetarian&search=${search}&page=1`)
           }}>
           Ovo
         </TabsTrigger>
@@ -67,9 +69,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="pescatarian"
           className="rounded-full bg-color-psc opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(
-              `/${path}/search?type=pescatarian&search=${search}&page=1`,
-            )
+            router.push(`/${path}?type=pescatarian&search=${search}&page=1`)
           }}>
           Psc
         </TabsTrigger>
@@ -78,7 +78,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-lct opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=lacto_vegetarian&search=${search}&page=1`,
+              `/${path}?type=lacto_vegetarian&search=${search}&page=1`,
             )
           }}>
           Lct
@@ -88,7 +88,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-pol opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=pollo_vegetarian&search=${search}&page=1`,
+              `/${path}?type=pollo_vegetarian&search=${search}&page=1`,
             )
           }}>
           Pol
@@ -97,9 +97,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           value="fruitarian"
           className="rounded-full bg-color-flu opacity-60 mr-1 text-sm w-8 h-8"
           onClick={() => {
-            router.push(
-              `/${path}/search?type=fruitarian&search=${search}&page=1`,
-            )
+            router.push(`/${path}?type=fruitarian&search=${search}&page=1`)
           }}>
           Flu
         </TabsTrigger>
@@ -108,7 +106,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
           className="rounded-full bg-color-oth opacity-60 text-sm w-8 h-8"
           onClick={() => {
             router.push(
-              `/${path}/search?type=other_vegetarian&search=${search}&page=1`,
+              `/${path}?type=other_vegetarian&search=${search}&page=1`,
             )
           }}>
           Oth
