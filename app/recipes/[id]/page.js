@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import SideButtons from '@/components/layouts/SideButtons'
 
 const page = ({ params }) => {
   const id = params.id
@@ -71,6 +72,7 @@ const page = ({ params }) => {
           commentsToRecipe: data.comments,
           tags: data.article.tags,
           vegeTags: vegeTags,
+          likes: data.likes,
         })
       } catch (err) {
         console.log(err)
@@ -274,6 +276,12 @@ const page = ({ params }) => {
           一覧に戻る
         </Button>
       </Link>
+      <SideButtons
+        articleId={articlesData.article_id}
+        likeableType="ArticleOfRecipe"
+        likes={articlesData.likes}
+        setArticlesData={setArticlesData}
+      />
     </main>
   )
 }
