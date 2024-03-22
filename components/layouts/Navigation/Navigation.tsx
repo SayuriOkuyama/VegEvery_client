@@ -10,23 +10,14 @@ export default function Navigation() {
   return (
     <>
       <div
-        className={`${styles.wrapper} ${styles.footer_nav} h-16 footer_nav flex`}>
+        className={`${styles.wrapper} ${styles.footer_nav} h-16 footer_nav flex pb-2`}>
         <Link href={'/'} className={styles.link}>
           <div className={`${styles.menu_wrapper}`}>
             <div
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
               <PiHouseLineLight size="80%" />
             </div>
-            <div className={`${styles.menu}  text-center`}>Top</div>
-          </div>
-        </Link>
-        <Link href={'/'} className={styles.link}>
-          <div className={`${styles.menu_wrapper}`}>
-            <div
-              className={`${styles.icon_wrapper} flex justify-center items-center`}>
-              <PiMapPinLineLight size="80%" />
-            </div>
-            <div className={`${styles.menu}  text-center`}>Map</div>
+            <div className={`${styles.menu}  text-center text-sm`}>Top</div>
           </div>
         </Link>
         <Link href={'/recipes'} className={styles.link}>
@@ -35,7 +26,7 @@ export default function Navigation() {
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
               <PiCookingPotLight size="80%" />
             </div>
-            <div className={`${styles.menu}  text-center`}>Recipe</div>
+            <div className={`${styles.menu}  text-center text-sm`}>Recipe</div>
           </div>
         </Link>
         <Link href={'/food_items'} className={styles.link}>
@@ -44,7 +35,16 @@ export default function Navigation() {
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
               <CiApple size="80%" />
             </div>
-            <div className={`${styles.menu}  text-center `}>Items</div>
+            <div className={`${styles.menu}  text-center text-sm`}>Items</div>
+          </div>
+        </Link>
+        <Link href={'/map'} className={styles.link}>
+          <div className={`${styles.menu_wrapper}`}>
+            <div
+              className={`${styles.icon_wrapper} flex justify-center items-center`}>
+              <PiMapPinLineLight size="80%" />
+            </div>
+            <div className={`${styles.menu}  text-center text-sm`}>Map</div>
           </div>
         </Link>
         <Link href={'/'} className={styles.link}>
@@ -53,7 +53,7 @@ export default function Navigation() {
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
               <CiUser size="80%" />
             </div>
-            <div className={`${styles.menu} text-center`}>Account</div>
+            <div className={`${styles.menu} text-center text-sm`}>Account</div>
           </div>
         </Link>
       </div>

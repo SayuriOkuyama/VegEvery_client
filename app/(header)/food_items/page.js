@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
-import Popular from '../../components/layouts/recipes/Popular.js'
+import Popular from '@/components/layouts/recipes/Popular.js'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
