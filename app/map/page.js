@@ -10,6 +10,7 @@ function page() {
   const map = useMap()
   const placesLibrary = useMapsLibrary('places')
   const [placesService, setPlacesService] = useState(null)
+  const [position, setPosition] = useState('')
 
   useEffect(() => {
     if (!placesLibrary || !map) return
@@ -24,6 +25,18 @@ function page() {
 
     // ...use placesService...
   }, [placesService])
+
+  useEffect(() => {
+    const success = res => {
+      console.log(res)
+      setPosition({
+        lat: res.coords.latitude,
+        lng: res.coords.longitude,
+      })
+    }
+    navigator.geolocation.getCurrentPosition(success)
+  }, [])
+
   //   async function getPlaceDetails() {
   //     // プレイス ID を使用して、新しいプレイス インスタンスを作成
   //     const place = new google.maps.places.Place({
@@ -96,7 +109,7 @@ function page() {
         <Logo size="50" />
       </div>
       <div className="w-full h-full pb-16">
-        <Maps />
+        {position && <Maps position={position} />}
       </div>
     </main>
   )

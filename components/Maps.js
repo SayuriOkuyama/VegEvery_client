@@ -20,25 +20,25 @@ import { PiMagnifyingGlassLight } from 'react-icons/pi'
 // import { CustomZoomControl } from './CustomZoomControl'
 // import ControlPanel from './ControllPanel'
 
-const Maps = () => {
-  const [position, setPosition] = useState({
-    lat: 35.2713215,
-    lng: 139.1797686,
-  })
+const Maps = ({ position }) => {
+  // const [position, setPosition] = useState({
+  //   lat: 35.2713215,
+  //   lng: 139.1797686,
+  // })
 
   const [markerRef, marker] = useAdvancedMarkerRef()
   const [infoWindowShown, setInfoWindowShown] = useState(false)
 
-  useEffect(() => {
-    const success = res => {
-      console.log(res)
-      setPosition({
-        lat: res.coords.latitude,
-        lng: res.coords.longitude,
-      })
-    }
-    navigator.geolocation.getCurrentPosition(success)
-  }, [])
+  // useEffect(() => {
+  //   const success = res => {
+  //     console.log(res)
+  //     setPosition({
+  //       lat: res.coords.latitude,
+  //       lng: res.coords.longitude,
+  //     })
+  //   }
+  //   navigator.geolocation.getCurrentPosition(success)
+  // }, [])
 
   const toggleInfoWindow = () =>
     setInfoWindowShown(previousState => !previousState)
@@ -60,11 +60,9 @@ const Maps = () => {
         defaultCenter={position}
         defaultZoom={zoom}
         zoom={zoom}
-        // center={position}
         disableDefaultUI={true}
         gestureHandling={'greedy'}
         mapId="46ff2cf41492db8c"
-        // zoom={zoom}
         onZoomChanged={ev => setZoom(ev.detail.zoom)}>
         <AdvancedMarker
           position={position}
@@ -106,26 +104,12 @@ const Maps = () => {
             <div>
               <button
                 className="block h-8 w-8 mx-2 my-2 text-xl bg-white border"
-                onClick={() =>
-                  setZoom(prev => {
-                    console.log('+')
-                    console.log(prev++)
-                    console.log(zoom)
-                    return prev++
-                  })
-                }>
+                onClick={() => setZoom(prev => (prev < 19 ? prev + 1 : 20))}>
                 ＋
               </button>
               <button
                 className="block h-8 w-8 mx-2 mb-6 text-xl bg-white border"
-                onClick={() =>
-                  setZoom(prev => {
-                    console.log('-')
-                    console.log(prev--)
-                    console.log(zoom)
-                    return prev--
-                  })
-                }>
+                onClick={() => setZoom(prev => (prev > 2 ? prev - 1 : 1))}>
                 ー
               </button>
             </div>
