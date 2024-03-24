@@ -14,6 +14,9 @@ function page() {
   //   // ...use placesService...
   // }, [placesService])
 
+  // コメダ
+  // const position = { lat: 35.2713215, lng: 139.1797686 };
+
   useEffect(() => {
     const success = res => {
       console.log(res)

@@ -19,6 +19,7 @@ import { IconContext } from 'react-icons' //IconContextをインポート
 import { PiMagnifyingGlassLight } from 'react-icons/pi'
 import AutoComplete from '@/components/layouts/map/AutoComplete'
 import MapHandler from '@/components/layouts/map/MapHandler'
+import ClickHandler from '@/components/layouts/map/ClickHandler'
 
 // import { CustomZoomControl } from './CustomZoomControl'
 // import ControlPanel from './ControllPanel'
@@ -32,7 +33,7 @@ const MapController = () => {
     if (!map) return
     console.log(map)
     // do something with the map instance
-  }, [map])
+  }, [map, marker])
 
   // useEffect(() => {
   //   if (!placesLibrary || !map) return
@@ -49,6 +50,10 @@ const Maps = ({ position, useHandleSearch }) => {
   const [markerRef, marker] = useAdvancedMarkerRef()
   const [infoWindowShown, setInfoWindowShown] = useState(false)
   const [selectedPlace, setSelectedPlace] = useState()
+  const [markersData, setMarkersData] = useState()
+  console.log(markersData)
+  const [clickedPlace, setClickedPlace] = useState(null)
+
   const toggleInfoWindow = () =>
     setInfoWindowShown(previousState => !previousState)
 
@@ -68,6 +73,7 @@ const Maps = ({ position, useHandleSearch }) => {
         disableDefaultUI={true}
         gestureHandling={'greedy'}
         mapId="46ff2cf41492db8c"
+        onClick={() => console.log('click')}
         onZoomChanged={ev => setZoom(ev.detail.zoom)}>
         <AdvancedMarker
           position={position}
@@ -87,26 +93,11 @@ const Maps = ({ position, useHandleSearch }) => {
           </InfoWindow>
         )}
         <MapControl position={ControlPosition.TOP}>
-          <AutoComplete setSelectedPlace={setSelectedPlace} />
+          <AutoComplete
+            setSelectedPlace={setSelectedPlace}
+            setMarkersData={setMarkersData}
+          />
         </MapControl>
-        {/* <MapControl position={ControlPosition.TOP}>
-          <div className="w-dvw flex justify-end items-center mt-6 mr-2">
-            <Input
-              // ref={refInput}
-              type="text"
-              placeholder="search"
-              className="pr-0 block w-60 h-8"
-            />
-            <Button
-              onClick={() => MapController()}
-              className="py-3 px-1 ml-1 border border-button-color h-6 bg-button">
-              <IconContext.Provider
-                value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
-                <PiMagnifyingGlassLight className="self-center text-lg" />
-              </IconContext.Provider>
-            </Button>
-          </div>
-        </MapControl> */}
         <MapControl position={ControlPosition.BOTTOM}>
           <div className="w-dvw flex justify-end">
             <div>
@@ -123,13 +114,39 @@ const Maps = ({ position, useHandleSearch }) => {
             </div>
           </div>
         </MapControl>
-        {/* <CustomZoomControl
-          controlPosition={controlPosition}
-          zoom={zoom}
-          onZoomChange={zoom => setZoom(zoom)}
-        /> */}
+        {markersData &&
+          markersData.map(markerData => (
+            <>
+              <AdvancedMarker
+                key={markerData.geometry.location}
+                position={markerData.geometry.location}
+                ref={markerRef}
+                // onClick={onMarkerClick}
+                label={markerData.name?.substr(0, 1)}
+                // onClick={}
+              />
+              {infoWindowShown && (
+                <InfoWindow position={markerData.geometry.location}>
+                  <div>
+                    <p>{markerData.name}</p>
+                    <p>評価：{markerData.rating}</p>
+                    <p>価格帯：{markerData.price_level}</p>
+                  </div>
+                  {/* <Image src={placeData.photos[0].getUrl()}></Image> */}
+                </InfoWindow>
+              )}
+            </>
+          ))}
+        {/* {clicks.map((latLng, i) => (
+          <AdvancedMarker key={i} position={latLng} />
+        ))} */}
+        <MapHandler
+          selectedPlace={selectedPlace}
+          setMarkersData={setMarkersData}
+          setClickedPlace={setClickedPlace}
+        />
+        <ClickHandler />
       </Map>
-      <MapHandler selectedPlace={selectedPlace} />
     </APIProvider>
   )
 }
