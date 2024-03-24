@@ -13,16 +13,9 @@ import {
 } from '@vis.gl/react-google-maps'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { IconContext } from 'react-icons' //IconContextをインポート
-import { PiMagnifyingGlassLight } from 'react-icons/pi'
 import AutoComplete from '@/components/layouts/map/AutoComplete'
 import MapHandler from '@/components/layouts/map/MapHandler'
 import ClickHandler from '@/components/layouts/map/ClickHandler'
-
-// import { CustomZoomControl } from './CustomZoomControl'
-// import ControlPanel from './ControllPanel'
 
 const MapController = () => {
   const map = useMap()
@@ -53,12 +46,24 @@ const Maps = ({ position, useHandleSearch }) => {
   const [markersData, setMarkersData] = useState()
   console.log(markersData)
   const [clickedPlace, setClickedPlace] = useState(null)
+  const [selectedMarker, setSelectedMarker] = useState(null)
 
-  const toggleInfoWindow = () =>
+  const toggleInfoWindow = () => {
+    console.log('toggleInfoWindow!!')
     setInfoWindowShown(previousState => !previousState)
+  }
+  const closeInfoWindow = () => {
+    console.log('closeInfoWindow!!')
+    setInfoWindowShown(false)
+  }
 
-  const closeInfoWindow = () => setInfoWindowShown(false)
+  // const closeInfoWindow = () => setInfoWindowShown(false)
   const [zoom, setZoom] = useState(18)
+
+  const handleMarkerClick = markerData => {
+    console.log('handleMarkerClick!!')
+    setSelectedMarker(markerData)
+  }
 
   console.log(zoom)
   return (
@@ -120,26 +125,22 @@ const Maps = ({ position, useHandleSearch }) => {
               <AdvancedMarker
                 key={markerData.geometry.location}
                 position={markerData.geometry.location}
-                ref={markerRef}
-                // onClick={onMarkerClick}
                 label={markerData.name?.substr(0, 1)}
-                // onClick={}
+                onClick={() => handleMarkerClick(markerData)}
               />
-              {infoWindowShown && (
-                <InfoWindow position={markerData.geometry.location}>
+              {selectedMarker && (
+                <InfoWindow
+                  position={selectedMarker.geometry.location}
+                  onCloseClick={() => setSelectedMarker(null)}>
                   <div>
-                    <p>{markerData.name}</p>
-                    <p>評価：{markerData.rating}</p>
-                    <p>価格帯：{markerData.price_level}</p>
+                    <p>{selectedMarker.name}</p>
+                    <p>評価：{selectedMarker.rating}</p>
+                    <p>価格帯：{selectedMarker.price_level}</p>
                   </div>
-                  {/* <Image src={placeData.photos[0].getUrl()}></Image> */}
                 </InfoWindow>
               )}
             </>
           ))}
-        {/* {clicks.map((latLng, i) => (
-          <AdvancedMarker key={i} position={latLng} />
-        ))} */}
         <MapHandler
           selectedPlace={selectedPlace}
           setMarkersData={setMarkersData}

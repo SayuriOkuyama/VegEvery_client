@@ -143,17 +143,8 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
       // }
       var request = {
         location: map.getCenter(),
-        // locationBias: {
-        //   circle: {
-        //     center: map.getCenter(),
-        //     radius: 50,
-        //   },
-        // },
         radius: 100,
-        type: 'food',
-        // includedTypes: ['food', 'restaurant', 'cafe'],
-        // excludedTypes: ['route'],
-        keyword: '飲食店 カフェ レストラン', // 検索地点の付近を`keyword`を使って検索する
+        keyword: value,
       }
 
       // getDetails が成功した時に実行する関数
