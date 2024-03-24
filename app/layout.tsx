@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Zen_Kaku_Gothic_New } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/layouts/Header'
 import Navigation from '@/components/layouts/Navigation/Navigation'
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
@@ -22,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={zenKakuGothic.className}>
-        <Header />
         {children}
         <Navigation />
       </body>

@@ -6,6 +6,7 @@ import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 const page = () => {
   const [articles, setArticles] = useState()
@@ -38,12 +39,14 @@ const page = () => {
     <main className="pb-24">
       <h3 className="text-center text-lg font-bold mt-8">フードアイテム情報</h3>
       <div className="flex justify-end mt-4 mb-1">
-        <Button className="py-0 px-2 mr-2 bg-button border-button-color">
-          <div className="flex items-end">
-            <PiNotePencilLight className="self-end text-lg text-bold" />
-            投稿する
-          </div>
-        </Button>
+        <Link href={'/food_items/create'}>
+          <Button className="py-0 px-2 mr-2 bg-button border-button-color">
+            <div className="flex items-end">
+              <PiNotePencilLight className="self-end text-lg text-bold" />
+              投稿する
+            </div>
+          </Button>
+        </Link>
       </div>
       <Tabs defaultValue="search" className="flex flex-col">
         <TabsList className="w-100 self-center">
