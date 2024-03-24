@@ -4,11 +4,12 @@ import {
   APIProvider,
   ControlPosition,
   Map,
-  Pin,
+  useMapsLibrary,
   MapControl,
   AdvancedMarker,
   InfoWindow,
   useAdvancedMarkerRef,
+  useMap,
 } from '@vis.gl/react-google-maps'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -16,40 +17,44 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { IconContext } from 'react-icons' //IconContextをインポート
 import { PiMagnifyingGlassLight } from 'react-icons/pi'
+import AutoComplete from '@/components/layouts/map/AutoComplete'
+import MapHandler from '@/components/layouts/map/MapHandler'
 
 // import { CustomZoomControl } from './CustomZoomControl'
 // import ControlPanel from './ControllPanel'
 
-const Maps = ({ position }) => {
-  // const [position, setPosition] = useState({
-  //   lat: 35.2713215,
-  //   lng: 139.1797686,
-  // })
+const MapController = () => {
+  const map = useMap()
+  const placesLibrary = useMapsLibrary('places')
+  // const [placesService, setPlacesService] = useState(null)
 
-  const [markerRef, marker] = useAdvancedMarkerRef()
-  const [infoWindowShown, setInfoWindowShown] = useState(false)
+  useEffect(() => {
+    if (!map) return
+    console.log(map)
+    // do something with the map instance
+  }, [map])
 
   // useEffect(() => {
-  //   const success = res => {
-  //     console.log(res)
-  //     setPosition({
-  //       lat: res.coords.latitude,
-  //       lng: res.coords.longitude,
-  //     })
-  //   }
-  //   navigator.geolocation.getCurrentPosition(success)
-  // }, [])
+  //   if (!placesLibrary || !map) return
 
+  //   // placesLibrary がロードされると、
+  //   // placeLibrary API オブジェクトを介してライブラリにアクセスできる
+  //   setPlacesService(new placesLibrary.PlacesService(map))
+  // }, [placesLibrary, map])
+
+  return <>...</>
+}
+
+const Maps = ({ position, useHandleSearch }) => {
+  const [markerRef, marker] = useAdvancedMarkerRef()
+  const [infoWindowShown, setInfoWindowShown] = useState(false)
+  const [selectedPlace, setSelectedPlace] = useState()
   const toggleInfoWindow = () =>
     setInfoWindowShown(previousState => !previousState)
 
   const closeInfoWindow = () => setInfoWindowShown(false)
   const [zoom, setZoom] = useState(18)
 
-  const handleSearch = () => {
-    // const search = refInput.current.value
-    // router.push(`/${path}?type=${type}&search=${search}&page=1`)
-  }
   console.log(zoom)
   return (
     <APIProvider
@@ -82,15 +87,18 @@ const Maps = ({ position }) => {
           </InfoWindow>
         )}
         <MapControl position={ControlPosition.TOP}>
-          <div className="flex justify-center items-center mt-4">
+          <AutoComplete setSelectedPlace={setSelectedPlace} />
+        </MapControl>
+        {/* <MapControl position={ControlPosition.TOP}>
+          <div className="w-dvw flex justify-end items-center mt-6 mr-2">
             <Input
               // ref={refInput}
               type="text"
               placeholder="search"
-              className="pr-0 block w-64 h-8"
+              className="pr-0 block w-60 h-8"
             />
             <Button
-              onClick={() => handleSearch()}
+              onClick={() => MapController()}
               className="py-3 px-1 ml-1 border border-button-color h-6 bg-button">
               <IconContext.Provider
                 value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
@@ -98,7 +106,7 @@ const Maps = ({ position }) => {
               </IconContext.Provider>
             </Button>
           </div>
-        </MapControl>
+        </MapControl> */}
         <MapControl position={ControlPosition.BOTTOM}>
           <div className="w-dvw flex justify-end">
             <div>
@@ -121,6 +129,7 @@ const Maps = ({ position }) => {
           onZoomChange={zoom => setZoom(zoom)}
         /> */}
       </Map>
+      <MapHandler selectedPlace={selectedPlace} />
     </APIProvider>
   )
 }

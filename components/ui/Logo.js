@@ -9,7 +9,7 @@ function Logo({ size }) {
         src="/logo.png"
         alt="VegEvery"
         width={size}
-        height={size}
+        height={(size / 10) * 11}
         className="mx-auto"
       />
     </Link>

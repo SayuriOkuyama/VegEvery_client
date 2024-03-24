@@ -1,30 +1,18 @@
 'use client'
 
 import Logo from '@/components/ui/Logo'
-import Maps from '@/components/Maps.js'
-
-import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps'
+import Maps, { MapController } from '@/components/layouts/map/Maps'
+import { useHandleSearch } from '@/components/layouts/map/SearchMap'
 import { useEffect, useState } from 'react'
 
 function page() {
-  const map = useMap()
-  const placesLibrary = useMapsLibrary('places')
-  const [placesService, setPlacesService] = useState(null)
   const [position, setPosition] = useState('')
 
-  useEffect(() => {
-    if (!placesLibrary || !map) return
+  // useEffect(() => {
+  //   if (!placesService) return
 
-    // placesLibrary がロードされると、
-    // placeLibrary API オブジェクトを介してライブラリにアクセスできる
-    setPlacesService(new placesLibrary.PlacesService(map))
-  }, [placesLibrary, map])
-
-  useEffect(() => {
-    if (!placesService) return
-
-    // ...use placesService...
-  }, [placesService])
+  //   // ...use placesService...
+  // }, [placesService])
 
   useEffect(() => {
     const success = res => {
@@ -105,8 +93,8 @@ function page() {
 
   return (
     <main className="h-full">
-      <div className="fixed top-2">
-        <Logo size="50" />
+      <div className="fixed top-2 left-2 z-50">
+        <Logo size="40" />
       </div>
       <div className="w-full h-full pb-16">
         {position && <Maps position={position} />}
