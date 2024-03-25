@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { useMap, useMapsLibrary } from '@vis.gl/react-google-maps'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { PiMagnifyingGlassLight } from 'react-icons/pi'
+import { IconContext } from 'react-icons' //IconContextをインポート
 
-const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
+const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
   const map = useMap()
   const places = useMapsLibrary('places')
 
@@ -107,7 +110,7 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
       // ↑ のオプションと関数を渡して、place 情報を取得する
       placesService?.getDetails(detailRequestOptions, detailsRequestCallback)
     },
-    [setSelectedPlace, places, placesService, sessionToken],
+    [setSelectedPlace, places, placesService, sessionToken, markersData],
   )
 
   // テキスト検索をクリックしたときに発火
@@ -119,30 +122,10 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
       if (!value) return
       console.log('valueあり!!')
 
-      // 取得する情報
-      // const detailRequestOptions = {
-      //   placeId,
-      //   fields: [
-      //     'geometry',
-      //     'name',
-      //     'formatted_address',
-      //     'icon',
-      //     'business_status',
-      //     'opening_hours',
-      //     'place_id',
-      //     'photos',
-      //     'rating',
-      //     'reviews',
-      //     'types',
-      //     'url',
-      //     'website',
-      //     'formatted_address',
-      //     'formatted_phone_number',
-      //   ],
-      //   sessionToken,
-      // }
+      const bounds = map.getBounds()
+
       var request = {
-        location: map.getCenter(),
+        bounds: bounds,
         radius: 100,
         keyword: value,
       }
@@ -151,7 +134,7 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
       const callback = placeDetails => {
         console.log(placeDetails)
         // ここでセットして、MapHandler コンポーネントで画面表示に使う
-        // setSelectedPlace(placeDetails)
+        setSelectedPlace(placeDetails)
         // サジェストを消す
         setPredictionResults([])
         // setSessionToken(new places.AutocompleteSessionToken())
@@ -184,7 +167,7 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
             </IconContext.Provider>
           </Button> */}
         </div>
-        {predictionResults.length > 0 && (
+        {predictionResults.length > 0 ? (
           <ul className="bg-white rounded-sm mt-2 mr-1 p-2 space-y-1">
             <li
               key={1}
@@ -203,6 +186,18 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData }) => {
               )
             })}
           </ul>
+        ) : (
+          inputValue && (
+            <Button
+              onClick={() => handleTextSearchClick(inputValue)}
+              className="mt-2 border-button-color bg-button py-1 px-2 h-7">
+              このエリアを検索
+              <IconContext.Provider
+                value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
+                <PiMagnifyingGlassLight className="self-center text-lg" />
+              </IconContext.Provider>
+            </Button>
+          )
         )}
       </div>
     </div>

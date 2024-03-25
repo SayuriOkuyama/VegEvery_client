@@ -15,6 +15,19 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useForm } from 'react-hook-form'
+import { getArticles } from '@/lib/utils/fetch.js'
+import useSWR from 'swr'
+import { GoTrash } from 'react-icons/go'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog'
+import { useRouter } from 'next/navigation'
 
 const page = ({ params }) => {
   const id = params.id
@@ -31,49 +44,42 @@ const page = ({ params }) => {
     vegeTags: '',
   })
   const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
+
+  const { data, error } = useSWR(`food_items/${id}`, getArticles)
+  console.log(data)
 
   useEffect(() => {
-    const getArticles = async () => {
-      try {
-        const response = await axios.get(`/food_items/${id}`)
+    if (data) {
+      const reports = data.article.reports.sort((a, b) => a.order - b.order)
 
-        const data = await response.data
-        console.log(data)
-        const reports = data.article.reports.sort((a, b) => a.order - b.order)
+      const vegeTags = [
+        data.article.vegan,
+        data.article.oriental_vegetarian,
+        data.article.ovo_vegetarian,
+        data.article.pescatarian,
+        data.article.lacto_vegetarian,
+        data.article.pollo_vegetarian,
+        data.article.fruitarian,
+        data.article.other_vegetarian,
+      ]
 
-        const vegeTags = [
-          data.article.vegan,
-          data.article.oriental_vegetarian,
-          data.article.ovo_vegetarian,
-          data.article.pescatarian,
-          data.article.lacto_vegetarian,
-          data.article.pollo_vegetarian,
-          data.article.fruitarian,
-          data.article.other_vegetarian,
-        ]
-
-        setArticlesData({
-          article_id: data.article.id,
-          title: data.article.title,
-          servings: data.article.servings,
-          thumbnail_url: data.article.thumbnail_url,
-          cooking_time: data.article.cooking_time,
-          number_of_likes: data.article.number_of_likes,
-          user: data.article.user,
-          items: data.article.items,
-          reports: reports,
-          commentsToItem: data.comments,
-          tags: data.article.tags,
-          vegeTags: vegeTags,
-        })
-      } catch (err) {
-        console.log(err)
-      }
+      setArticlesData({
+        article_id: data.article.id,
+        title: data.article.title,
+        servings: data.article.servings,
+        thumbnail_url: data.article.thumbnail_url,
+        cooking_time: data.article.cooking_time,
+        number_of_likes: data.article.number_of_likes,
+        user: data.article.user,
+        items: data.article.items,
+        reports: reports,
+        commentsToItem: data.comments,
+        tags: data.article.tags,
+        vegeTags: vegeTags,
+      })
     }
-
-    const data = getArticles()
-  }, [])
-  console.log(articlesData)
+  }, [data])
 
   const { register, reset, handleSubmit, control, getValues } = useForm({
     // resolver: zodResolver(formSchema),
@@ -102,6 +108,17 @@ const page = ({ params }) => {
     reset()
     setIsOpen(false)
   }
+
+  const handleCommentDelete = async commentId => {
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/comment`,
+      { data: { id: commentId } },
+    )
+    router.replace()
+  }
+
+  if (error) return <p>Error: {error.message}</p>
+  if (!data) return <p>Loading...</p>
 
   return (
     <main className="pb-20">
@@ -186,7 +203,6 @@ const page = ({ params }) => {
       <div className="container py-8">
         <h3 className="mb-4">レポート</h3>
         {articlesData.reports.map(report => {
-          console.log(report)
           return (
             <div key={report.id} className="pb-4">
               <hr className="" />
@@ -219,7 +235,38 @@ const page = ({ params }) => {
           {articlesData.commentsToItem &&
             articlesData.commentsToItem.map(commentToItem => {
               return (
-                <div key={commentToItem.id}>
+                <div key={commentToItem.id} className="relative">
+                  {commentToItem.user_id === 1 && (
+                    <Dialog className="mx-auto mt-0">
+                      <DialogTrigger className="absolute right-4">
+                        <div className=" bg-white/80 p-1 rounded-full">
+                          <GoTrash />
+                        </div>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>コメントを削除しますか？</DialogTitle>
+                          <DialogDescription className="flex">
+                            <Button
+                              onClick={() =>
+                                handleCommentDelete(commentToItem.id)
+                              }
+                              type="button"
+                              className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                              削除する
+                            </Button>
+                            <DialogClose asChild>
+                              <Button
+                                type="button"
+                                className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                                戻る
+                              </Button>
+                            </DialogClose>
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                   <div className="flex">
                     <Avatar className="self-end mr-2">
                       <AvatarImage src={commentToItem.userIcon} alt="@shadcn" />
