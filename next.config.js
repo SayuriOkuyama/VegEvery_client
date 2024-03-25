@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'sbbfkhueljpgbvhxguip.supabase.co',
       },
+      {
+        protocol: 'https',
+        hostname: 'maps.googleapis.com',
+      },
     ],
   },
 }

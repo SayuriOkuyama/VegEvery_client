@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
 import { v4 as uuidv4 } from 'uuid'
-import EditTags from '@/app/food_items/edit/EditTags.js'
-import EditItems from '@/app/food_items/edit/EditItems.js'
-import EditReports from '@/app/food_items/edit/EditReports.js'
-import EditFormVegeTypes from '@/app/recipes/edit/EditFormVegeTypes.js'
+import EditTags from '@/app/(header)/food_items/edit/EditTags.js'
+import EditItems from '@/app/(header)/food_items/edit/EditItems.js'
+import EditReports from '@/app/(header)/food_items/edit/EditReports.js'
+import EditFormVegeTypes from '@/app/(header)/recipes/edit/EditFormVegeTypes.js'
 import { useEffect, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
@@ -16,6 +16,15 @@ import { useDropzone } from 'react-dropzone'
 import { useRouter, useSearchParams } from 'next/navigation.js'
 import { getArticles } from '@/lib/utils/fetch.js'
 import useSWR from 'swr'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog'
 
 const page = () => {
   const router = useRouter()
@@ -221,6 +230,36 @@ const page = () => {
     }
   }
 
+  const handleDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
+      )
+      console.log(res.data)
+
+      const imageRes = await supabase.storage.from('VegEvery-backet').remove()
+      console.log(imageRes.data)
+
+      await Promise.all(
+        arrayOldPath.map(oldPath => {
+          supabase.storage
+            .from('VegEvery-backet')
+            .remove(oldPath)
+            .then(response => {
+              console.log('Delete report_image successful:', response.data)
+            })
+            .catch(error => {
+              console.error('Error delete report_image:', error)
+            })
+        }),
+      )
+
+      // router.push('/food_items')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
@@ -287,7 +326,36 @@ const page = () => {
         />
         <hr className="mx-4" />
 
-        <div className="">
+        <div className="flex justify-center">
+          <Dialog className="mx-auto">
+            <DialogTrigger className="mx-auto">
+              <Button
+                type="button"
+                className="mx-auto bg-button block py-1 mt-16 border-button-color ">
+                削除
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>本当に削除しますか？</DialogTitle>
+                <DialogDescription className="flex">
+                  <Button
+                    onClick={handleDelete}
+                    type="button"
+                    className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                    削除する
+                  </Button>
+                  <DialogClose asChild>
+                    <Button
+                      type="button"
+                      className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                      戻る
+                    </Button>
+                  </DialogClose>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
           <Button
             type="submit"
             className="mx-auto bg-button block py-1 mt-16 border-button-color ">

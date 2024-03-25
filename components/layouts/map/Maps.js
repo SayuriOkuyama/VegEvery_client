@@ -1,5 +1,6 @@
 'use client'
 
+import React, { useCallback } from 'react'
 import {
   APIProvider,
   ControlPosition,
@@ -16,6 +17,17 @@ import { useEffect, useState } from 'react'
 import AutoComplete from '@/components/layouts/map/AutoComplete'
 import MapHandler from '@/components/layouts/map/MapHandler'
 import ClickHandler from '@/components/layouts/map/ClickHandler'
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
+import { Button } from '@/components/ui/button'
 
 const MapController = () => {
   const map = useMap()
@@ -47,6 +59,7 @@ const Maps = ({ position, useHandleSearch }) => {
   console.log(markersData)
   const [clickedPlace, setClickedPlace] = useState(null)
   const [selectedMarker, setSelectedMarker] = useState(null)
+  const [open, setOpen] = useState(false)
 
   const toggleInfoWindow = () => {
     console.log('toggleInfoWindow!!')
@@ -60,10 +73,14 @@ const Maps = ({ position, useHandleSearch }) => {
   // const closeInfoWindow = () => setInfoWindowShown(false)
   const [zoom, setZoom] = useState(18)
 
-  const handleMarkerClick = markerData => {
-    console.log('handleMarkerClick!!')
-    setSelectedMarker(markerData)
-  }
+  const handleMarkerClick = useCallback(
+    markerData => {
+      console.log('handleMarkerClick!!')
+      setSelectedMarker(markerData)
+      setOpen(true)
+    },
+    [selectedMarker],
+  )
 
   console.log(zoom)
   return (
@@ -80,11 +97,14 @@ const Maps = ({ position, useHandleSearch }) => {
         mapId="46ff2cf41492db8c"
         onClick={() => console.log('click')}
         onZoomChanged={ev => setZoom(ev.detail.zoom)}>
-        <AdvancedMarker
-          position={position}
-          ref={markerRef}
-          onClick={toggleInfoWindow}
-        />
+        <div className="bg-black">
+          {/* <AdvancedMarker
+            position={position}
+            ref={markerRef}
+            onClick={() => handleMarkerClick()}
+            // onClick={toggleInfoWindow}
+          /> */}
+        </div>
         {/* <Image
             width={30}
             height={30}
@@ -93,9 +113,33 @@ const Maps = ({ position, useHandleSearch }) => {
             priority
             className="h-auto"></Image> */}
         {infoWindowShown && (
-          <InfoWindow anchor={marker} onCloseClick={closeInfoWindow}>
-            You can drag and drop me.
-          </InfoWindow>
+          // <InfoWindow anchor={marker} onCloseClick={closeInfoWindow}>
+          //   <div>
+          //     <p>お店の名前</p>
+          //     <p>評価：★★★★</p>
+          //     <p>お店の名前</p>
+          //     <p>評価：★★★★</p>
+          //   </div>
+          // </InfoWindow>
+          <Drawer open={open} onOpenChange={setOpen}>
+            {/* <DrawerTrigger></DrawerTrigger> */}
+            <DrawerContent className="pb-20">
+              <DrawerHeader>
+                <DrawerTitle>
+                  {selectedMarker && selectedMarker.name}
+                </DrawerTitle>
+                <DrawerDescription>
+                  This action cannot be undone.
+                </DrawerDescription>
+              </DrawerHeader>
+              <DrawerFooter>
+                <Button>Submit</Button>
+                <DrawerClose>
+                  <Button variant="outline">Cancel</Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
         )}
         <MapControl position={ControlPosition.TOP}>
           <AutoComplete
@@ -119,34 +163,41 @@ const Maps = ({ position, useHandleSearch }) => {
             </div>
           </div>
         </MapControl>
-        {markersData &&
+        <div id="marker_point"></div>
+        {/* {markersData &&
           markersData.map(markerData => (
-            <>
+            <React.Fragment key={markerData.place_id}>
+              <Drawer open={open} onOpenChange={setOpen}>
+                <DrawerContent className="pb-20">
+                  <DrawerHeader>
+                    <DrawerTitle>
+                      {selectedMarker && selectedMarker.name}
+                    </DrawerTitle>
+                    <DrawerDescription>
+                      This action cannot be undone.
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerFooter>
+                    <Button>Submit</Button>
+                    <DrawerClose>
+                      <Button variant="outline">Cancel</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
               <AdvancedMarker
-                key={markerData.geometry.location}
                 position={markerData.geometry.location}
                 label={markerData.name?.substr(0, 1)}
                 onClick={() => handleMarkerClick(markerData)}
               />
-              {selectedMarker && (
-                <InfoWindow
-                  position={selectedMarker.geometry.location}
-                  onCloseClick={() => setSelectedMarker(null)}>
-                  <div>
-                    <p>{selectedMarker.name}</p>
-                    <p>評価：{selectedMarker.rating}</p>
-                    <p>価格帯：{selectedMarker.price_level}</p>
-                  </div>
-                </InfoWindow>
-              )}
-            </>
-          ))}
+            </React.Fragment>
+          ))} */}
         <MapHandler
           selectedPlace={selectedPlace}
           setMarkersData={setMarkersData}
           setClickedPlace={setClickedPlace}
         />
-        <ClickHandler />
+        {/* <ClickHandler /> */}
       </Map>
     </APIProvider>
   )
