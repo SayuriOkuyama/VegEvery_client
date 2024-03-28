@@ -43,7 +43,7 @@ const page = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function onSubmit(values) {
-    console.log(values)
+    // console.log(values)
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
@@ -73,7 +73,7 @@ const page = () => {
                 `items/report_image/${uuidv4()}.${fileExtension}`,
                 report.file,
               )
-            console.log('Report image upload successful:', response.data)
+            // console.log('Report image upload successful:', response.data)
             reportImagesData[index] = {
               image_path: response.data.path,
               image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
@@ -81,12 +81,12 @@ const page = () => {
           }
         }),
       )
-      console.log({
-        values,
-        thumbnail_path,
-        thumbnail_url,
-        reportImagesData,
-      })
+      // console.log({
+      //   values,
+      //   thumbnail_path,
+      //   thumbnail_url,
+      //   reportImagesData,
+      // })
 
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items`,
@@ -106,11 +106,11 @@ const page = () => {
         },
       )
 
-      console.log(res.data)
-      console.log('画面遷移')
+      // console.log(res.data)
+      // console.log('画面遷移')
       router.push(`/food_items/${res.data.article.id}`)
     } catch (error) {
-      console.error('Error handling form submission:', error)
+      // console.error('Error handling form submission:', error)
     }
   }
 

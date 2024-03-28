@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 
 //  ログインフォームに入力し、Submitが行われるとこちらの処理に飛ぶ
 export async function POST(request) {
-  console.log(request)
+  // console.log(request)
   const requestUrl = new URL(request.url)
   const formData = await request.formData()
   const email = formData.get('email')

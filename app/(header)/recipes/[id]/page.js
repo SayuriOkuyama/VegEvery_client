@@ -85,7 +85,7 @@ const page = ({ params }) => {
     }
   }, [data])
 
-  const { register, reset, handleSubmit, control, getValues } = useForm({
+  const { register, reset, handleSubmit } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
       comment: '',
@@ -99,13 +99,13 @@ const page = ({ params }) => {
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${articlesData.article_id}/comment`,
       { text: value.comment },
     )
-    console.log(response.data)
+    // console.log(response.data)
     const newComment = response.data
     setArticlesData(prevState => {
-      console.log({
-        ...prevState,
-        commentsToRecipe: [...prevState.commentsToRecipe, newComment],
-      })
+      // console.log({
+      //   ...prevState,
+      //   commentsToRecipe: [...prevState.commentsToRecipe, newComment],
+      // })
       return {
         ...prevState,
         commentsToRecipe: [...prevState.commentsToRecipe, newComment],
@@ -116,7 +116,7 @@ const page = ({ params }) => {
   }
 
   const handleCommentDelete = async commentId => {
-    const response = await axios.delete(
+    await axios.delete(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/comment`,
       { data: { id: commentId } },
     )
@@ -166,11 +166,11 @@ const page = ({ params }) => {
         <div className="flex">
           <Avatar className="self-end mr-2">
             <AvatarImage src={articlesData.user.icon} alt="@shadcn" />
-            <AvatarFallback></AvatarFallback>
+            <AvatarFallback>Icon</AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{articlesData.user.name}</div>
         </div>
-        <div className="">
+        <div>
           <div className="flex text-lg ml-auto justify-end">
             <TfiTimer className="flex self-center" />
             <p>{articlesData.cooking_time}分</p>
@@ -204,7 +204,7 @@ const page = ({ params }) => {
         {articlesData.recipe_steps.map(recipe_step => {
           return (
             <div key={recipe_step.id} className="pb-4">
-              <hr className="" />
+              <hr />
               <p>{recipe_step.order}.</p>
               {recipe_step.image_url && (
                 <Image
@@ -303,7 +303,8 @@ const page = ({ params }) => {
                     rows="10"
                     className="outline-none"
                     {...register(`comment`)}
-                    placeholder="コメントを入力"></textarea>
+                    placeholder="コメントを入力"
+                  />
                   <Button
                     type="submit"
                     className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">

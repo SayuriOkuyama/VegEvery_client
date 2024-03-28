@@ -1,13 +1,12 @@
 'use client'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useFieldArray } from 'react-hook-form'
 
-const EditTags = ({ register, control, getValues }) => {
+const EditTags = ({ register, control }) => {
   // const { control } = useForm()
   const { fields, append, remove } = useFieldArray({
     name: 'tags',
     control,
   })
-  const tags = getValues('tags')
 
   return (
     <div>

@@ -11,8 +11,8 @@ const Steps = ({ register, control, stepImages, setStepImages }) => {
     control,
   })
 
-  console.log(fields)
-  console.log(stepImages)
+  // console.log(fields)
+  // console.log(stepImages)
 
   return (
     <div className="container pb-8">
@@ -95,7 +95,8 @@ const Steps = ({ register, control, stepImages, setStepImages }) => {
                 rows="10"
                 placeholder="手順を入力"
                 defaultValue={field.text}
-                {...register(`steps.${index}.text`)}></textarea>
+                {...register(`steps.${index}.text`)}
+              />
             </div>
             {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
             {index !== 0 && (

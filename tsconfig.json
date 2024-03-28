@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -35,7 +41,25 @@
     "app/recipes/[id]/page.js",
     "lib/next-auth/options.js",
     "lib/next-auth/provider.js",
-    "app/api/auth/[...nextauth]/route.js"
+    "app/api/auth/[...nextauth]/route.js",
+    "app/login/page.js",
+    "components/layouts/Navigation/Navigation.js",
+    "components/layouts/Header.js",
+    "app/layout.js",
+    "components/ui/avatar.js",
+    "components/ui/button.js",
+    "components/ui/card.js",
+    "components/ui/dialog.js",
+    "components/ui/drawer.js",
+    "components/ui/input.js",
+    "components/ui/form.js",
+    "components/ui/pagination.js",
+    "components/ui/label.js",
+    "components/ui/popover.js",
+    "components/ui/tabs.js",
+    "components/ui/textarea.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

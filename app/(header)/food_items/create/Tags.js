@@ -1,5 +1,5 @@
 'use client'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useFieldArray } from 'react-hook-form'
 
 const Tags = ({ register, control }) => {
   // const { control } = useForm()

@@ -5,8 +5,11 @@ ENV TZ Asia/Tokyo
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 COPY . .
+
+RUN npm install -D prettier eslint-config-prettier \
+    @typescript-eslint/parser @typescript-eslint/eslint-plugin --save-dev
 
 RUN npm run build
 

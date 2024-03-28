@@ -1,35 +1,31 @@
 import {
   useMap,
   useMapsLibrary,
-  useAdvancedMarkerRef,
-  AdvancedMarker,
-  InfoWindow,
+  // useAdvancedMarkerRef,
+  // AdvancedMarker,
+  // InfoWindow,
 } from '@vis.gl/react-google-maps'
-import axios from '@/lib/axios'
+// import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-const MapHandler = ({
-  selectedPlace,
-  setMarkersData,
-  clickedPlace,
-  setClickedPlace,
-}) => {
+// import {
+//   Drawer,
+//   DrawerClose,
+//   DrawerContent,
+//   DrawerDescription,
+//   DrawerFooter,
+//   DrawerHeader,
+//   DrawerTitle,
+//   DrawerTrigger,
+// } from '@/components/ui/drawer'
+// import { Button } from '@/components/ui/button'
+const MapHandler = ({ selectedPlace, setMarkersData }) => {
   const map = useMap()
-  const places = useMapsLibrary('places')
-  const [markerRef, marker] = useAdvancedMarkerRef()
+  // const places = useMapsLibrary('places')
+  // const [markerRef, marker] = useAdvancedMarkerRef()
   const placesLib = useMapsLibrary('places')
   const [placesService, setPlacesService] = useState(null)
-  const [open, setOpen] = useState(false)
+  // const [open, setOpen] = useState(false)
+  const google = window.google
 
   useEffect(() => {
     if (!placesLib || !map) return
@@ -106,7 +102,7 @@ const MapHandler = ({
   // })
 
   function createMarker(placeData) {
-    console.log('createMarker')
+    // console.log('createMarker')
 
     if (!placeData.geometry || !placeData.geometry.location) return
     // お店情報マーカー
@@ -125,26 +121,26 @@ const MapHandler = ({
     //   label: placeData.name?.substr(0, 1),
     //   optimized: false,
     // })
-    console.log('make')
+    // console.log('make')
 
     // お店情報ウィンドウ
     infoWindows[0] = new google.maps.InfoWindow()
 
     // ウィンドウにて表示する情報
-    const price = placeData.price_level
-      ? placeData.price_level
-      : '取得できませんでした'
+    // const price = placeData.price_level
+    //   ? placeData.price_level
+    //   : '取得できませんでした'
 
-    const infoList = [
-      placeData.name,
-      `ランク：${placeData.rating}`,
-      `金額：${price}`,
-      placeData.photos && placeData.photos.length > 0
-        ? `<p><img style="max-width:200px" src="${placeData.photos[0].getUrl()}"/></p>`
-        : null,
-    ]
+    // const infoList = [
+    //   placeData.name,
+    //   `ランク：${placeData.rating}`,
+    //   `金額：${price}`,
+    //   placeData.photos && placeData.photos.length > 0
+    //     ? `<p><img style="max-width:200px" src="${placeData.photos[0].getUrl()}"/></p>`
+    //     : null,
+    // ]
 
-    const info = infoList.join('<br>') // 改行区切りで加工して見せる
+    // const info = infoList.join('<br>') // 改行区切りで加工して見せる
 
     const div = document.getElementById('marker_point')
     div.innerHTML = `
@@ -169,14 +165,13 @@ const MapHandler = ({
 
     // マーカーにクリックイベントを付与
     google.maps.event.addListener(marker, 'click', () => {
-      console.log('イベント')
+      // console.log('イベント')
       // すでに他のマーカーがオープンになっている場合はそのマーカーを閉じる
       // if (infoWindows[1]) infoWindows[1].close()
       // if (infoWindows[0] == undefined || infoWindows[0] == null) return
       // infoWindows[0].close()
       // infoWindows[0].setContent(info)
       // infoWindows[0].open(marker.getMap(), marker)
-
       // return (
       //   <Drawer open={open} onOpenChange={setOpen}>
       //     {/* <DrawerTrigger></DrawerTrigger> */}
@@ -202,17 +197,18 @@ const MapHandler = ({
 
   useEffect(() => {
     if (!map || !selectedPlace) return
-    console.log('handle')
-    console.log(selectedPlace)
+    // console.log('handle')
+    // console.log(selectedPlace)
     // AutoComplete コンポーネントで取得した place 情報から
     // 東西南北の画面表示エリア取り出し、
     // fitBounds 関数に渡して、その位置情報に画面表示を合わせる
     if (selectedPlace.geometry?.viewport) {
       map.fitBounds(selectedPlace.geometry?.viewport)
-      console.log('handle inner')
+      // console.log('handle inner')
 
-      const callback = async (result, status) => {
-        console.log(result)
+      const callback = async result => {
+        // const callback = async (result, status) => {
+        // console.log(result)
         setMarkersData(result)
 
         // const res = await axios.post(
