@@ -11,35 +11,48 @@ const kiteOne = Kite_One({
 })
 
 async function fetchRecipes() {
-  try {
-    const response = await axios.get(`/recipes?page=top`, {
+  // try {
+  // const response = await axios.get(`/recipes?page=top`, {
+  //   headers: {
+  //     'Cache-Control': 'no-store',
+  //   },
+  // })
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes?page=top`,
+    {
+      method: 'GET',
       headers: {
+        'Content-Type': 'application/json',
         'Cache-Control': 'no-store',
       },
-    })
-
-    const data = await response.data
-    return data
-  } catch (err) {}
+    },
+  )
+  const data = await response.data
+  return data
+  // } catch (err) {
+  //   throw err
+  // }
 }
 
 async function fetchItems() {
-  try {
-    const response = await axios.get(`/food_items?page=top`, {
-      headers: {
-        'Cache-Control': 'no-store',
-      },
-    })
+  // try {
+  const response = await axios.get(`/food_items?page=top`, {
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+  })
 
-    const data = await response.data
-    return data
-  } catch (err) {}
+  const data = await response.data
+  return data
+  // } catch (err) {
+  //   throw err
+  // }
 }
 
 export default async function Home() {
   const articlesOfRecipes = await fetchRecipes()
   const articlesOfItems = await fetchItems()
-  console.log(articlesOfItems)
+  // console.log(articlesOfItems)
 
   return (
     <>

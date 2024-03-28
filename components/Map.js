@@ -1,9 +1,7 @@
 'use client'
 // src/components/GoogleMap.tsx
-import React, { useEffect, useRef, useState } from 'react'
 import {
   GoogleMap,
-  LoadScript,
   useLoadScript,
   AdvancedMarker,
 } from '@react-google-maps/api'

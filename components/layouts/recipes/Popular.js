@@ -14,13 +14,15 @@ const Popular = ({ path }) => {
 
   useEffect(() => {
     const getArticles = async () => {
-      try {
-        const response = await axios.get(`/${path}?page=${page}`)
+      // try {
+      const response = await axios.get(`/${path}?page=${page}`)
 
-        const data = await response.data
-        setArticles(data.data)
-        setPageData(data)
-      } catch (err) {}
+      const data = await response.data
+      setArticles(data.data)
+      setPageData(data)
+      // } catch (err) {
+      //   throw err
+      // }
     }
     getArticles()
   }, [])

@@ -2,7 +2,7 @@
 
 import { Avatar } from '@/components/ui/avatar'
 
-const FormVegeType = ({ register, control }) => {
+const FormVegeType = ({ register }) => {
   return (
     <div>
       <h3 className="text-center">対応のベジタリアンを選択</h3>

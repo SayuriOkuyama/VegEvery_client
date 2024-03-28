@@ -1,6 +1,6 @@
 'use client'
 
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useFieldArray } from 'react-hook-form'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import Dropzone from 'react-dropzone'
@@ -11,8 +11,8 @@ const EditStep = ({ register, control, stepImages, setStepImages }) => {
     control,
   })
 
-  console.log(fields)
-  console.log(stepImages)
+  // console.log(fields)
+  // console.log(stepImages)
 
   return (
     <div className="container pb-8">
@@ -58,7 +58,7 @@ const EditStep = ({ register, control, stepImages, setStepImages }) => {
                   <Dropzone
                     className="h-52"
                     onDrop={acceptedFiles => {
-                      console.log('drop')
+                      // console.log('drop')
                       const file = acceptedFiles[0]
                       const createdUrl = URL.createObjectURL(file)
                       setStepImages(prevState => {
@@ -98,7 +98,8 @@ const EditStep = ({ register, control, stepImages, setStepImages }) => {
                   rows="10"
                   placeholder="手順を入力"
                   defaultValue={field.text}
-                  {...register(`steps.${index}.text`)}></textarea>
+                  {...register(`steps.${index}.text`)}
+                />
               </div>
               {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
               {index !== 0 && (

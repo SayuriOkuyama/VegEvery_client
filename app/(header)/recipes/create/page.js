@@ -1,8 +1,8 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
+// import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+// import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
@@ -114,78 +114,78 @@ const page = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function onSubmit(values) {
-    console.log(values)
+    // console.log(values)
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
     const stepImagesData = []
 
-    try {
-      const fileExtension = values.thumbnail.name.split('.').pop()
+    // try {
+    const fileExtension = values.thumbnail.name.split('.').pop()
 
-      // サムネイルのアップロード
-      const response = await supabase.storage.from('VegEvery-backet').upload(
-        // ランダムな文字列に拡張子を付けたものをパスとする
-        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
-        values.thumbnail,
-      )
-      thumbnail_path = response.data.path
-      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
+    // サムネイルのアップロード
+    const response = await supabase.storage.from('VegEvery-backet').upload(
+      // ランダムな文字列に拡張子を付けたものをパスとする
+      `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
+      values.thumbnail,
+    )
+    thumbnail_path = response.data.path
+    thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
-      await Promise.all(
-        stepImages.map(async (step, index) => {
-          if (step.file) {
-            const fileExtension = step.file.name.split('.').pop()
+    await Promise.all(
+      stepImages.map(async (step, index) => {
+        if (step.file) {
+          const fileExtension = step.file.name.split('.').pop()
 
-            const response = await supabase.storage
-              .from('VegEvery-backet')
-              .upload(
-                `recipes/step_image/${uuidv4()}.${fileExtension}`,
-                step.file,
-              )
-            console.log('Step image upload successful:', response.data)
+          const response = await supabase.storage
+            .from('VegEvery-backet')
+            .upload(
+              `recipes/step_image/${uuidv4()}.${fileExtension}`,
+              step.file,
+            )
+          // console.log('Step image upload successful:', response.data)
 
-            stepImagesData[index] = {
-              image_path: response.data.path,
-              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-            }
+          stepImagesData[index] = {
+            image_path: response.data.path,
+            image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
           }
-        }),
-      )
-      console.log({
-        values,
-        thumbnail_path,
-        thumbnail_url,
-        stepImagesData,
-      })
+        }
+      }),
+    )
+    // console.log({
+    //   values,
+    //   thumbnail_path,
+    //   thumbnail_url,
+    //   stepImagesData,
+    // })
 
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`,
-        {
-          title: values.title,
-          thumbnail: {
-            thumbnail_path: thumbnail_path,
-            thumbnail_url: thumbnail_url,
-          },
-          cooking_time: values.time,
-          servings: values.servings,
-          tags: values.tags,
-          vege_type: values.vege_type,
-          materials: values.materials,
-          recipe_step: {
-            step_order_text: values.steps,
-            stepImages: stepImagesData,
-          },
+    const res = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`,
+      {
+        title: values.title,
+        thumbnail: {
+          thumbnail_path: thumbnail_path,
+          thumbnail_url: thumbnail_url,
         },
-      )
+        cooking_time: values.time,
+        servings: values.servings,
+        tags: values.tags,
+        vege_type: values.vege_type,
+        materials: values.materials,
+        recipe_step: {
+          step_order_text: values.steps,
+          stepImages: stepImagesData,
+        },
+      },
+    )
 
-      console.log(res.data)
-      console.log('画面遷移')
-      router.push(`/recipes/${res.data.article.id}`)
-    } catch (error) {
-      console.error('Error handling form submission:', error)
-    }
+    // console.log(res.data)
+    // console.log('画面遷移')
+    router.push(`/recipes/${res.data.article.id}`)
+    // } catch (error) {
+    //   throw error
+    // }
   }
 
   return (

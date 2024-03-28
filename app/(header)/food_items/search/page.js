@@ -17,20 +17,22 @@ const page = () => {
   const type = params.get('type')
   const search = params.get('search')
 
-  console.log(articles)
-  console.log(pageData)
+  // console.log(articles)
+  // console.log(pageData)
 
   useEffect(() => {
     const getArticles = async () => {
-      try {
-        const response = await axios.get(
-          `/food_items/search?type=${type}&search=${search}&page=${page}`,
-        )
+      // try {
+      const response = await axios.get(
+        `/food_items/search?type=${type}&search=${search}&page=${page}`,
+      )
 
-        const data = await response.data
-        setArticles(data.data)
-        setPageData(data)
-      } catch (err) {}
+      const data = await response.data
+      setArticles(data.data)
+      setPageData(data)
+      // } catch (err) {
+      //   throw error
+      // }
     }
     getArticles()
   }, [page, search, type])

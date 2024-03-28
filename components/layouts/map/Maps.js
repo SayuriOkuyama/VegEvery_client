@@ -1,88 +1,87 @@
 'use client'
 
-import React, { useCallback } from 'react'
+// import React, { useCallback } from 'react'
 import {
   APIProvider,
   ControlPosition,
   Map,
-  useMapsLibrary,
+  // useMapsLibrary,
   MapControl,
-  AdvancedMarker,
-  InfoWindow,
-  useAdvancedMarkerRef,
-  useMap,
+  // AdvancedMarker,
+  // InfoWindow,
+  // useAdvancedMarkerRef,
+  // useMap,
 } from '@vis.gl/react-google-maps'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+// import Image from 'next/image'
+import { useState } from 'react'
 import AutoComplete from '@/components/layouts/map/AutoComplete'
 import MapHandler from '@/components/layouts/map/MapHandler'
-import ClickHandler from '@/components/layouts/map/ClickHandler'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
+// import {
+//   Drawer,
+//   DrawerClose,
+//   DrawerContent,
+//   DrawerDescription,
+//   DrawerFooter,
+//   DrawerHeader,
+//   DrawerTitle,
+//   // DrawerTrigger,
+// } from '@/components/ui/drawer'
+// import { Button } from '@/components/ui/button'
 
-const MapController = () => {
-  const map = useMap()
-  const placesLibrary = useMapsLibrary('places')
-  // const [placesService, setPlacesService] = useState(null)
+// const MapController = () => {
+//   const map = useMap()
+//   // const placesLibrary = useMapsLibrary('places')
+//   // const [placesService, setPlacesService] = useState(null)
 
-  useEffect(() => {
-    if (!map) return
-    console.log(map)
-    // do something with the map instance
-  }, [map, marker])
+//   useEffect(() => {
+//     if (!map) return
+//     // console.log(map)
+//     // do something with the map instance
+//   }, [map, marker])
 
-  // useEffect(() => {
-  //   if (!placesLibrary || !map) return
+//   // useEffect(() => {
+//   //   if (!placesLibrary || !map) return
 
-  //   // placesLibrary がロードされると、
-  //   // placeLibrary API オブジェクトを介してライブラリにアクセスできる
-  //   setPlacesService(new placesLibrary.PlacesService(map))
-  // }, [placesLibrary, map])
+//   //   // placesLibrary がロードされると、
+//   //   // placeLibrary API オブジェクトを介してライブラリにアクセスできる
+//   //   setPlacesService(new placesLibrary.PlacesService(map))
+//   // }, [placesLibrary, map])
 
-  return <>...</>
-}
+//   return <>...</>
+// }
 
-const Maps = ({ position, useHandleSearch }) => {
-  const [markerRef, marker] = useAdvancedMarkerRef()
-  const [infoWindowShown, setInfoWindowShown] = useState(false)
+const Maps = ({ position }) => {
+  // const [markerRef, marker] = useAdvancedMarkerRef()
+  // const [infoWindowShown, setInfoWindowShown] = useState(false)
   const [selectedPlace, setSelectedPlace] = useState()
-  const [markersData, setMarkersData] = useState()
-  console.log(markersData)
-  const [clickedPlace, setClickedPlace] = useState(null)
-  const [selectedMarker, setSelectedMarker] = useState(null)
-  const [open, setOpen] = useState(false)
+  // const [markersData, setMarkersData] = useState()
+  // console.log(markersData)
+  // const [clickedPlace, setClickedPlace] = useState(null)
+  // const [selectedMarker, setSelectedMarker] = useState(null)
+  // const [open, setOpen] = useState(false)
 
-  const toggleInfoWindow = () => {
-    console.log('toggleInfoWindow!!')
-    setInfoWindowShown(previousState => !previousState)
-  }
-  const closeInfoWindow = () => {
-    console.log('closeInfoWindow!!')
-    setInfoWindowShown(false)
-  }
+  // const toggleInfoWindow = () => {
+  //   console.log('toggleInfoWindow!!')
+  //   setInfoWindowShown(previousState => !previousState)
+  // }
+  // const closeInfoWindow = () => {
+  //   console.log('closeInfoWindow!!')
+  //   setInfoWindowShown(false)
+  // }
 
   // const closeInfoWindow = () => setInfoWindowShown(false)
   const [zoom, setZoom] = useState(18)
 
-  const handleMarkerClick = useCallback(
-    markerData => {
-      console.log('handleMarkerClick!!')
-      setSelectedMarker(markerData)
-      setOpen(true)
-    },
-    [selectedMarker],
-  )
+  // const handleMarkerClick = useCallback(
+  //   markerData => {
+  //     console.log('handleMarkerClick!!')
+  //     setSelectedMarker(markerData)
+  //     setOpen(true)
+  //   },
+  //   [selectedMarker],
+  // )
 
-  console.log(zoom)
+  // console.log(zoom)
   return (
     <APIProvider
       apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
@@ -95,7 +94,6 @@ const Maps = ({ position, useHandleSearch }) => {
         disableDefaultUI={true}
         gestureHandling={'greedy'}
         mapId="46ff2cf41492db8c"
-        onClick={() => console.log('click')}
         onZoomChanged={ev => setZoom(ev.detail.zoom)}>
         <div className="bg-black">
           {/* <AdvancedMarker
@@ -112,7 +110,7 @@ const Maps = ({ position, useHandleSearch }) => {
             alt=""
             priority
             className="h-auto"></Image> */}
-        {infoWindowShown && (
+        {/* {infoWindowShown && (
           // <InfoWindow anchor={marker} onCloseClick={closeInfoWindow}>
           //   <div>
           //     <p>お店の名前</p>
@@ -123,7 +121,7 @@ const Maps = ({ position, useHandleSearch }) => {
           // </InfoWindow>
           <Drawer open={open} onOpenChange={setOpen}>
             {/* <DrawerTrigger></DrawerTrigger> */}
-            <DrawerContent className="pb-20">
+        {/* <DrawerContent className="pb-20">
               <DrawerHeader>
                 <DrawerTitle>
                   {selectedMarker && selectedMarker.name}
@@ -140,11 +138,11 @@ const Maps = ({ position, useHandleSearch }) => {
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
-        )}
+        )} */}
         <MapControl position={ControlPosition.TOP}>
           <AutoComplete
             setSelectedPlace={setSelectedPlace}
-            setMarkersData={setMarkersData}
+            // setMarkersData={setMarkersData}
           />
         </MapControl>
         <MapControl position={ControlPosition.BOTTOM}>
@@ -163,7 +161,7 @@ const Maps = ({ position, useHandleSearch }) => {
             </div>
           </div>
         </MapControl>
-        <div id="marker_point"></div>
+        {/* <div id="marker_point"></div> */}
         {/* {markersData &&
           markersData.map(markerData => (
             <React.Fragment key={markerData.place_id}>
@@ -194,10 +192,9 @@ const Maps = ({ position, useHandleSearch }) => {
           ))} */}
         <MapHandler
           selectedPlace={selectedPlace}
-          setMarkersData={setMarkersData}
-          setClickedPlace={setClickedPlace}
+          // setMarkersData={setMarkersData}
+          // setClickedPlace={setClickedPlace}
         />
-        {/* <ClickHandler /> */}
       </Map>
     </APIProvider>
   )

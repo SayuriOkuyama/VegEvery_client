@@ -1,8 +1,8 @@
 'use client'
 
 import Logo from '@/components/ui/Logo'
-import Maps, { MapController } from '@/components/layouts/map/Maps'
-import { useHandleSearch } from '@/components/layouts/map/SearchMap'
+import Maps from '@/components/layouts/map/Maps'
+// import { useHandleSearch } from '@/components/layouts/map/SearchMap'
 import { useEffect, useState } from 'react'
 
 function page() {
@@ -19,7 +19,7 @@ function page() {
 
   useEffect(() => {
     const success = res => {
-      console.log(res)
+      // console.log(res)
       setPosition({
         lat: res.coords.latitude,
         lng: res.coords.longitude,

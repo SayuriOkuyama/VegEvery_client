@@ -10,8 +10,8 @@ const Reports = ({ register, control, reportImages, setReportImages }) => {
     name: 'reports',
     control,
   })
-  console.log(fields)
-  console.log(reportImages)
+  // console.log(fields)
+  // console.log(reportImages)
 
   return (
     <div className="container pb-8">
@@ -88,7 +88,8 @@ const Reports = ({ register, control, reportImages, setReportImages }) => {
                 rows="10"
                 placeholder="コメントを入力"
                 defaultValue={field.text}
-                {...register(`reports.${index}.text`)}></textarea>
+                {...register(`reports.${index}.text`)}
+              />
             </div>
             {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
             {index !== 0 && (

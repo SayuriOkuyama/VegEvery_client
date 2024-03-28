@@ -1,12 +1,12 @@
 'use client'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useFieldArray } from 'react-hook-form'
 
-const EditMaterials = ({ register, control, getValues, setValue }) => {
+const EditMaterials = ({ register, control }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'materials',
     control,
   })
-  const materials = getValues('materials')
+
   // console.log(materials)
   // console.log(fields)
   return (
@@ -77,7 +77,7 @@ const EditMaterials = ({ register, control, getValues, setValue }) => {
                   ✕
                 </button>
               ) : (
-                <div className="w-4 h-4 ml-1"></div>
+                <div className="w-4 h-4 ml-1 opacity-0">✕</div>
               )}
             </div>
           </div>

@@ -1,12 +1,7 @@
 'use client'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useFieldArray } from 'react-hook-form'
 
 const Materials = ({ register, control }) => {
-  // const { register, control } = useForm({
-  //   defaultValues: {
-  //     materials: [{ material: '', quantity: '', unit: '' }],
-  //   },
-  // })
   const { fields, append, remove } = useFieldArray({
     name: 'materials',
     control,
@@ -27,28 +22,24 @@ const Materials = ({ register, control }) => {
         </h3>
       </div>
       <div className="space-y-2">
-        {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
           <div className="flex space-x-2" key={field.id}>
             <input
               className="border block w-20"
               type="text"
               placeholder="材料名"
-              // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
               {...register(`materials.${index}.material`)}
             />
             <input
               className="border block w-12"
               type="text"
               placeholder="100"
-              // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
               {...register(`materials.${index}.quantity`)}
             />
             <select
               className="border block w-12"
-              // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
               {...register(`materials.${index}.unit`)}>
-              <option value=""></option>
+              <option value="">単位を選択</option>
               <option value="dog">g</option>
               <option value="cat">mg</option>
               <option value="hamster">L</option>
@@ -62,7 +53,6 @@ const Materials = ({ register, control }) => {
               <option value="goldfish">杯（大さじ）</option>
               <option value="goldfish">カップ</option>
             </select>
-            {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
             {index !== 0 && (
               <button
                 className="border ml-1"
@@ -75,7 +65,6 @@ const Materials = ({ register, control }) => {
         ))}
       </div>
       <div>
-        {/* 要素を追加する */}
         <button
           className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
           type="button"

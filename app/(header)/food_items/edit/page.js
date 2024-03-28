@@ -33,7 +33,6 @@ const page = () => {
   const path = 'food_items'
 
   const [oldThumbnail, setOldThumbnail] = useState()
-  // const [oldStepImages, setOldStepImages] = useState()
   const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
   const [reportsData, setReportsData] = useState([])
@@ -41,15 +40,14 @@ const page = () => {
     useForm({
       mode: 'onChange', // リアルタイムで入力値を取得する
     })
-  const form = useForm()
 
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
-  console.log(data)
+  // console.log(data)
 
   useEffect(() => {
-    console.log('エフェクト')
+    // console.log('エフェクト')
     if (data) {
-      console.log(data)
+      // console.log(data)
       setOldThumbnail({
         path: data.article.thumbnail_path,
         url: data.article.thumbnail_url,
@@ -80,8 +78,6 @@ const page = () => {
         }
       })
       setArrayOldPath(arrayPath)
-      // 編集キャンセルに備えて、元の画像を保持しておく
-      // setOldStepImages(preOldStepImages)
 
       reset({
         title: data.article.title,
@@ -119,145 +115,143 @@ const page = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function onSubmit(values) {
-    console.log(values)
+    // console.log(values)
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
     const reportImages = []
     const pathOnly = []
-    try {
-      // サムネイルに変更があった場合のみ、ストレージにアップロード
-      if (values.thumbnail && values.thumbnail.name) {
-        // 拡張子部分を切り出す
-        const fileExtension = values.thumbnail.name.split('.').pop()
+    // try {
+    // サムネイルに変更があった場合のみ、ストレージにアップロード
+    if (values.thumbnail && values.thumbnail.name) {
+      // 拡張子部分を切り出す
+      const fileExtension = values.thumbnail.name.split('.').pop()
 
-        // サムネイルのアップロード
-        const response = await supabase.storage.from('VegEvery-backet').upload(
-          // ランダムな文字列に拡張子を付けたものをパスとする
-          `items/thumbnail/${uuidv4()}.${fileExtension}`,
-          values.thumbnail,
-        )
-        console.log('Thumbnail upload successful:', response.data)
-        thumbnail_path = response.data.path
-        thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
-
-        const { data, error } = await supabase.storage
-          .from('VegEvery-backet')
-          .remove(oldThumbnail.path)
-      } else {
-        thumbnail_path = values.thumbnail_path
-        thumbnail_url = values.thumbnail_url
-      }
-
-      await Promise.all(
-        // 新しい画像をストレージに保存
-        reportsData.map(async (report, index) => {
-          if (report && report.file && report.url.substr(0, 4) === 'blob') {
-            const fileExtension = report.file.name.split('.').pop()
-
-            const response = await supabase.storage
-              .from('VegEvery-backet')
-              .upload(
-                `items/report_image/${uuidv4()}.${fileExtension}`,
-                report.file,
-              )
-            console.log('Report image upload successful:', response.data)
-
-            reportImages[index] = {
-              image_path: response.data.path,
-              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-            }
-            console.log(reportImages)
-            pathOnly.push(response.data.path)
-          } else {
-            reportImages[index] = {
-              image_path: report.path,
-              image_url: report.url,
-            }
-            console.log(reportImages)
-            pathOnly.push(report.path)
-          }
-        }),
+      // サムネイルのアップロード
+      const response = await supabase.storage.from('VegEvery-backet').upload(
+        // ランダムな文字列に拡張子を付けたものをパスとする
+        `items/thumbnail/${uuidv4()}.${fileExtension}`,
+        values.thumbnail,
       )
+      // console.log('Thumbnail upload successful:', response.data)
+      thumbnail_path = response.data.path
+      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
-      // 要らなくなった画像をストレージから削除
-      await Promise.all(
-        arrayOldPath.map(oldPath => {
-          if (!pathOnly.includes(oldPath)) {
-            supabase.storage
-              .from('VegEvery-backet')
-              .remove(oldPath)
-              .then(response => {
-                console.log('Delete report_image successful:', response.data)
-              })
-              .catch(error => {
-                console.error('Error delete report_image:', error)
-              })
-          }
-        }),
-      )
-      console.log({
-        values,
-        thumbnail_path,
-        thumbnail_url,
-        reportImages,
-      })
-
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
-        {
-          title: values.title,
-          thumbnail: {
-            thumbnail_path: thumbnail_path,
-            thumbnail_url: thumbnail_url,
-          },
-          tags: values.tags,
-          vegeTags: values.vegeTags,
-          items: values.items,
-          reports: {
-            report_order_text: values.reports,
-            reportImages: reportImages,
-          },
-        },
-      )
-
-      console.log(res.data)
-      console.log('画面遷移')
-      router.push(`/food_items/${res.data.article.id}`)
-    } catch (error) {
-      console.error('Error handling form submission:', error)
+      await supabase.storage.from('VegEvery-backet').remove(oldThumbnail.path)
+    } else {
+      thumbnail_path = values.thumbnail_path
+      thumbnail_url = values.thumbnail_url
     }
-  }
 
-  const handleDelete = async () => {
-    try {
-      const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
-      )
-      console.log(res.data)
+    await Promise.all(
+      // 新しい画像をストレージに保存
+      reportsData.map(async (report, index) => {
+        if (report && report.file && report.url.substr(0, 4) === 'blob') {
+          const fileExtension = report.file.name.split('.').pop()
 
-      const imageRes = await supabase.storage.from('VegEvery-backet').remove()
-      console.log(imageRes.data)
+          const response = await supabase.storage
+            .from('VegEvery-backet')
+            .upload(
+              `items/report_image/${uuidv4()}.${fileExtension}`,
+              report.file,
+            )
+          // console.log('Report image upload successful:', response.data)
 
-      await Promise.all(
-        arrayOldPath.map(oldPath => {
+          reportImages[index] = {
+            image_path: response.data.path,
+            image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
+          }
+          // console.log(reportImages)
+          pathOnly.push(response.data.path)
+        } else {
+          reportImages[index] = {
+            image_path: report.path,
+            image_url: report.url,
+          }
+          // console.log(reportImages)
+          pathOnly.push(report.path)
+        }
+      }),
+    )
+
+    // 要らなくなった画像をストレージから削除
+    await Promise.all(
+      arrayOldPath.map(oldPath => {
+        if (!pathOnly.includes(oldPath)) {
           supabase.storage
             .from('VegEvery-backet')
             .remove(oldPath)
-            .then(response => {
-              console.log('Delete report_image successful:', response.data)
-            })
+            // .then(() => {
+            // console.log('Delete report_image successful:', response.data)
+            // })
             .catch(error => {
-              console.error('Error delete report_image:', error)
+              throw error
             })
-        }),
-      )
+        }
+      }),
+    )
+    // console.log({
+    //   values,
+    //   thumbnail_path,
+    //   thumbnail_url,
+    //   reportImages,
+    // })
 
-      // router.push('/food_items')
-    } catch (error) {
-      console.log(error)
-    }
+    await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
+      {
+        title: values.title,
+        thumbnail: {
+          thumbnail_path: thumbnail_path,
+          thumbnail_url: thumbnail_url,
+        },
+        tags: values.tags,
+        vegeTags: values.vegeTags,
+        items: values.items,
+        reports: {
+          report_order_text: values.reports,
+          reportImages: reportImages,
+        },
+      },
+    )
+
+    // console.log(res.data)
+    // console.log('画面遷移')
+    //   router.push(`/food_items/${res.data.article.id}`)
+    // } catch (error) {
+    //   throw error
+    // }
+  }
+
+  const handleDelete = async () => {
+    // try {
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${data.article.id}`,
+    )
+    // console.log(res.data)
+
+    await supabase.storage.from('VegEvery-backet').remove()
+    // console.log(imageRes.data)
+
+    await Promise.all(
+      arrayOldPath.map(oldPath => {
+        supabase.storage
+          .from('VegEvery-backet')
+          .remove(oldPath)
+          // .then(() => {
+          // console.log('Delete report_image successful:', response.data)
+          // })
+          .catch(error => {
+            throw error
+          })
+      }),
+    )
+
+    router.push('/food_items')
+    // } catch (error) {
+    //   throw error
+    // }
   }
 
   if (error) return <p>Error: {error.message}</p>

@@ -47,7 +47,7 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
       // 検索ワードとトークンを渡して place 情報をフェッチ
       const request = { input: inputValue, sessionToken }
       const response = await autocompleteService.getPlacePredictions(request)
-      console.log(response)
+      // console.log(response)
 
       // 検索結果の詳細情報をセットし、サジェストのリストを表示する
       setPredictionResults(response.predictions)
@@ -97,7 +97,7 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
 
       // getDetails が成功した時に実行する関数
       const detailsRequestCallback = placeDetails => {
-        console.log(placeDetails)
+        // console.log(placeDetails)
         // ここでセットして、MapHandler コンポーネントで画面表示に使う
         setSelectedPlace(placeDetails)
         // サジェストを消す
@@ -117,10 +117,10 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
   // useCallback で、変わらない時には発火しないようにする
   const handleTextSearchClick = useCallback(
     value => {
-      console.log('handleTextSearchClick!!')
-      console.log(value)
+      // console.log('handleTextSearchClick!!')
+      // console.log(value)
       if (!value) return
-      console.log('valueあり!!')
+      // console.log('valueあり!!')
 
       const bounds = map.getBounds()
 
@@ -132,7 +132,7 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
 
       // getDetails が成功した時に実行する関数
       const callback = placeDetails => {
-        console.log(placeDetails)
+        // console.log(placeDetails)
         // ここでセットして、MapHandler コンポーネントで画面表示に使う
         setSelectedPlace(placeDetails)
         // サジェストを消す

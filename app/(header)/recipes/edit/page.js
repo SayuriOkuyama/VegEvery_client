@@ -43,12 +43,12 @@ const page = () => {
   // const form = useForm()
 
   const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
-  console.log(data)
+  // console.log(data)
 
   useEffect(() => {
-    console.log('エフェクト')
+    // console.log('エフェクト')
     if (data) {
-      console.log(data)
+      // console.log(data)
       setOldThumbnail({
         path: data.article.thumbnail_path,
         url: data.article.thumbnail_url,
@@ -115,7 +115,7 @@ const page = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function onSubmit(values) {
-    console.log(values)
+    // console.log(values)
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
@@ -123,125 +123,123 @@ const page = () => {
     const stepImagesData = []
     const pathOnly = []
 
-    try {
-      // サムネイルに変更があった場合のみ、ストレージにアップロード
-      if (values.thumbnail && values.thumbnail.name) {
-        // 拡張子部分を切り出す
-        const fileExtension = values.thumbnail.name.split('.').pop()
+    // try {
+    // サムネイルに変更があった場合のみ、ストレージにアップロード
+    if (values.thumbnail && values.thumbnail.name) {
+      // 拡張子部分を切り出す
+      const fileExtension = values.thumbnail.name.split('.').pop()
 
-        // サムネイルのアップロード
-        const response = await supabase.storage.from('VegEvery-backet').upload(
-          // ランダムな文字列に拡張子を付けたものをパスとする
-          `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
-          values.thumbnail,
-        )
-        console.log('Thumbnail upload successful:', response.data)
-        thumbnail_path = response.data.path
-        thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
-
-        const { data, error } = await supabase.storage
-          .from('VegEvery-backet')
-          .remove(oldThumbnail.path)
-      } else {
-        thumbnail_path = values.thumbnail_path
-        thumbnail_url = values.thumbnail_url
-      }
-
-      console.log(stepImages)
-      await Promise.all(
-        // 新しい画像をストレージに保存
-        stepImages.map(async (step, index) => {
-          console.log(step)
-          if (step && step.file && step.url.substr(0, 4) === 'blob') {
-            const fileExtension = step.file.name.split('.').pop()
-
-            const response = await supabase.storage
-              .from('VegEvery-backet')
-              .upload(
-                `recipes/step_image/${uuidv4()}.${fileExtension}`,
-                step.file,
-              )
-            console.log('Step image upload successful:', response.data)
-
-            stepImagesData[index] = {
-              image_path: response.data.path,
-              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-            }
-            console.log(stepImagesData)
-
-            pathOnly.push(response.data.path)
-          } else {
-            stepImagesData[index] = {
-              image_path: step.path,
-              image_url: step.url,
-            }
-            console.log(stepImagesData)
-            pathOnly.push(step.path)
-          }
-        }),
+      // サムネイルのアップロード
+      const response = await supabase.storage.from('VegEvery-backet').upload(
+        // ランダムな文字列に拡張子を付けたものをパスとする
+        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
+        values.thumbnail,
       )
+      // console.log('Thumbnail upload successful:', response.data)
+      thumbnail_path = response.data.path
+      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
-      // 要らなくなった画像をストレージから削除
-      await Promise.all(
-        arrayOldPath.map(oldPath => {
-          if (!pathOnly.includes(oldPath)) {
-            supabase.storage
-              .from('VegEvery-backet')
-              .remove(oldPath)
-              .then(response => {
-                console.log('Delete step_image successful:', response.data)
-              })
-              .catch(error => {
-                console.error('Error delete step_image:', error)
-              })
-          }
-        }),
-      )
-      console.log({
-        values,
-        thumbnail_path,
-        thumbnail_url,
-        stepImagesData,
-      })
-
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
-        {
-          title: values.title,
-          thumbnail: {
-            thumbnail_path: thumbnail_path,
-            thumbnail_url: thumbnail_url,
-          },
-          cooking_time: values.time,
-          servings: values.servings,
-          tags: values.tags,
-          vegeTags: values.vegeTags,
-          materials: values.materials,
-          recipe_step: {
-            step_order_text: values.steps,
-            stepImages: stepImagesData,
-          },
-        },
-      )
-
-      console.log(res.data)
-      console.log('画面遷移')
-      router.push(`/recipes/${res.data.article.id}`)
-    } catch (error) {
-      console.error('Error handling form submission:', error)
+      await supabase.storage.from('VegEvery-backet').remove(oldThumbnail.path)
+    } else {
+      thumbnail_path = values.thumbnail_path
+      thumbnail_url = values.thumbnail_url
     }
+
+    // console.log(stepImages)
+    await Promise.all(
+      // 新しい画像をストレージに保存
+      stepImages.map(async (step, index) => {
+        // console.log(step)
+        if (step && step.file && step.url.substr(0, 4) === 'blob') {
+          const fileExtension = step.file.name.split('.').pop()
+
+          const response = await supabase.storage
+            .from('VegEvery-backet')
+            .upload(
+              `recipes/step_image/${uuidv4()}.${fileExtension}`,
+              step.file,
+            )
+          // console.log('Step image upload successful:', response.data)
+
+          stepImagesData[index] = {
+            image_path: response.data.path,
+            image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
+          }
+          // console.log(stepImagesData)
+
+          pathOnly.push(response.data.path)
+        } else {
+          stepImagesData[index] = {
+            image_path: step.path,
+            image_url: step.url,
+          }
+          // console.log(stepImagesData)
+          pathOnly.push(step.path)
+        }
+      }),
+    )
+
+    // 要らなくなった画像をストレージから削除
+    await Promise.all(
+      arrayOldPath.map(oldPath => {
+        if (!pathOnly.includes(oldPath)) {
+          supabase.storage
+            .from('VegEvery-backet')
+            .remove(oldPath)
+            // .then(response => {
+            //   console.log('Delete step_image successful:', response.data)
+            // })
+            .catch(error => {
+              throw error
+            })
+        }
+      }),
+    )
+    // console.log({
+    //   values,
+    //   thumbnail_path,
+    //   thumbnail_url,
+    //   stepImagesData,
+    // })
+
+    const res = await axios.put(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
+      {
+        title: values.title,
+        thumbnail: {
+          thumbnail_path: thumbnail_path,
+          thumbnail_url: thumbnail_url,
+        },
+        cooking_time: values.time,
+        servings: values.servings,
+        tags: values.tags,
+        vegeTags: values.vegeTags,
+        materials: values.materials,
+        recipe_step: {
+          step_order_text: values.steps,
+          stepImages: stepImagesData,
+        },
+      },
+    )
+
+    // console.log(res.data)
+    // console.log('画面遷移')
+    router.push(`/recipes/${res.data.article.id}`)
+    // } catch (error) {
+    //   throw error
+    // }
   }
 
   const handleDelete = async () => {
-    try {
-      const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
-      )
-      console.log(res.data)
-      router.push('/recipes')
-    } catch (error) {
-      console.log(error)
-    }
+    // try {
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
+    )
+    // console.log(res.data)
+    router.push('/recipes')
+    // } catch (error) {
+    //   throw error
+    // }
   }
 
   if (error) return <p>Error: {error.message}</p>
