@@ -10,9 +10,10 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - vegevery_server_sail
+      - vegenet
 volumes:
   node_modules:
 networks:
-  vegevery_server_sail:
+  vegenet:
     external: true
+    name: vegevery_server_vegenet
