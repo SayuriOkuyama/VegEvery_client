@@ -12,21 +12,12 @@ const kiteOne = Kite_One({
 
 async function fetchRecipes() {
   // try {
-  // const response = await axios.get(`/recipes?page=top`, {
-  //   headers: {
-  //     'Cache-Control': 'no-store',
-  //   },
-  // })
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes?page=top`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-store',
-      },
+  const response = await axios.get(`/recipes?page=top`, {
+    headers: {
+      'Cache-Control': 'no-store',
     },
-  )
+  })
+
   const data = await response.data
   return data
   // } catch (err) {
