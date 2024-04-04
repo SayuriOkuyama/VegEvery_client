@@ -160,25 +160,22 @@ const page = () => {
     //   stepImagesData,
     // })
 
-    const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes`,
-      {
-        title: values.title,
-        thumbnail: {
-          thumbnail_path: thumbnail_path,
-          thumbnail_url: thumbnail_url,
-        },
-        cooking_time: values.time,
-        servings: values.servings,
-        tags: values.tags,
-        vege_type: values.vege_type,
-        materials: values.materials,
-        recipe_step: {
-          step_order_text: values.steps,
-          stepImages: stepImagesData,
-        },
+    const res = await axios.post(`/api/recipes`, {
+      title: values.title,
+      thumbnail: {
+        thumbnail_path: thumbnail_path,
+        thumbnail_url: thumbnail_url,
       },
-    )
+      cooking_time: values.time,
+      servings: values.servings,
+      tags: values.tags,
+      vege_type: values.vege_type,
+      materials: values.materials,
+      recipe_step: {
+        step_order_text: values.steps,
+        stepImages: stepImagesData,
+      },
+    })
 
     // console.log(res.data)
     // console.log('画面遷移')

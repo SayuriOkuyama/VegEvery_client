@@ -2,34 +2,50 @@
 
 import Logo from '@/components/ui/Logo'
 import { Button } from '@/components/ui/button'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { FormContext } from '@/contexts/registerProvider'
-import axios from '@/lib/axios'
+// import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
 import { v4 as uuidv4 } from 'uuid'
+import { useAuth } from '@/hooks/auth'
 
 const page = () => {
-  const [register, , handleSubmit] = useContext(FormContext)
+  const [register, , handleSubmit, watch] = useContext(FormContext)
+  const [errors, setErrors] = useState([])
+  const watcher = watch()
+
+  console.log(watcher)
+  console.log(errors)
+
+  const { authRegister } = useAuth({
+    middleware: 'guest',
+    // ログイン状態になったらトップページに移動
+    redirectIfAuthenticated: '/',
+  })
 
   const onSubmit = async values => {
     console.log(values)
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-    let icon_url = ''
-    let icon_path = ''
+    let icon_url = 'users/icon/user_icon.png'
+    let icon_path =
+      'https://sbbfkhueljpgbvhxguip.supabase.co/storage/v1/object/public/VegEvery-backet/users/icon/user_icon.png'
 
     if (values.iconFile) {
-      const fileExtension = values.iconUrl.split('.').pop()
+      const fileExtension = values.iconFile.name.split('.').pop()
 
       const response = await supabase.storage.from('VegEvery-backet').upload(
         // ランダムな文字列に拡張子を付けたものをパスとする
         `users/icon/${uuidv4()}.${fileExtension}`,
         values.iconFile,
       )
+      console.log(response.data)
       icon_path = response.data.path
       icon_url = `${supabase_url}/object/public/${response.data.fullPath}`
     }
 
-    const res = await axios.post(`/register`, {
+    // register ルートに post し、user データを登録
+    authRegister({
+      account_id: values.account_id,
       name: values.name,
       password: values.password,
       icon: {
@@ -39,13 +55,15 @@ const page = () => {
       vegetarian_type: values.vegeType,
       secret_question: values.secretQuestion,
       answer_to_secret_question: values.secretAnswer,
+      provider: values.provider,
+      provider_id: values.providerId,
+      setErrors,
     })
-    console.log(res.data)
   }
 
   return (
     <>
-      <div className="mt-16">
+      <div className="pt-8">
         <Logo size="100" />
       </div>
       <main className="container mx-auto mt-8">
@@ -59,12 +77,9 @@ const page = () => {
               id="name"
               type="text"
               placeholder="初めての海外旅行で行った場所は？"
-              className="border w-full text-sm pl-1"
+              className="border w-full text-sm pl-1 h-8"
               {...register(`secretQuestion`)}
             />
-            {/* <small className="block text-start">
-              (例) 初めての海外旅行で行った場所は？
-            </small> */}
           </div>
           <div>
             <label htmlFor="password" className="block text-start">
@@ -74,12 +89,9 @@ const page = () => {
               id="password"
               type="text"
               placeholder="フランスのルーヴル美術館"
-              className="border w-full text-sm pl-1"
+              className="border w-full text-sm pl-1 h-8"
               {...register(`secretAnswer`)}
             />
-            {/* <small className="block text-start">
-              (例) フランスのルーヴル美術館
-            </small> */}
           </div>
         </div>
         <Button

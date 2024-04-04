@@ -15,7 +15,7 @@ const Popular = ({ path }) => {
   useEffect(() => {
     const getArticles = async () => {
       // try {
-      const response = await axios.get(`/${path}?page=${page}`)
+      const response = await axios.get(`/api/${path}?page=${page}`)
 
       const data = await response.data
       setArticles(data.data)

@@ -12,13 +12,14 @@ const page = () => {
   const router = useRouter()
   const [inputValue, setInputValue] = useState({ userName: '', password: '' })
 
-  const handleGoogleLogin = async () => {
-    const res = await axios.get(`/login/google`)
+  const handleGoogleAccount = async () => {
+    const res = await axios.get(`/api/user/auth/google`)
     console.log(res)
     router.push(res.data)
   }
+
   const handleLogin = async () => {
-    const res = await axios.post(`/login`, {
+    const res = await axios.post(`/api/user/login`, {
       name: inputValue.userName,
       password: inputValue.password,
     })
@@ -27,13 +28,13 @@ const page = () => {
 
   return (
     <>
-      <div className="mt-20">
+      <div className="pt-8">
         <Logo size="100" />
       </div>
       <main className="container mx-auto">
         <Button
           className="border flex items-center py-3 px-4 mt-12 mx-auto"
-          onClick={handleGoogleLogin}>
+          onClick={handleGoogleAccount}>
           <Image
             width={20}
             height={20}
@@ -86,9 +87,7 @@ const page = () => {
           アカウントをお持ちでない場合
         </p>
         <Link href={'/register'}>
-          <Button
-            className="border flex items-center py-3 px-4 mt-4 mx-auto"
-            onClick={handleGoogleLogin}>
+          <Button className="border flex items-center py-3 px-4 mt-4 mx-auto">
             <p className="leading-none">新規アカウント作成</p>
           </Button>
         </Link>

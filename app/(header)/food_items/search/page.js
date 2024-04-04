@@ -24,7 +24,7 @@ const page = () => {
     const getArticles = async () => {
       // try {
       const response = await axios.get(
-        `/food_items/search?type=${type}&search=${search}&page=${page}`,
+        `/api/food_items/search?type=${type}&search=${search}&page=${page}`,
       )
 
       const data = await response.data

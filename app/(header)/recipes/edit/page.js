@@ -202,25 +202,22 @@ const page = () => {
     //   stepImagesData,
     // })
 
-    const res = await axios.put(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
-      {
-        title: values.title,
-        thumbnail: {
-          thumbnail_path: thumbnail_path,
-          thumbnail_url: thumbnail_url,
-        },
-        cooking_time: values.time,
-        servings: values.servings,
-        tags: values.tags,
-        vegeTags: values.vegeTags,
-        materials: values.materials,
-        recipe_step: {
-          step_order_text: values.steps,
-          stepImages: stepImagesData,
-        },
+    const res = await axios.put(`/api/recipes/${data.article.id}`, {
+      title: values.title,
+      thumbnail: {
+        thumbnail_path: thumbnail_path,
+        thumbnail_url: thumbnail_url,
       },
-    )
+      cooking_time: values.time,
+      servings: values.servings,
+      tags: values.tags,
+      vegeTags: values.vegeTags,
+      materials: values.materials,
+      recipe_step: {
+        step_order_text: values.steps,
+        stepImages: stepImagesData,
+      },
+    })
 
     // console.log(res.data)
     // console.log('画面遷移')
@@ -232,9 +229,7 @@ const page = () => {
 
   const handleDelete = async () => {
     // try {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${data.article.id}`,
-    )
+    await axios.delete(`/api/recipes/${data.article.id}`)
     // console.log(res.data)
     router.push('/recipes')
     // } catch (error) {

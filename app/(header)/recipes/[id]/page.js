@@ -49,7 +49,7 @@ const page = ({ params }) => {
   })
   const [isOpen, setIsOpen] = useState(false)
 
-  const { data, error } = useSWR(`recipes/${id}`, getArticles)
+  const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
 
   useEffect(() => {
     if (data) {
@@ -96,7 +96,7 @@ const page = ({ params }) => {
 
   const onSubmit = async value => {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/${articlesData.article_id}/comment`,
+      `/api/recipes/${articlesData.article_id}/comment`,
       { text: value.comment },
     )
     // console.log(response.data)

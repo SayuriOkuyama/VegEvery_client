@@ -5,17 +5,6 @@ import { useForm } from 'react-hook-form'
 export const FormContext = createContext()
 
 export const RegisterProvider = ({ children }) => {
-  // const [formData, setFormData] = useState({
-  //   name: '',
-  //   password: '',
-  //   reenteredPassword: '',
-  //   iconFile: '',
-  //   iconUrl: null,
-  //   VegeType: 'none',
-  //   secretQuestion: '',
-  //   secretAnswer: '',
-  // })
-
   const { register, setValue, handleSubmit, watch } = useForm({
     // resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,6 +16,8 @@ export const RegisterProvider = ({ children }) => {
       vegeType: 'none',
       secretQuestion: '',
       secretAnswer: '',
+      provider: '',
+      providerId: '',
     },
     mode: 'onChange', // リアルタイムで入力値を取得する
   })

@@ -46,7 +46,7 @@ const page = ({ params }) => {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
 
-  const { data, error } = useSWR(`food_items/${id}`, getArticles)
+  const { data, error } = useSWR(`/api/food_items/${id}`, getArticles)
   // console.log(data)
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const page = ({ params }) => {
 
   const onSubmit = async value => {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/${articlesData.article_id}/comment`,
+      `/api/food_items/${articlesData.article_id}/comment`,
       { text: value.comment },
     )
     // console.log(response.data)
@@ -110,10 +110,7 @@ const page = ({ params }) => {
   }
 
   const handleCommentDelete = async commentId => {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/food_items/comment`,
-      { data: { id: commentId } },
-    )
+    await axios.delete(`/api/food_items/comment`, { data: { id: commentId } })
     router.replace()
   }
 

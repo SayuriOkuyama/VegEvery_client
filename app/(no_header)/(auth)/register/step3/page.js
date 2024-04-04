@@ -36,7 +36,7 @@ const page = () => {
 
   return (
     <>
-      <div className="mt-16">
+      <div className="pt-8">
         <Logo size="100" />
       </div>
       <main className="container mx-auto mt-8">
