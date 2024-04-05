@@ -25,24 +25,6 @@ const page = () => {
             <>
               <div className="mt-20 mb-20">
                 <label htmlFor="name" className="block text-start">
-                  アカウント ID
-                </label>
-                <span>@</span>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="べジヴリー"
-                  className="border w-full text-sm pl-1 h-8"
-                  {...register(`account_id`)}
-                />
-                <p className="text-xs text-start">
-                  半角英数字 8 文字以上で入力してください。
-                  <br />
-                  登録後に変更はできません。
-                </p>
-              </div>
-              <div className="mt-20 mb-20">
-                <label htmlFor="name" className="block text-start">
                   ユーザー名
                 </label>
                 <input
@@ -75,8 +57,6 @@ const page = () => {
                 </div>
                 <p className="text-xs text-start">
                   半角英数字 8 文字以上で入力してください。
-                  <br />
-                  登録後に変更はできません。
                 </p>
               </div>
               <div>
@@ -92,8 +72,6 @@ const page = () => {
                 />
                 <p className="text-xs text-start">
                   公開されて問題のないニックネームを入力してください。
-                  <br />
-                  登録後に変更可能です。
                 </p>
               </div>
               <div>

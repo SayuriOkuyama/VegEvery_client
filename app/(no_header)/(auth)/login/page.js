@@ -72,15 +72,18 @@ const page = () => {
         <p className="text-center my-8">または</p>
         <div>
           <label htmlFor="name" className="block text-start">
-            ユーザー名
+            アカウント ID
           </label>
-          <input
-            id="name"
-            type="text"
-            placeholder="べジヴリー"
-            className="border w-full text-sm pl-1 h-8"
-            {...register(`name`)}
-          />
+          <div className="flex items-center">
+            <span className="text-lg mr-1">@</span>
+            <input
+              id="name"
+              type="text"
+              placeholder=""
+              className="border w-full text-sm pl-1 h-8"
+              {...register(`name`)}
+            />
+          </div>
         </div>
         <div className="mt-2">
           <label htmlFor="password" className="block text-start">

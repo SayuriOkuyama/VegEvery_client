@@ -44,6 +44,7 @@ const page = () => {
     }
 
     // register ルートに post し、user データを登録
+    // レスポンスのトークンを Cookie に保存
     authRegister({
       account_id: values.account_id,
       name: values.name,
