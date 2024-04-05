@@ -164,6 +164,10 @@ h3 {
   background: var(--bg-color-button);
 }
 
+.disabled-text-color {
+  color: #8c695470;
+}
+
 .border-button-color {
   border: 1px solid var(--border-color-button);
 }

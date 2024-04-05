@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import styles from '@/components/layouts/Navigation/Navigation.module.css'
 import { PiHouseLineLight } from 'react-icons/pi'
@@ -5,8 +7,22 @@ import { PiMapPinLineLight } from 'react-icons/pi'
 import { PiCookingPotLight } from 'react-icons/pi'
 import { CiApple } from 'react-icons/ci'
 import { CiUser } from 'react-icons/ci'
+import { useAuth } from '@/hooks/auth'
 
 export default function Navigation() {
+  const { user } = useAuth({
+    middleware: 'guest',
+    // ログイン状態になったらトップページに移動
+    redirectIfAuthenticated: '/',
+  })
+
+  let accountPath
+  if (user) {
+    accountPath = '/account'
+  } else {
+    accountPath = '/login'
+  }
+
   return (
     <>
       <div
@@ -47,7 +63,7 @@ export default function Navigation() {
             <div className={`${styles.menu}  text-center text-sm`}>Map</div>
           </div>
         </Link>
-        <Link href={'/'} className={styles.link}>
+        <Link href={accountPath} className={styles.link}>
           <div className={`${styles.menu_wrapper}`}>
             <div
               className={`${styles.icon_wrapper} flex justify-center items-center`}>

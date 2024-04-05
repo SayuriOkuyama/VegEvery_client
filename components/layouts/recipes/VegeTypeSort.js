@@ -30,9 +30,12 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
       refInput.current.value = search
     }
   }, [search])
-
+  // console.log(search)
   const handleSearch = () => {
     const search = refInput.current.value
+    if (type === null) {
+      type = 'vegan'
+    }
     router.push(`/${path}?type=${type}&search=${search}&page=1`)
   }
 

@@ -43,10 +43,7 @@ function SideButtons({ articleId, likeableType, likes, setArticlesData }) {
   const handleLike = async () => {
     if (likeState && likeState.user_id) {
       // try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/likes/${articleId}`,
-        likeState,
-      )
+      const res = await axios.put(`api/likes/${articleId}`, likeState)
       // console.log(res.data)
       // console.log(res.data.like)
       if (res.data.like) {
