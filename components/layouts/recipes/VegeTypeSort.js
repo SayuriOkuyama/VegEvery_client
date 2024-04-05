@@ -30,7 +30,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
       refInput.current.value = search
     }
   }, [search])
-  console.log(search)
+  // console.log(search)
   const handleSearch = () => {
     const search = refInput.current.value
     if (type === null) {

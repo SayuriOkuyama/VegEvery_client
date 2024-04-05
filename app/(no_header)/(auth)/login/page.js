@@ -13,7 +13,9 @@ import { useEffect, useState } from 'react'
 const page = () => {
   const router = useRouter()
   const [errors, setErrors] = useState([])
-  const [status, setStatus] = useState(null)
+  // const [errors, setErrors] = useState([])
+  const [, setStatus] = useState(null)
+  // const [status, setStatus] = useState(null)
 
   const { register, handleSubmit } = useForm({
     // resolver: zodResolver(formSchema),
@@ -35,8 +37,8 @@ const page = () => {
       setStatus(null)
     }
   })
-  console.log(errors)
-  console.log(status)
+  // console.log(errors)
+  // console.log(status)
 
   const handleGoogleLogin = async () => {
     const res = await axios.get(`/api/user/auth/google`)

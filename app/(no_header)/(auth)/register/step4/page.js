@@ -10,12 +10,13 @@ import { v4 as uuidv4 } from 'uuid'
 import { useAuth } from '@/hooks/auth'
 
 const page = () => {
-  const [register, , handleSubmit, watch] = useContext(FormContext)
-  const [errors, setErrors] = useState([])
-  const watcher = watch()
+  const [register, , handleSubmit] = useContext(FormContext)
+  // const [errors, setErrors] = useState([])
+  const [, setErrors] = useState([])
+  // const watcher = watch()
 
-  console.log(watcher)
-  console.log(errors)
+  // console.log(watcher)
+  // console.log(errors)
 
   const { authRegister } = useAuth({
     middleware: 'guest',
@@ -24,7 +25,7 @@ const page = () => {
   })
 
   const onSubmit = async values => {
-    console.log(values)
+    // console.log(values)
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let icon_url = 'users/icon/user_icon.png'
     let icon_path =
@@ -38,7 +39,7 @@ const page = () => {
         `users/icon/${uuidv4()}.${fileExtension}`,
         values.iconFile,
       )
-      console.log(response.data)
+      // console.log(response.data)
       icon_path = response.data.path
       icon_url = `${supabase_url}/object/public/${response.data.fullPath}`
     }

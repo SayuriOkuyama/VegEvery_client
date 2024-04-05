@@ -22,8 +22,10 @@ const page = ({ params }) => {
   const prompt = query.get('prompt')
   const [, setValue] = useContext(FormContext)
   const router = useRouter()
-  const [errors, setErrors] = useState([])
-  const [status, setStatus] = useState(null)
+  const [, setErrors] = useState([])
+  // const [errors, setErrors] = useState([])
+  const [, setStatus] = useState(null)
+  // const [status, setStatus] = useState(null)
 
   const { data, error } = useSWR(
     `/api/user/auth/google/callback?state=${state}&code=${code}&scope=${scope}&authuser=${authuser}&prompt=${prompt}`,
@@ -35,12 +37,12 @@ const page = ({ params }) => {
     redirectIfAuthenticated: '/',
   })
 
-  console.log(errors)
-  console.log(status)
+  // console.log(errors)
+  // console.log(status)
 
   useEffect(() => {
     if (data) {
-      console.log(data)
+      // console.log(data)
       if (data.message === 'registered') {
         login({
           provider: provider,

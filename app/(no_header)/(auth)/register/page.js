@@ -12,7 +12,7 @@ const page = () => {
 
   const handleGoogleLogin = async () => {
     const res = await axios.get(`/api/user/auth/google`)
-    console.log(res)
+    // console.log(res)
     router.push(res.data)
   }
 

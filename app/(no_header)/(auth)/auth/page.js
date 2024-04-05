@@ -14,16 +14,16 @@ const page = () => {
 
   const handleGoogleAccount = async () => {
     const res = await axios.get(`/api/user/auth/google`)
-    console.log(res)
+    // console.log(res)
     router.push(res.data)
   }
 
   const handleLogin = async () => {
-    const res = await axios.post(`/api/user/login`, {
+    await axios.post(`/api/user/login`, {
       name: inputValue.userName,
       password: inputValue.password,
     })
-    console.log(res)
+    // console.log(res)
   }
 
   return (

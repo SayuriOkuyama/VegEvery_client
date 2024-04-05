@@ -10,9 +10,9 @@ import { FormContext } from '@/contexts/registerProvider'
 const page = () => {
   const [register, , , watch] = useContext(FormContext)
   const provider = watch('provider')
-  const watcher = watch()
+  // const watcher = watch()
 
-  console.log(watcher)
+  // console.log(watcher)
 
   return (
     <>
