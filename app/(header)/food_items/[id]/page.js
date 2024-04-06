@@ -51,7 +51,7 @@ const page = ({ params }) => {
   const [user, setUser] = useState()
 
   const { data, error } = useSWR(`/api/food_items/${id}`, getArticles)
-  // console.log(data)
+  console.log(data)
 
   useEffect(() => {
     const getUser = async () => {
@@ -89,6 +89,7 @@ const page = ({ params }) => {
         commentsToItem: data.comments,
         tags: data.article.tags,
         vegeTags: vegeTags,
+        likes: data.likes,
       })
     }
   }, [data])
@@ -359,7 +360,7 @@ const page = ({ params }) => {
       </Link>
       <SideButtons
         articleId={articlesData.article_id}
-        likeableType="ArticleOfRecipe"
+        likeableType="ArticleOfItem"
         likes={articlesData.likes}
         setArticlesData={setArticlesData}
         user={user}
