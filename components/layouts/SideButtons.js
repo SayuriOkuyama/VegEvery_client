@@ -22,12 +22,9 @@ function SideButtons({
   const [likeState, setLikeState] = useState()
   const [isOpen, setIsOpen] = useState(false)
 
-  console.log(likes)
-
   useEffect(() => {
     if (likes) {
       const userLikes = likes.find(({ user_id }) => user_id == user.id)
-      console.log(userLikes)
       if (userLikes) {
         setLikeState(prev => {
           return {
@@ -54,9 +51,7 @@ function SideButtons({
     }
   }, [likes])
 
-  console.log(likeState)
   const handleLike = async () => {
-    console.log('click')
     if (likeState && likeState.user_id) {
       // try {
       const res = await axios.put(`api/likes/${articleId}`, likeState)

@@ -51,7 +51,6 @@ const page = ({ params }) => {
   const [user, setUser] = useState()
 
   const { data, error } = useSWR(`/api/food_items/${id}`, getArticles)
-  console.log(data)
 
   useEffect(() => {
     const getUser = async () => {
