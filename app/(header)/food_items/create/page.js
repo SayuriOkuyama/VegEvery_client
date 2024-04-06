@@ -14,6 +14,8 @@ import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation.js'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { itemFormSchema } from '@/lib/zod/itemFormSchema'
 
 const page = () => {
   const [image, setImage] = useState(null)
@@ -21,6 +23,7 @@ const page = () => {
   const router = useRouter()
 
   const { register, setValue, handleSubmit, control, getValues } = useForm({
+    resolver: zodResolver(itemFormSchema),
     defaultValues: {
       title: '',
       tags: [{ tag: '' }],

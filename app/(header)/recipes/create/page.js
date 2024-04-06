@@ -1,8 +1,8 @@
 'use client'
 
-// import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { recipeFormSchema } from '@/lib/zod/recipeFormSchema'
 import { useForm } from 'react-hook-form'
-// import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
@@ -21,79 +21,39 @@ import Tags from './Tags'
 import Materials from './Materials.js'
 import Steps from './Steps.js'
 import FormVegeType from './FormVegeType.js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation.js'
 
-// const formSchema = z.object({
-//   title: z
-//     .string()
-//     .min(2, {
-//       message: 'タイトルは 2 文字以上で入力してください。',
-//     })
-//     .max(30, {
-//       message: 'タイトルは 30 文字以内で入力してください。',
-//     }),
-//   tags: z
-//     .string()
-//     .min(2, {
-//       message: 'タグは 2 文字以上で入力してください。',
-//     })
-//     .max(10, {
-//       message: 'タグは 10 文字以内で入力してください。',
-//     }),
-// time: z
-//   .string()
-//   .min(1, {
-//     message: '調理目安時間は 1 文字以上で入力してください',
-//   })
-//   .max(10, { message: '調理目安時間は 10 文字以内で入力してください' }),
-// servings: z.string().min(2, {
-//   message: '分量は 2 文字以上で入力してください。',
-// }),
-// material: z
-//   .string()
-//   .min(1, {
-//     message: '材料は 1 文字以上で入力してください。',
-//   })
-//   .max(20, {
-//     message: '材料は 20 文字以内で入力してください。',
-//   }),
-// quantity: z
-//   .string()
-//   .min(1, {
-//     message: '量は 1 文字以上で入力してください。',
-//   })
-//   .max(1, {
-//     message: '量は 10 文字以内で入力してください。',
-//   }),
-// unit: z.string().min(2, {
-//   message: '量は 1 文字以上で入力してください。',
-// }),
-// image: z.string().min(2, {
-//   message: 'Username must be at least 2 characters.',
-// }),
-// step: z.string().min(2, {
-//   message: '手順は 2 文字以上で入力してください。',
-// }),
-//   image: z.string().min(2, {
-//     message: 'Username must be at least 2 characters.',
-//   }),
-// })
-
 const page = () => {
   const [image, setImage] = useState(null)
   const [stepImages, setStepImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
+  const [user, setUser] = useState()
 
-  const { register, setValue, handleSubmit, control, getValues } = useForm({
-    // resolver: zodResolver(formSchema),
+  useEffect(() => {
+    const getUser = async () => {
+      axios.get('/sanctum/csrf-cookie')
+      axios.get('/api/user').then(res => setUser(res.data))
+    }
+    getUser()
+  }, [])
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    // watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(recipeFormSchema),
     defaultValues: {
       title: '',
-      tags: [{ tag: '' }],
-      materials: [{ material: '', quantity: '', unit: '' }],
+      tags: [{ name: '' }],
+      materials: [{ material: '', quantity: '', unit: 'null' }],
       time: '',
       thumbnail: '',
       servings: '',
@@ -101,6 +61,10 @@ const page = () => {
     },
     mode: 'onChange', // リアルタイムで入力値を取得する
   })
+  // const watcher = watch()
+  // console.log(errors)
+  // console.log(watcher)
+  console.log(user)
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
@@ -114,7 +78,13 @@ const page = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function onSubmit(values) {
-    // console.log(values)
+    let tags = []
+    values.tags.map(tag => {
+      if (tag.name === '') {
+        return
+      }
+      tags.push(tag.name)
+    })
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
@@ -161,6 +131,7 @@ const page = () => {
     // })
 
     const res = await axios.post(`/api/recipes`, {
+      user_id: user.id,
       title: values.title,
       thumbnail: {
         thumbnail_path: thumbnail_path,
@@ -168,7 +139,7 @@ const page = () => {
       },
       cooking_time: values.time,
       servings: values.servings,
-      tags: values.tags,
+      tags: tags,
       vege_type: values.vege_type,
       materials: values.materials,
       recipe_step: {
@@ -207,7 +178,7 @@ const page = () => {
             </div>
           ) : (
             <div {...getRootProps()} className="h-64">
-              <input {...getInputProps()} />
+              <input accept="image/* " {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
                   <PiCameraLight />
@@ -216,30 +187,37 @@ const page = () => {
             </div>
           )}
         </div>
+        {errors.thumbnail && (
+          <div className="container text-red-400">
+            {errors.thumbnail.message}
+          </div>
+        )}
 
         <div className="container py-4 space-y-4">
           <div>
             <h3>レシピタイトル</h3>
             <input className="border" type="text" {...register(`title`)} />
+            {errors.title && (
+              <div className="text-red-400">{errors.title.message}</div>
+            )}
           </div>
-          <Tags register={register} control={control} getValues={getValues} />
+          <Tags register={register} control={control} errors={errors} />
           <div>
             <h3>調理目安時間</h3>
             <input
               className="border w-8"
-              type="number"
+              type="text"
               placeholder="20"
-              {...register(`time`)}
+              {...register('time')}
             />
             分
+            {errors.time && (
+              <div className="text-red-400">{errors.time.message}</div>
+            )}
           </div>
         </div>
 
-        <Materials
-          register={register}
-          control={control}
-          getValues={getValues}
-        />
+        <Materials register={register} control={control} errors={errors} />
 
         <Steps
           register={register}
@@ -247,6 +225,7 @@ const page = () => {
           stepImages={stepImages}
           setStepImages={setStepImages}
           setValue={setValue}
+          errors={errors}
         />
         <hr className="mx-4" />
 

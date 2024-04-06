@@ -154,7 +154,7 @@ const page = ({ params }) => {
       <div className="container flex py-4 justify-between">
         <div className="flex">
           <Avatar className="self-end mr-2">
-            <AvatarImage src={articlesData.user.icon} alt="@shadcn" />
+            <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{articlesData.user.name}</div>

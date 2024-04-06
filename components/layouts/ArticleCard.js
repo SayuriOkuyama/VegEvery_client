@@ -49,7 +49,7 @@ const ArticleCard = ({
         <CardFooter>
           <div className="flex">
             <Avatar>
-              <AvatarImage src={user.icon} alt="@shadcn" />
+              <AvatarImage src={user.icon_url} alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="text-sm self-end">{user.name}</div>

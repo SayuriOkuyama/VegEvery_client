@@ -33,7 +33,17 @@ import {
 
 const page = ({ params }) => {
   const id = params.id
+  const [user, setUser] = useState()
 
+  useEffect(() => {
+    const getUser = async () => {
+      axios.get('/sanctum/csrf-cookie')
+      axios.get('/api/user').then(res => setUser(res.data))
+    }
+    getUser()
+  }, [])
+
+  console.log(user)
   const [articlesData, setArticlesData] = useState({
     article_id: '',
     title: '',
@@ -50,7 +60,7 @@ const page = ({ params }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
-
+  console.log(articlesData)
   useEffect(() => {
     if (data) {
       const recipe_steps = data.article.recipe_steps.sort(
@@ -128,7 +138,7 @@ const page = ({ params }) => {
 
   return (
     <main className="pb-20">
-      {articlesData.user.id === 1 && (
+      {user && articlesData.user.id === user.id && (
         <Link
           href={`/recipes/edit?id=${articlesData.article_id}`}
           className="fixed top-3 right-3">
@@ -165,7 +175,7 @@ const page = ({ params }) => {
       <div className="container flex py-4 justify-between">
         <div className="flex">
           <Avatar className="self-end mr-2">
-            <AvatarImage src={articlesData.user.icon} alt="@shadcn" />
+            <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
             <AvatarFallback>Icon</AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{articlesData.user.name}</div>
@@ -236,7 +246,7 @@ const page = ({ params }) => {
             articlesData.commentsToRecipe.map(commentToRecipe => {
               return (
                 <div key={commentToRecipe.id} className="relative">
-                  {commentToRecipe.user_id === 1 && (
+                  {user && commentToRecipe.user_id === user.id && (
                     <Dialog className="mx-auto mt-0">
                       <DialogTrigger className="absolute right-4">
                         <div className=" bg-white/80 p-1 rounded-full">

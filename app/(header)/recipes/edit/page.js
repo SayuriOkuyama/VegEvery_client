@@ -42,7 +42,7 @@ const page = () => {
     })
   // const form = useForm()
 
-  const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
+  const { data, error } = useSWR(`/api/${path}/${articleId}`, getArticles)
   // console.log(data)
 
   useEffect(() => {
