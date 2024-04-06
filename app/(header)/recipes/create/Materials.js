@@ -26,7 +26,7 @@ const Materials = ({ register, control, errors }) => {
       </div>
       <div className="space-y-2">
         {fields.map((field, index) => (
-          <div className="" key={field.id}>
+          <div key={field.id}>
             <div className="flex space-x-2">
               <input
                 className="border block w-20"
@@ -34,38 +34,40 @@ const Materials = ({ register, control, errors }) => {
                 placeholder="材料名"
                 {...register(`materials.${index}.name`)}
               />
-              <input
-                className="border block w-12"
-                type="text"
-                placeholder="100"
-                {...register(`materials.${index}.quantity`)}
-              />
-              <select
-                className="border block w-12"
-                {...register(`materials.${index}.unit`)}>
-                <option value="null">単位なし</option>
-                <option value="g">g</option>
-                <option value="mg">mg</option>
-                <option value="L">L</option>
-                <option value="mL">mL</option>
-                <option value="cc">cc</option>
-                <option value="個">個</option>
-                <option value="袋">袋</option>
-                <option value="本">本</option>
-                <option value="片">片</option>
-                <option value="枚">枚</option>
-                <option value="杯（小さじ）">杯（小さじ）</option>
-                <option value="杯（大さじ）">杯（大さじ）</option>
-                <option value="カップ">カップ</option>
-              </select>
-              {index !== 0 && (
-                <button
-                  className="border ml-1"
-                  type="button"
-                  onClick={() => remove(index)}>
-                  ✕
-                </button>
-              )}
+              <div className="flex items-center">
+                <input
+                  className="border block w-12"
+                  type="text"
+                  placeholder="100"
+                  {...register(`materials.${index}.quantity`)}
+                />
+                <select
+                  className="border block w-12"
+                  {...register(`materials.${index}.unit`)}>
+                  <option value="null">単位なし</option>
+                  <option value="g">g</option>
+                  <option value="mg">mg</option>
+                  <option value="L">L</option>
+                  <option value="mL">mL</option>
+                  <option value="cc">cc</option>
+                  <option value="個">個</option>
+                  <option value="袋">袋</option>
+                  <option value="本">本</option>
+                  <option value="片">片</option>
+                  <option value="枚">枚</option>
+                  <option value="杯（小さじ）">杯（小さじ）</option>
+                  <option value="杯（大さじ）">杯（大さじ）</option>
+                  <option value="カップ">カップ</option>
+                </select>
+                {index !== 0 && (
+                  <button
+                    className="border ml-1"
+                    type="button"
+                    onClick={() => remove(index)}>
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
             {errors.materials &&
               errors.materials[index] &&
@@ -95,7 +97,7 @@ const Materials = ({ register, control, errors }) => {
         <button
           className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
           type="button"
-          onClick={() => append({ material: '', quantity: '', unit: 'null' })}>
+          onClick={() => append({ name: '', quantity: '', unit: 'null' })}>
           材料を追加
         </button>
       </div>

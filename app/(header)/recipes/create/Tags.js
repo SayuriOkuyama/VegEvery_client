@@ -31,7 +31,7 @@ const Tags = ({ register, control, errors }) => {
             </div>
             {errors.tags && errors.tags[index].tag && (
               <div className="text-red-400">
-                {errors.tags[index].tag.message}
+                {errors.tags[index].name.message}
               </div>
             )}
           </div>

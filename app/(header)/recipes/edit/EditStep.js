@@ -5,7 +5,7 @@ import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import Dropzone from 'react-dropzone'
 
-const EditStep = ({ register, control, stepImages, setStepImages }) => {
+const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
@@ -100,6 +100,13 @@ const EditStep = ({ register, control, stepImages, setStepImages }) => {
                   defaultValue={field.text}
                   {...register(`steps.${index}.text`)}
                 />
+                {errors.steps &&
+                  errors.steps[index] &&
+                  errors.steps[index].text && (
+                    <div className="text-red-400">
+                      {errors.steps[index].text.message}
+                    </div>
+                  )}
               </div>
               {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
               {index !== 0 && (

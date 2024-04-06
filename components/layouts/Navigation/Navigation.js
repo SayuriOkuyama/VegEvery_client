@@ -7,14 +7,19 @@ import { PiMapPinLineLight } from 'react-icons/pi'
 import { PiCookingPotLight } from 'react-icons/pi'
 import { CiApple } from 'react-icons/ci'
 import { CiUser } from 'react-icons/ci'
-import { useAuth } from '@/hooks/auth'
+import { useEffect, useState } from 'react'
+import axios from '@/lib/axios'
 
 export default function Navigation() {
-  const { user } = useAuth({
-    middleware: 'guest',
-    // ログイン状態になったらトップページに移動
-    redirectIfAuthenticated: '/',
-  })
+  const [user, setUser] = useState()
+
+  useEffect(() => {
+    const getUser = async () => {
+      axios.get('/sanctum/csrf-cookie')
+      axios.get('/api/user').then(res => setUser(res.data))
+    }
+    getUser()
+  }, [])
 
   let accountPath
   if (user) {

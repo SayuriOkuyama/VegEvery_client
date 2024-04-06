@@ -7,16 +7,6 @@ import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
 import { v4 as uuidv4 } from 'uuid'
-
-// import {
-//   Form,
-//   FormControl,
-//   FormDescription,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from '@/components/ui/form'
 import Tags from './Tags'
 import Materials from './Materials.js'
 import Steps from './Steps.js'
@@ -53,7 +43,7 @@ const page = () => {
     defaultValues: {
       title: '',
       tags: [{ name: '' }],
-      materials: [{ material: '', quantity: '', unit: 'null' }],
+      materials: [{ name: '', quantity: '', unit: 'null' }],
       time: '',
       thumbnail: '',
       servings: '',

@@ -1,6 +1,8 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { recipeFormSchema } from '@/lib/zod/recipeFormSchema'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
 import { supabase } from '@/lib/utils/supabase/supabase'
@@ -36,17 +38,27 @@ const page = () => {
   const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
   const [stepImages, setStepImages] = useState([])
-  const { register, setValue, handleSubmit, control, getValues, reset } =
-    useForm({
-      mode: 'onChange', // リアルタイムで入力値を取得する
-    })
-  // const form = useForm()
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(recipeFormSchema),
+    mode: 'onChange', // リアルタイムで入力値を取得する
+  })
+  const watcher = watch()
+  console.log(watcher)
+  console.log(errors)
 
   const { data, error } = useSWR(`/api/${path}/${articleId}`, getArticles)
   // console.log(data)
 
   useEffect(() => {
-    // console.log('エフェクト')
     if (data) {
       // console.log(data)
       setOldThumbnail({
@@ -81,12 +93,13 @@ const page = () => {
         title: data.article.title,
         thumbnail_path: data.article.thumbnail_path,
         thumbnail_url: data.article.thumbnail_url,
+        thumbnail: data.article.thumbnail_url,
         tags: data.article.tags,
         materials: data.article.materials,
         steps: data.article.recipe_steps,
         servings: data.article.servings,
         time: data.article.cooking_time,
-        vegeTags: {
+        vege_type: {
           vegan: data.article.vegan,
           oriental_vegetarian: data.article.oriental_vegetarian,
           ovo_vegetarian: data.article.ovo_vegetarian,
@@ -117,6 +130,14 @@ const page = () => {
   async function onSubmit(values) {
     // console.log(values)
 
+    let tags = []
+    values.tags.map(tag => {
+      if (tag.name === '') {
+        return
+      }
+      tags.push(tag.name)
+    })
+
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
     let thumbnail_url
@@ -125,7 +146,7 @@ const page = () => {
 
     // try {
     // サムネイルに変更があった場合のみ、ストレージにアップロード
-    if (values.thumbnail && values.thumbnail.name) {
+    if (values.thumbnail.name) {
       // 拡張子部分を切り出す
       const fileExtension = values.thumbnail.name.split('.').pop()
 
@@ -135,7 +156,7 @@ const page = () => {
         `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
         values.thumbnail,
       )
-      // console.log('Thumbnail upload successful:', response.data)
+
       thumbnail_path = response.data.path
       thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
 
@@ -143,6 +164,10 @@ const page = () => {
     } else {
       thumbnail_path = values.thumbnail_path
       thumbnail_url = values.thumbnail_url
+      console.log(values.thumbnail_path)
+      console.log(values.thumbnail_url)
+      console.log(thumbnail_path)
+      console.log(thumbnail_url)
     }
 
     // console.log(stepImages)
@@ -159,7 +184,6 @@ const page = () => {
               `recipes/step_image/${uuidv4()}.${fileExtension}`,
               step.file,
             )
-          // console.log('Step image upload successful:', response.data)
 
           stepImagesData[index] = {
             image_path: response.data.path,
@@ -186,21 +210,18 @@ const page = () => {
           supabase.storage
             .from('VegEvery-backet')
             .remove(oldPath)
-            // .then(response => {
-            //   console.log('Delete step_image successful:', response.data)
-            // })
             .catch(error => {
               throw error
             })
         }
       }),
     )
-    // console.log({
-    //   values,
-    //   thumbnail_path,
-    //   thumbnail_url,
-    //   stepImagesData,
-    // })
+    console.log({
+      values,
+      thumbnail_path,
+      thumbnail_url,
+      stepImagesData,
+    })
 
     const res = await axios.put(`/api/recipes/${data.article.id}`, {
       title: values.title,
@@ -210,8 +231,8 @@ const page = () => {
       },
       cooking_time: values.time,
       servings: values.servings,
-      tags: values.tags,
-      vegeTags: values.vegeTags,
+      tags: tags,
+      vege_type: values.vege_type,
       materials: values.materials,
       recipe_step: {
         step_order_text: values.steps,
@@ -250,7 +271,10 @@ const page = () => {
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
-                onClick={() => setImage('')}>
+                onClick={() => {
+                  setValue('thumbnail', '')
+                  setImage('')
+                }}>
                 ✕
               </button>
               <img
@@ -261,7 +285,7 @@ const page = () => {
             </div>
           ) : (
             <div {...getRootProps()} className="h-64">
-              <input {...getInputProps()} />
+              <input accept="image/* " {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
                   <PiCameraLight />
@@ -270,17 +294,21 @@ const page = () => {
             </div>
           )}
         </div>
+        {errors.thumbnail && (
+          <div className="container text-red-400">
+            {errors.thumbnail.message}
+          </div>
+        )}
 
         <div className="container py-4 space-y-4">
           <div>
             <h3>レシピタイトル</h3>
             <input className="border" type="text" {...register(`title`)} />
+            {errors.title && (
+              <div className="text-red-400">{errors.title.message}</div>
+            )}
           </div>
-          <EditTags
-            register={register}
-            control={control}
-            getValues={getValues}
-          />
+          <EditTags register={register} control={control} errors={errors} />
           <div>
             <h3>調理目安時間</h3>
             <input
@@ -290,14 +318,17 @@ const page = () => {
               {...register(`time`)}
             />
             分
+            {errors.time && (
+              <div className="text-red-400">{errors.time.message}</div>
+            )}
           </div>
         </div>
 
         <EditMaterials
           register={register}
           control={control}
-          getValues={getValues}
           setValue={setValue}
+          errors={errors}
         />
 
         <EditStep
@@ -307,6 +338,7 @@ const page = () => {
           setStepImages={setStepImages}
           setValue={setValue}
           reset={reset}
+          errors={errors}
         />
         <hr className="mx-4" />
 
