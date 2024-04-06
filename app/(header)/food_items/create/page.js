@@ -9,27 +9,48 @@ import Tags from './Tags'
 import Reports from './Reports'
 import Items from './Items'
 import FormVegeType from './FormVegeType.js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation.js'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { itemFormSchema } from '@/lib/zod/itemFormSchema'
 
 const page = () => {
   const [image, setImage] = useState(null)
   const [reportImages, setReportImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
+  const [user, setUser] = useState()
 
-  const { register, setValue, handleSubmit, control, getValues } = useForm({
+  useEffect(() => {
+    const getUser = async () => {
+      axios.get('/sanctum/csrf-cookie')
+      axios.get('/api/user').then(res => setUser(res.data))
+    }
+    getUser()
+  }, [])
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control, // watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(itemFormSchema),
     defaultValues: {
       title: '',
-      tags: [{ tag: '' }],
+      tags: [{ name: '' }],
       items: [{ name: '', place: '', price: '' }],
       thumbnail: '',
+      thumbnail_path: 'a',
+      thumbnail_url: 'a',
       reports: [{ text: '' }],
     },
     mode: 'onChange', // リアルタイムで入力値を取得する
   })
+  // console.log(errors)
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
@@ -44,6 +65,13 @@ const page = () => {
 
   async function onSubmit(values) {
     // console.log(values)
+    let tags = []
+    values.tags.map(tag => {
+      if (tag.name === '') {
+        return
+      }
+      tags.push(tag.name)
+    })
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
@@ -89,13 +117,14 @@ const page = () => {
       // })
 
       const res = await axios.post(`api/food_items`, {
+        user_id: user.id,
         title: values.title,
         thumbnail: {
           thumbnail_path: thumbnail_path,
           thumbnail_url: thumbnail_url,
         },
-        tags: values.tags,
-        vegeTags: values.vege_type,
+        tags: tags,
+        vege_type: values.vege_type,
         items: values.items,
         reports: {
           reports_order_text: values.reports,
@@ -142,6 +171,11 @@ const page = () => {
             </div>
           )}
         </div>
+        {errors.thumbnail && (
+          <div className="container text-red-400">
+            {errors.thumbnail.message}
+          </div>
+        )}
 
         <div className="container py-4 space-y-4">
           <div>
@@ -152,11 +186,14 @@ const page = () => {
               {...register(`title`)}
               placeholder="新発売のヴィーガンヌードルを試してみた"
             />
+            {errors.title && (
+              <div className="text-red-400">{errors.title.message}</div>
+            )}
           </div>
-          <Tags register={register} control={control} getValues={getValues} />
+          <Tags register={register} control={control} errors={errors} />
         </div>
 
-        <Items register={register} control={control} getValues={getValues} />
+        <Items register={register} control={control} errors={errors} />
 
         <Reports
           register={register}
@@ -164,6 +201,7 @@ const page = () => {
           reportImages={reportImages}
           setReportImages={setReportImages}
           setValue={setValue}
+          errors={errors}
         />
         <hr className="mx-4" />
 

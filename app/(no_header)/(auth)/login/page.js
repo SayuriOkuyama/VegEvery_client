@@ -28,7 +28,7 @@ const page = () => {
 
   const { login } = useAuth({
     middleware: 'guest',
-    redirectIfAuthenticated: '/recipes',
+    redirectIfAuthenticated: '/',
   })
   useEffect(() => {
     if (router.reset?.length > 0 && errors.length === 0) {

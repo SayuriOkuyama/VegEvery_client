@@ -16,6 +16,8 @@ import { useDropzone } from 'react-dropzone'
 import { useRouter, useSearchParams } from 'next/navigation.js'
 import { getArticles } from '@/lib/utils/fetch.js'
 import useSWR from 'swr'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { itemFormSchema } from '@/lib/zod/itemFormSchema'
 import {
   Dialog,
   DialogContent,
@@ -36,16 +38,23 @@ const page = () => {
   const [arrayOldPath, setArrayOldPath] = useState()
   const [image, setImage] = useState(null)
   const [reportsData, setReportsData] = useState([])
-  const { register, setValue, handleSubmit, control, getValues, reset } =
-    useForm({
-      mode: 'onChange', // リアルタイムで入力値を取得する
-    })
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(itemFormSchema),
+    mode: 'onChange', // リアルタイムで入力値を取得する
+  })
+  // console.log(errors)
 
-  const { data, error } = useSWR(`${path}/${articleId}`, getArticles)
+  const { data, error } = useSWR(`/api/${path}/${articleId}`, getArticles)
   // console.log(data)
 
   useEffect(() => {
-    // console.log('エフェクト')
     if (data) {
       // console.log(data)
       setOldThumbnail({
@@ -83,10 +92,11 @@ const page = () => {
         title: data.article.title,
         thumbnail_path: data.article.thumbnail_path,
         thumbnail_url: data.article.thumbnail_url,
+        thumbnail: data.article.thumbnail_url,
         tags: data.article.tags,
         items: data.article.items,
         reports: data.article.reports,
-        vegeTags: {
+        vege_type: {
           vegan: data.article.vegan,
           oriental_vegetarian: data.article.oriental_vegetarian,
           ovo_vegetarian: data.article.ovo_vegetarian,
@@ -116,6 +126,13 @@ const page = () => {
 
   async function onSubmit(values) {
     // console.log(values)
+    let tags = []
+    values.tags.map(tag => {
+      if (tag.name === '') {
+        return
+      }
+      tags.push(tag.name)
+    })
 
     const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
     let thumbnail_path
@@ -198,14 +215,14 @@ const page = () => {
     //   reportImages,
     // })
 
-    await axios.put(`/api/food_items/${data.article.id}`, {
+    const res = await axios.put(`/api/food_items/${data.article.id}`, {
       title: values.title,
       thumbnail: {
         thumbnail_path: thumbnail_path,
         thumbnail_url: thumbnail_url,
       },
-      tags: values.tags,
-      vegeTags: values.vegeTags,
+      tags: tags,
+      vege_type: values.vege_type,
       items: values.items,
       reports: {
         report_order_text: values.reports,
@@ -215,7 +232,7 @@ const page = () => {
 
     // console.log(res.data)
     // console.log('画面遷移')
-    //   router.push(`/food_items/${res.data.article.id}`)
+    router.push(`/food_items/${res.data.article.id}`)
     // } catch (error) {
     //   throw error
     // }
@@ -262,7 +279,10 @@ const page = () => {
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
-                onClick={() => setImage('')}>
+                onClick={() => {
+                  setValue('thumbnail', '')
+                  setImage('')
+                }}>
                 ✕
               </button>
               <img
@@ -282,6 +302,11 @@ const page = () => {
             </div>
           )}
         </div>
+        {errors.thumbnail && (
+          <div className="container text-red-400">
+            {errors.thumbnail.message}
+          </div>
+        )}
 
         <div className="container py-4 space-y-4">
           <div>
@@ -292,18 +317,14 @@ const page = () => {
               {...register(`title`)}
             />
           </div>
-          <EditTags
-            register={register}
-            control={control}
-            getValues={getValues}
-          />
+          <EditTags register={register} control={control} errors={errors} />
         </div>
 
         <EditItems
           register={register}
           control={control}
-          getValues={getValues}
           setValue={setValue}
+          errors={errors}
         />
 
         <EditReports
@@ -312,6 +333,7 @@ const page = () => {
           reportsData={reportsData}
           setReportsData={setReportsData}
           setValue={setValue}
+          errors={errors}
         />
         <hr className="mx-4" />
 

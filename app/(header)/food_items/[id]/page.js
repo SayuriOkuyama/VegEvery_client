@@ -15,6 +15,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { getArticles } from '@/lib/utils/fetch.js'
 import useSWR from 'swr'
 import { GoTrash } from 'react-icons/go'
@@ -28,6 +30,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { useRouter } from 'next/navigation'
+import SideButtons from '@/components/layouts/SideButtons'
 
 const page = ({ params }) => {
   const id = params.id
@@ -45,9 +48,18 @@ const page = ({ params }) => {
   })
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
+  const [user, setUser] = useState()
 
   const { data, error } = useSWR(`/api/food_items/${id}`, getArticles)
   // console.log(data)
+
+  useEffect(() => {
+    const getUser = async () => {
+      axios.get('/sanctum/csrf-cookie')
+      axios.get('/api/user').then(res => setUser(res.data))
+    }
+    getUser()
+  }, [])
 
   useEffect(() => {
     if (data) {
@@ -81,17 +93,34 @@ const page = ({ params }) => {
     }
   }, [data])
 
-  const { register, reset, handleSubmit } = useForm({
-    // resolver: zodResolver(formSchema),
+  const commentFormSchema = z.object({
+    comment: z
+      .string()
+      .min(1, {
+        message: '※ 入力が必須です。',
+      })
+      .max(225, {
+        message: '※ 225 文字以内で入力してください。',
+      }),
+  })
+
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(commentFormSchema),
     defaultValues: {
       comment: '',
     },
+    mode: 'onChange', // リアルタイムで入力値を取得する
   })
 
   const onSubmit = async value => {
     const response = await axios.post(
       `/api/food_items/${articlesData.article_id}/comment`,
-      { text: value.comment },
+      { user_id: user.id, text: value.comment },
     )
     // console.log(response.data)
     const newComment = response.data
@@ -119,7 +148,7 @@ const page = ({ params }) => {
 
   return (
     <main className="pb-20">
-      {articlesData.user.id === 1 && (
+      {user && articlesData.user.id === user.id && (
         <Link
           href={`/food_items/edit?id=${articlesData.article_id}`}
           className="fixed top-3 right-3">
@@ -154,7 +183,7 @@ const page = ({ params }) => {
       <div className="container flex py-4 justify-between">
         <div className="flex">
           <Avatar className="self-end mr-2">
-            <AvatarImage src={articlesData.user.icon} alt="@shadcn" />
+            <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{articlesData.user.name}</div>
@@ -288,22 +317,36 @@ const page = ({ params }) => {
                 コメントする
               </PopoverTrigger>
               <PopoverContent className="h-fit">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <textarea
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="10"
-                    className="outline-none"
-                    {...register(`comment`)}
-                    placeholder="コメントを入力"
-                  />
-                  <Button
-                    type="submit"
-                    className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
-                    送信
-                  </Button>
-                </form>
+                {user ? (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <textarea
+                      cols="30"
+                      rows="10"
+                      className="outline-none"
+                      {...register(`comment`)}
+                      placeholder="コメントを入力"
+                    />
+                    {errors.comment && (
+                      <div className="text-red-400">
+                        {errors.comment.message}
+                      </div>
+                    )}
+                    <Button
+                      type="submit"
+                      className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                      送信
+                    </Button>
+                  </form>
+                ) : (
+                  <div className="p-4">
+                    <p className="text-center mb-8">ログインが必要です</p>
+                    <Link href={'/login'}>
+                      <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+                        ログインページへ
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </PopoverContent>
             </Popover>
           </div>
@@ -314,6 +357,13 @@ const page = ({ params }) => {
           一覧に戻る
         </Button>
       </Link>
+      <SideButtons
+        articleId={articlesData.article_id}
+        likeableType="ArticleOfRecipe"
+        likes={articlesData.likes}
+        setArticlesData={setArticlesData}
+        user={user}
+      />
     </main>
   )
 }

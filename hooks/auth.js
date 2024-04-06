@@ -38,7 +38,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post('api/user/register', props)
       .then(res => {
-        console.log(res)
+        // console.log(res)
         // トークンをクッキーに保存
         Cookie.set('sanctum_token', res.data.token, {
           expires: 7,
@@ -64,7 +64,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post('api/user/login', props)
       .then(res => {
-        console.log(res)
+        // console.log(res)
         // トークンをクッキーに保存
         Cookie.set('sanctum_token', res.data.token, {
           expires: 7,

@@ -1,7 +1,7 @@
 'use client'
 import { useFieldArray } from 'react-hook-form'
 
-const Items = ({ register, control }) => {
+const Items = ({ register, control, errors }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'items',
     control,
@@ -35,7 +35,7 @@ const Items = ({ register, control }) => {
                   type="text"
                   placeholder="〇〇ネットショップ"
                   // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
-                  {...register(`items.${index}.place`)}
+                  {...register(`items.${index}.where_to_buy`)}
                 />
               </label>
               <label className="block py-1">
@@ -58,6 +58,27 @@ const Items = ({ register, control }) => {
                 </button>
               )}
             </div>
+            {errors.items &&
+              errors.items[index] &&
+              errors.items[index].name && (
+                <div className="text-red-400">
+                  {errors.items[index].name.message}
+                </div>
+              )}
+            {errors.items &&
+              errors.items[index] &&
+              errors.items[index].where_to_buy && (
+                <div className="text-red-400">
+                  {errors.items[index].where_to_buy.message}
+                </div>
+              )}
+            {errors.items &&
+              errors.items[index] &&
+              errors.items[index].price && (
+                <div className="text-red-400">
+                  {errors.items[index].price.message}
+                </div>
+              )}
           </div>
         ))}
         <hr className="" />

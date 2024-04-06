@@ -4,9 +4,23 @@ import { GoHeart } from 'react-icons/go'
 import { GoHeartFill } from 'react-icons/go'
 import { useEffect, useState } from 'react'
 import axios from '@/lib/axios'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
-function SideButtons({ articleId, likeableType, likes, setArticlesData }) {
+function SideButtons({
+  articleId,
+  likeableType,
+  likes,
+  setArticlesData,
+  user,
+}) {
   const [likeState, setLikeState] = useState()
+  const [isOpen, setIsOpen] = useState(false)
 
   // console.log(likeState)
 
@@ -79,12 +93,34 @@ function SideButtons({ articleId, likeableType, likes, setArticlesData }) {
 
   return (
     <div className="fixed bottom-20 right-0 w-12 ">
-      <button className="flex flex-col items-center" onClick={handleLike}>
-        <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
-          {likeState && likeState.like ? <GoHeartFill /> : <GoHeart />}
-        </IconContext.Provider>
-        <div className="text-xs">いいね</div>
-      </button>
+      {user ? (
+        <button className="flex flex-col items-center" onClick={handleLike}>
+          <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
+            {likeState && likeState.like ? <GoHeartFill /> : <GoHeart />}
+          </IconContext.Provider>
+          <div className="text-xs">いいね</div>
+        </button>
+      ) : (
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger className="flex flex-col items-center">
+            <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
+              <GoHeart />
+            </IconContext.Provider>
+            <div className="text-xs">いいね</div>
+          </PopoverTrigger>
+          <PopoverContent className="mr-8">
+            <div className="p-4">
+              <p className="text-center mb-8">ログインが必要です</p>
+              <Link href={'/login'}>
+                <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+                  ログインページへ
+                </Button>
+              </Link>
+            </div>
+          </PopoverContent>
+        </Popover>
+      )}
+
       <button className="flex flex-col items-center mt-1">
         <IconContext.Provider value={{ size: '24px' }}>
           <PiShareFatFill />

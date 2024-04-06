@@ -5,7 +5,7 @@ import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import Dropzone from 'react-dropzone'
 
-const Steps = ({ register, control, stepImages, setStepImages }) => {
+const Steps = ({ register, control, stepImages, setStepImages, errors }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
@@ -20,16 +20,36 @@ const Steps = ({ register, control, stepImages, setStepImages }) => {
         <h3>作り方</h3>
       </div>
       <div>
-        {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
           <div key={field.id} className="my-4">
-            <h4>{index + 1}.</h4>
-            <input
-              type="text"
-              value={index + 1}
-              hidden
-              {...register(`steps.${index}.order`)}
-            />
+            <div className="flex">
+              <h4>{index + 1}.</h4>
+              <input
+                type="text"
+                value={index + 1}
+                hidden
+                {...register(`steps.${index}.order`)}
+              />
+              {index !== 0 && (
+                <button
+                  className="border ml-1"
+                  type="button"
+                  onClick={() => {
+                    remove(index)
+                    setStepImages(prevState => {
+                      const newData = []
+                      for (let i = 0; i < fields.length; i++) {
+                        if (i !== index) {
+                          newData.push(prevState[i])
+                        }
+                      }
+                      return newData
+                    })
+                  }}>
+                  ✕
+                </button>
+              )}
+            </div>
             <div className="bg-orange h-52 w-full mx-auto">
               {stepImages[index] && stepImages[index].url ? (
                 <div className="image-preview relative flex h-52 mx-auto">
@@ -97,28 +117,14 @@ const Steps = ({ register, control, stepImages, setStepImages }) => {
                 defaultValue={field.text}
                 {...register(`steps.${index}.text`)}
               />
+              {errors.steps &&
+                errors.steps[index] &&
+                errors.steps[index].text && (
+                  <div className="text-red-400">
+                    {errors.steps[index].text.message}
+                  </div>
+                )}
             </div>
-            {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
-            {index !== 0 && (
-              <button
-                className="border"
-                type="button"
-                onClick={() => {
-                  remove(index)
-
-                  setStepImages(prevState => {
-                    const newData = []
-                    for (let i = 0; i < fields.length; i++) {
-                      if (i !== index) {
-                        newData.push(prevState[i])
-                      }
-                    }
-                    return newData
-                  })
-                }}>
-                ✕
-              </button>
-            )}
           </div>
         ))}
       </div>
