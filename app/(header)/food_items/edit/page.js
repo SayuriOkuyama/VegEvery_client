@@ -49,7 +49,7 @@ const page = () => {
     resolver: zodResolver(itemFormSchema),
     mode: 'onChange', // リアルタイムで入力値を取得する
   })
-  console.log(errors)
+  // console.log(errors)
 
   const { data, error } = useSWR(`/api/${path}/${articleId}`, getArticles)
   // console.log(data)

@@ -50,7 +50,7 @@ const page = () => {
     },
     mode: 'onChange', // リアルタイムで入力値を取得する
   })
-  console.log(errors)
+  // console.log(errors)
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
