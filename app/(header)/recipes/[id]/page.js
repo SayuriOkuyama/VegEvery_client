@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/popover'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import SideButtons from '@/components/layouts/SideButtons'
 import useSWR from 'swr'
@@ -43,7 +45,7 @@ const page = ({ params }) => {
     getUser()
   }, [])
 
-  console.log(user)
+  // console.log(user)
   const [articlesData, setArticlesData] = useState({
     article_id: '',
     title: '',
@@ -60,7 +62,7 @@ const page = ({ params }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
-  console.log(articlesData)
+  // console.log(articlesData)
   useEffect(() => {
     if (data) {
       const recipe_steps = data.article.recipe_steps.sort(
@@ -95,11 +97,28 @@ const page = ({ params }) => {
     }
   }, [data])
 
-  const { register, reset, handleSubmit } = useForm({
-    // resolver: zodResolver(formSchema),
+  const commentFormSchema = z.object({
+    comment: z
+      .string()
+      .min(1, {
+        message: '※ 入力が必須です。',
+      })
+      .max(225, {
+        message: '※ 225 文字以内で入力してください。',
+      }),
+  })
+
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(commentFormSchema),
     defaultValues: {
       comment: '',
     },
+    mode: 'onChange', // リアルタイムで入力値を取得する
   })
 
   const router = useRouter()
@@ -107,7 +126,7 @@ const page = ({ params }) => {
   const onSubmit = async value => {
     const response = await axios.post(
       `/api/recipes/${articlesData.article_id}/comment`,
-      { text: value.comment },
+      { user_id: user.id, text: value.comment },
     )
     // console.log(response.data)
     const newComment = response.data
@@ -126,10 +145,7 @@ const page = ({ params }) => {
   }
 
   const handleCommentDelete = async commentId => {
-    await axios.delete(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/recipes/comment`,
-      { data: { id: commentId } },
-    )
+    await axios.delete(`/api/recipes/comment`, { data: { id: commentId } })
     router.replace()
   }
 
@@ -305,22 +321,36 @@ const page = ({ params }) => {
                 コメントする
               </PopoverTrigger>
               <PopoverContent className="h-fit">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <textarea
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="10"
-                    className="outline-none"
-                    {...register(`comment`)}
-                    placeholder="コメントを入力"
-                  />
-                  <Button
-                    type="submit"
-                    className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
-                    送信
-                  </Button>
-                </form>
+                {user ? (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <textarea
+                      cols="30"
+                      rows="10"
+                      className="outline-none"
+                      {...register(`comment`)}
+                      placeholder="コメントを入力"
+                    />
+                    {errors.comment && (
+                      <div className="text-red-400">
+                        {errors.comment.message}
+                      </div>
+                    )}
+                    <Button
+                      type="submit"
+                      className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                      送信
+                    </Button>
+                  </form>
+                ) : (
+                  <div className="p-4">
+                    <p className="text-center mb-8">ログインが必要です</p>
+                    <Link href={'/login'}>
+                      <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+                        ログインページへ
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </PopoverContent>
             </Popover>
           </div>
@@ -336,6 +366,7 @@ const page = ({ params }) => {
         likeableType="ArticleOfRecipe"
         likes={articlesData.likes}
         setArticlesData={setArticlesData}
+        user={user}
       />
     </main>
   )

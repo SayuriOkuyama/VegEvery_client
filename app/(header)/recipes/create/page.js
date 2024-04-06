@@ -54,7 +54,7 @@ const page = () => {
   // const watcher = watch()
   // console.log(errors)
   // console.log(watcher)
-  console.log(user)
+  // console.log(user)
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]

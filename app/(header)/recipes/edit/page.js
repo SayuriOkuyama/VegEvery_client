@@ -45,15 +45,15 @@ const page = () => {
     handleSubmit,
     control,
     reset,
-    watch,
+    // watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(recipeFormSchema),
     mode: 'onChange', // リアルタイムで入力値を取得する
   })
-  const watcher = watch()
-  console.log(watcher)
-  console.log(errors)
+  // const watcher = watch()
+  // console.log(watcher)
+  // console.log(errors)
 
   const { data, error } = useSWR(`/api/${path}/${articleId}`, getArticles)
   // console.log(data)
@@ -164,10 +164,6 @@ const page = () => {
     } else {
       thumbnail_path = values.thumbnail_path
       thumbnail_url = values.thumbnail_url
-      console.log(values.thumbnail_path)
-      console.log(values.thumbnail_url)
-      console.log(thumbnail_path)
-      console.log(thumbnail_url)
     }
 
     // console.log(stepImages)
@@ -216,12 +212,12 @@ const page = () => {
         }
       }),
     )
-    console.log({
-      values,
-      thumbnail_path,
-      thumbnail_url,
-      stepImagesData,
-    })
+    // console.log({
+    //   values,
+    //   thumbnail_path,
+    //   thumbnail_url,
+    //   stepImagesData,
+    // })
 
     const res = await axios.put(`/api/recipes/${data.article.id}`, {
       title: values.title,

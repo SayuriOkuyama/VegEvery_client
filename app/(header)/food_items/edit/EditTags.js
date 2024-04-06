@@ -1,7 +1,7 @@
 'use client'
 import { useFieldArray } from 'react-hook-form'
 
-const EditTags = ({ register, control }) => {
+const EditTags = ({ register, control, errors }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'tags',
     control,
@@ -13,18 +13,25 @@ const EditTags = ({ register, control }) => {
       <div className="">
         {fields.map((field, index) => (
           <div className="flex" key={field.id}>
-            <input
-              className="border"
-              type="text"
-              {...register(`tags.${index}.name`)}
-            />
-            {index !== 0 && (
-              <button
+            <div>
+              <input
                 className="border"
-                type="button"
-                onClick={() => remove(index)}>
-                ✕
-              </button>
+                type="text"
+                {...register(`tags.${index}.name`)}
+              />
+              {index !== 0 && (
+                <button
+                  className="border"
+                  type="button"
+                  onClick={() => remove(index)}>
+                  ✕
+                </button>
+              )}
+            </div>
+            {errors.tags && errors.tags[index].name && (
+              <div className="text-red-400">
+                {errors.tags[index].name.message}
+              </div>
             )}
           </div>
         ))}

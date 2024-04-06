@@ -29,7 +29,7 @@ const Tags = ({ register, control, errors }) => {
                 </button>
               )}
             </div>
-            {errors.tags && errors.tags[index].tag && (
+            {errors.tags && errors.tags[index].name && (
               <div className="text-red-400">
                 {errors.tags[index].name.message}
               </div>

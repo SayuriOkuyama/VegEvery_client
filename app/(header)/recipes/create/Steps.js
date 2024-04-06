@@ -36,7 +36,6 @@ const Steps = ({ register, control, stepImages, setStepImages, errors }) => {
                   type="button"
                   onClick={() => {
                     remove(index)
-
                     setStepImages(prevState => {
                       const newData = []
                       for (let i = 0; i < fields.length; i++) {
