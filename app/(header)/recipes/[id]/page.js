@@ -45,7 +45,6 @@ const page = ({ params }) => {
     getUser()
   }, [])
 
-  // console.log(user)
   const [articlesData, setArticlesData] = useState({
     article_id: '',
     title: '',
@@ -60,6 +59,7 @@ const page = ({ params }) => {
     vegeTags: '',
   })
   const [isOpen, setIsOpen] = useState(false)
+  console.log(articlesData)
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
   // console.log(articlesData)

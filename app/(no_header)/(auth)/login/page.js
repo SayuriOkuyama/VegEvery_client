@@ -20,7 +20,7 @@ const page = () => {
   // const [status, setStatus] = useState(null)
 
   const formSchema = z.object({
-    name: z
+    account_id: z
       .string()
       .min(1, {
         message: '※ 入力が必須です。',
@@ -33,7 +33,7 @@ const page = () => {
       }),
     password: z
       .string()
-      .min(1, {
+      .min(8, {
         message: '※ 入力が必須です。',
       })
       .max(225, {
@@ -71,7 +71,7 @@ const page = () => {
       setStatus(null)
     }
   })
-  // console.log(errors)
+  console.log(errors)
   // console.log(status)
 
   const handleGoogleLogin = async () => {
@@ -80,8 +80,9 @@ const page = () => {
   }
 
   const handleLogin = async values => {
+    console.log('login')
     login({
-      name: values.name,
+      account_id: values.account_id,
       password: values.password,
       setErrors,
       setStatus,
@@ -107,18 +108,18 @@ const page = () => {
         </Button>
         <p className="text-center my-8">または</p>
         <div>
-          <label htmlFor="name" className="block text-start">
+          <label htmlFor="account_id" className="block text-start">
             アカウント ID
           </label>
           <div className="flex flex-col items-center">
             <div className="flex items-center w-full">
               <span className="text-lg mr-1">@</span>
               <input
-                id="name"
+                id="account_id"
                 type="text"
                 placeholder="vegevery123"
                 className="border w-full text-sm pl-1 h-8"
-                {...register(`name`)}
+                {...register(`account_id`)}
               />
             </div>
             {errors.name && (

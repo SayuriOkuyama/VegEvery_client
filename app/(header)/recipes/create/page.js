@@ -5,13 +5,13 @@ import { recipeFormSchema } from '@/lib/zod/recipeFormSchema'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
-import { supabase } from '@/lib/utils/supabase/supabase'
-import { v4 as uuidv4 } from 'uuid'
+// import { supabase } from '@/lib/utils/supabase/supabase'
+// import { v4 as uuidv4 } from 'uuid'
 import Tags from './Tags'
 import Materials from './Materials.js'
 import Steps from './Steps.js'
 import FormVegeType from './FormVegeType.js'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
@@ -21,15 +21,15 @@ const page = () => {
   const [image, setImage] = useState(null)
   const [stepImages, setStepImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
-  const [user, setUser] = useState()
+  // const [user, setUser] = useState()
 
-  useEffect(() => {
-    const getUser = async () => {
-      axios.get('/sanctum/csrf-cookie')
-      axios.get('/api/user').then(res => setUser(res.data))
-    }
-    getUser()
-  }, [])
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     axios.get('/sanctum/csrf-cookie')
+  //     axios.get('/api/user').then(res => setUser(res.data))
+  //   }
+  //   getUser()
+  // }, [])
 
   const {
     register,
@@ -48,6 +48,16 @@ const page = () => {
       thumbnail: '',
       servings: '',
       steps: [{ text: '' }],
+      vege_type: {
+        vegan: false,
+        oriental_vegetarian: false,
+        ovo_vegetarian: false,
+        pescatarian: false,
+        lacto_vegetarian: false,
+        pollo_vegetarian: false,
+        fruitarian: false,
+        other_vegetarian: false,
+      },
     },
     mode: 'onChange', // リアルタイムで入力値を取得する
   })
@@ -67,77 +77,65 @@ const page = () => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
-  async function onSubmit(values) {
-    let tags = []
-    values.tags.map(tag => {
-      if (tag.name === '') {
-        return
+  async function onSubmit(data) {
+    // console.log('submit')
+    // console.log(data)
+
+    // FormDataオブジェクトを作成
+    const formData = new FormData()
+
+    // フォームデータをFormDataオブジェクトに追加
+    for (const key in data) {
+      formData.append(key, data[key])
+    }
+
+    const types = [
+      'vegan',
+      'oriental_vegetarian',
+      'ovo_vegetarian',
+      'pescatarian',
+      'lacto_vegetarian',
+      'pollo_vegetarian',
+      'fruitarian',
+      'other_vegetarian',
+    ]
+
+    // チェックボックスがチェックされているかどうかを確認し、
+    // 文字列として 'true' または 'false' を設定
+    types.map(type => {
+      formData.append(type, data.type ? 'true' : 'false')
+    })
+
+    data.steps.forEach((step, index) => {
+      formData.append(`steps[${index}][order]`, step.order)
+      formData.append(`steps[${index}][text]`, step.text)
+      // console.log(stepImages[index])
+      if (stepImages[index]) {
+        // console.log(stepImages[index].file)
+        // ↓ なぜかこれだと undefined になる
+        // console.log(step.image)
+        formData.append(`steps[${index}][image]`, stepImages[index].file)
+        console.log(formData.getAll('steps'))
       }
-      tags.push(tag.name)
     })
 
-    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-    let thumbnail_path
-    let thumbnail_url
-    const stepImagesData = []
-
-    // try {
-    const fileExtension = values.thumbnail.name.split('.').pop()
-
-    // サムネイルのアップロード
-    const response = await supabase.storage.from('VegEvery-backet').upload(
-      // ランダムな文字列に拡張子を付けたものをパスとする
-      `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
-      values.thumbnail,
-    )
-    thumbnail_path = response.data.path
-    thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
-
-    await Promise.all(
-      stepImages.map(async (step, index) => {
-        if (step.file) {
-          const fileExtension = step.file.name.split('.').pop()
-
-          const response = await supabase.storage
-            .from('VegEvery-backet')
-            .upload(
-              `recipes/step_image/${uuidv4()}.${fileExtension}`,
-              step.file,
-            )
-          // console.log('Step image upload successful:', response.data)
-
-          stepImagesData[index] = {
-            image_path: response.data.path,
-            image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-          }
-        }
-      }),
-    )
-    // console.log({
-    //   values,
-    //   thumbnail_path,
-    //   thumbnail_url,
-    //   stepImagesData,
-    // })
-
-    const res = await axios.post(`/api/recipes`, {
-      user_id: user.id,
-      title: values.title,
-      thumbnail: {
-        thumbnail_path: thumbnail_path,
-        thumbnail_url: thumbnail_url,
-      },
-      cooking_time: values.time,
-      servings: values.servings,
-      tags: tags,
-      vege_type: values.vege_type,
-      materials: values.materials,
-      recipe_step: {
-        step_order_text: values.steps,
-        stepImages: stepImagesData,
-      },
+    data.materials.forEach((material, index) => {
+      formData.append(`materials[${index}][name]`, material.name)
+      formData.append(`materials[${index}][quantity]`, material.quantity)
+      formData.append(`materials[${index}][unit]`, material.unit)
     })
 
+    data.tags.forEach((tag, index) => {
+      if (tag.name !== '') {
+        formData.append(`tags[${index}][name]`, tag.name)
+      }
+    })
+
+    const res = await axios.post(`/api/recipes`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     // console.log(res.data)
     // console.log('画面遷移')
     router.push(`/recipes/${res.data.article.id}`)
@@ -212,9 +210,9 @@ const page = () => {
         <Steps
           register={register}
           control={control}
+          setValue={setValue}
           stepImages={stepImages}
           setStepImages={setStepImages}
-          setValue={setValue}
           errors={errors}
         />
         <hr className="mx-4" />

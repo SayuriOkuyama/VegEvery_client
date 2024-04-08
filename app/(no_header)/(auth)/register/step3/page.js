@@ -2,9 +2,8 @@
 
 import Logo from '@/components/ui/Logo'
 import { Button } from '@/components/ui/button'
-// import Image from 'next/image'
 import Link from 'next/link'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { FormContext } from '@/contexts/registerProvider'
 import { useDropzone } from 'react-dropzone'
 import { PiCameraLight } from 'react-icons/pi'
@@ -12,24 +11,24 @@ import { IconContext } from 'react-icons'
 import { useRouter } from 'next/navigation'
 
 const page = () => {
-  const [, setValue] = useContext(FormContext)
-  const [image, setImage] = useState(null)
+  const [, setValue, , watch] = useContext(FormContext)
   const router = useRouter()
+  const iconUrl = watch('iconUrl')
+  const provider = watch('provider')
 
   const noStoreRoute = () => {
-    setValue('iconUrl', '')
+    setValue(
+      'iconUrl',
+      'https://static.vegevery.my-raga-bhakti.com/user/icon_image/user_icon.png',
+    )
     setValue('iconFile', '')
-    router.push('/register/step4')
+    router.push(`/register/${provider ? 'check' : 'step4'}`)
   }
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
     setValue('iconUrl', URL.createObjectURL(file))
     setValue('iconFile', file)
-    setImage({
-      file,
-      image: URL.createObjectURL(file),
-    })
   }
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
@@ -43,7 +42,7 @@ const page = () => {
         <div className="text-center space-y-3">
           <p className="text-center my-4">プロフィール画像を選択</p>
           <div className="bg-orange rounded-full h-40 w-40 mx-auto">
-            {image ? (
+            {iconUrl ? (
               <div className="image-preview relative flex h-40 w-40 rounded-full">
                 <button
                   className="absolute right-1 bottom-1 bg-white w-10 h-10 leading-none border rounded-full text-center"
@@ -51,12 +50,11 @@ const page = () => {
                   onClick={() => {
                     setValue('iconUrl', '')
                     setValue('iconFile', '')
-                    setImage('')
                   }}>
                   ✕
                 </button>
                 <img
-                  src={image.image}
+                  src={iconUrl}
                   className="object-cover w-full h-full block rounded-full"
                   alt="Uploaded Image"
                 />
@@ -73,8 +71,8 @@ const page = () => {
             )}
           </div>
         </div>
-        {image ? (
-          <Link href={'/register/step4'}>
+        {iconUrl ? (
+          <Link href={`/register/${provider ? 'check' : 'step4'}`}>
             <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
               <p className="leading-none">次へ</p>
             </Button>
