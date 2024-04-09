@@ -40,7 +40,7 @@ const page = () => {
         message: '※ 225 文字以内で入力してください。',
       })
       .refine(
-        value => /^[A-Za-z0-9!@#$%^&*()_+={}\[\]:;"'<>,.?/~`-]+$/.test(value),
+        value => /^[A-Za-z0-9!@#$%^&*()_+={}[\]:;"'<>,.?/~`-]+$/.test(value),
         {
           message: 'パスワードは半角英数字、記号で入力してください。',
         },
@@ -71,7 +71,7 @@ const page = () => {
       setStatus(null)
     }
   })
-  console.log(errors)
+  // console.log(errors)
   // console.log(status)
 
   const handleGoogleLogin = async () => {
@@ -80,7 +80,7 @@ const page = () => {
   }
 
   const handleLogin = async values => {
-    console.log('login')
+    // console.log('login')
     login({
       account_id: values.account_id,
       password: values.password,

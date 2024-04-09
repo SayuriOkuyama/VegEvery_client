@@ -18,8 +18,8 @@ const Steps = ({
     control,
   })
 
-  console.log(fields)
-  console.log(stepImages)
+  // console.log(fields)
+  // console.log(stepImages)
 
   return (
     <div className="container pb-8">

@@ -59,7 +59,7 @@ const page = ({ params }) => {
     vegeTags: '',
   })
   const [isOpen, setIsOpen] = useState(false)
-  console.log(articlesData)
+  // console.log(articlesData)
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
   // console.log(articlesData)
