@@ -11,9 +11,8 @@ const page = () => {
   // const [errors, setErrors] = useState([])
   const watcher = watch()
 
-  console.log(watcher)
-  console.log(errors)
-  console.log(errors.length)
+  // console.log(watcher)
+  // console.log(errors)
 
   return (
     <>

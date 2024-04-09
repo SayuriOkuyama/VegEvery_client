@@ -7,8 +7,6 @@ import { FormContext } from '@/contexts/registerProvider'
 import { useAuth } from '@/hooks/auth'
 import Link from 'next/link'
 import { PiNotePencilLight } from 'react-icons/pi'
-import axios from '@/lib/axios'
-import Cookie from 'js-cookie'
 
 const page = () => {
   const [, , handleSubmit, watch] = useContext(FormContext)
@@ -21,26 +19,26 @@ const page = () => {
   })
 
   const watcher = watch()
-  console.log(watcher)
+  // console.log(watcher)
   // console.log(user)
 
   const onSubmit = async data => {
-    console.log(data)
+    // console.log(data)
 
     // FormDataオブジェクトを作成
     const formData = new FormData()
 
     // フォームデータをFormDataオブジェクトに追加
     for (const key in data) {
-      console.log(key)
-      console.log(data[key])
+      // console.log(key)
+      // console.log(data[key])
       formData.append(key, data[key])
     }
 
     // register ルートに post し、user データを登録
     // レスポンスのトークンを Cookie に保存
     // axios.get('/sanctum/csrf-cookie')
-    console.log(formData.get('name'))
+    // console.log(formData.get('name'))
     authRegister({
       setErrors,
       formData,

@@ -115,7 +115,7 @@ const page = () => {
         // ↓ なぜかこれだと undefined になる
         // console.log(step.image)
         formData.append(`steps[${index}][image]`, stepImages[index].file)
-        console.log(formData.getAll('steps'))
+        // console.log(formData.getAll('steps'))
       }
     })
 
