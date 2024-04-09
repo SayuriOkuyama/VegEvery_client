@@ -2,7 +2,6 @@
 
 import Logo from '@/components/ui/Logo'
 import { Button } from '@/components/ui/button'
-// import Image from 'next/image'
 import Link from 'next/link'
 import React, { useContext } from 'react'
 import { FormContext } from '@/contexts/registerProvider'

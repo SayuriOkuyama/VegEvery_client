@@ -1,67 +1,19 @@
 'use client'
 
 import Logo from '@/components/ui/Logo'
-import { Button } from '@/components/ui/button'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { FormContext } from '@/contexts/registerProvider'
-// import axios from '@/lib/axios'
-import { supabase } from '@/lib/utils/supabase/supabase'
-import { v4 as uuidv4 } from 'uuid'
-import { useAuth } from '@/hooks/auth'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 const page = () => {
-  const [register, , handleSubmit] = useContext(FormContext)
+  const [register, , , watch, errors] = useContext(FormContext)
   // const [errors, setErrors] = useState([])
-  const [, setErrors] = useState([])
-  // const watcher = watch()
+  const watcher = watch()
 
-  // console.log(watcher)
-  // console.log(errors)
-
-  const { authRegister } = useAuth({
-    middleware: 'guest',
-    // ログイン状態になったらトップページに移動
-    redirectIfAuthenticated: '/',
-  })
-
-  const onSubmit = async values => {
-    // console.log(values)
-    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-    let icon_url = 'users/icon/user_icon.png'
-    let icon_path =
-      'https://sbbfkhueljpgbvhxguip.supabase.co/storage/v1/object/public/VegEvery-backet/users/icon/user_icon.png'
-
-    if (values.iconFile) {
-      const fileExtension = values.iconFile.name.split('.').pop()
-
-      const response = await supabase.storage.from('VegEvery-backet').upload(
-        // ランダムな文字列に拡張子を付けたものをパスとする
-        `users/icon/${uuidv4()}.${fileExtension}`,
-        values.iconFile,
-      )
-      // console.log(response.data)
-      icon_path = response.data.path
-      icon_url = `${supabase_url}/object/public/${response.data.fullPath}`
-    }
-
-    // register ルートに post し、user データを登録
-    // レスポンスのトークンを Cookie に保存
-    authRegister({
-      account_id: values.account_id,
-      name: values.name,
-      password: values.password,
-      icon: {
-        url: icon_url,
-        storage_path: icon_path,
-      },
-      vegetarian_type: values.vegeType,
-      secret_question: values.secretQuestion,
-      answer_to_secret_question: values.secretAnswer,
-      provider: values.provider,
-      provider_id: values.providerId,
-      setErrors,
-    })
-  }
+  console.log(watcher)
+  console.log(errors)
+  console.log(errors.length)
 
   return (
     <>
@@ -82,6 +34,11 @@ const page = () => {
               className="border w-full text-sm pl-1 h-8"
               {...register(`secretQuestion`)}
             />
+            {errors.secretQuestion && (
+              <div className="text-red-400 w-full text-start text-sm">
+                {errors.secretQuestion.message}
+              </div>
+            )}
           </div>
           <div>
             <label htmlFor="password" className="block text-start">
@@ -94,13 +51,24 @@ const page = () => {
               className="border w-full text-sm pl-1 h-8"
               {...register(`secretAnswer`)}
             />
+            {errors.secretAnswer && (
+              <div className="text-red-400 w-full text-start text-sm">
+                {errors.secretAnswer.message}
+              </div>
+            )}
           </div>
         </div>
-        <Button
-          className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color"
-          onClick={handleSubmit(onSubmit)}>
-          <p className="leading-none">登録する</p>
-        </Button>
+        {!errors.length && watcher.secretAnswer && watcher.secretAnswer ? (
+          <Link href={'/register/check'}>
+            <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
+              <p className="leading-none">次へ</p>
+            </Button>
+          </Link>
+        ) : (
+          <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color disabled-text-color">
+            <p className="leading-none">次へ</p>
+          </Button>
+        )}
       </main>
     </>
   )

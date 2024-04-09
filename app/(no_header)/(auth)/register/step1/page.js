@@ -8,11 +8,12 @@ import React, { useContext } from 'react'
 import { FormContext } from '@/contexts/registerProvider'
 
 const page = () => {
-  const [register, , , watch] = useContext(FormContext)
+  const [register, , , watch, errors] = useContext(FormContext)
   const provider = watch('provider')
-  // const watcher = watch()
+  const watcher = watch()
 
-  // console.log(watcher)
+  console.log(errors)
+  console.log(watcher)
 
   return (
     <>
@@ -24,11 +25,11 @@ const page = () => {
           {provider ? (
             <>
               <div className="mt-20 mb-20">
-                <label htmlFor="name" className="block text-start">
+                <label htmlFor="name1" className="block text-start">
                   ユーザー名
                 </label>
                 <input
-                  id="name"
+                  id="name1"
                   type="text"
                   placeholder="べジヴリー"
                   className="border w-full text-sm pl-1 h-8"
@@ -37,18 +38,23 @@ const page = () => {
                 <p className="text-xs text-start">
                   公開されても問題のないニックネームを入力してください。
                 </p>
+                {errors.name && (
+                  <div className="text-red-400 w-full text-start text-sm">
+                    {errors.name.message}
+                  </div>
+                )}
               </div>
             </>
           ) : (
             <>
               <div>
-                <label htmlFor="name" className="block text-start">
+                <label htmlFor="account_id" className="block text-start">
                   アカウント ID
                 </label>
                 <div className="flex items-center">
                   <span className="text-lg mr-1">@</span>
                   <input
-                    id="name"
+                    id="account_id"
                     type="text"
                     placeholder="vege1234"
                     className="border w-full text-sm pl-1 h-8"
@@ -58,6 +64,11 @@ const page = () => {
                 <p className="text-xs text-start">
                   半角英数字 8 文字以上で入力してください。
                 </p>
+                {errors.account_id && (
+                  <div className="text-red-400 w-full text-start text-sm">
+                    {errors.account_id.message}
+                  </div>
+                )}
               </div>
               <div>
                 <label htmlFor="name" className="block text-start">
@@ -73,6 +84,11 @@ const page = () => {
                 <p className="text-xs text-start">
                   公開されて問題のないニックネームを入力してください。
                 </p>
+                {errors.name && (
+                  <div className="text-red-400 w-full text-start text-sm">
+                    {errors.name.message}
+                  </div>
+                )}
               </div>
               <div>
                 <label htmlFor="password" className="block text-start">
@@ -89,27 +105,45 @@ const page = () => {
                   半角英字、数字、記号をそれぞれ１文字以上含め、
                   <br />8 文字以上で入力してください。
                 </small>
+                {errors.password && (
+                  <div className="text-red-400 w-full text-start text-sm">
+                    {errors.password.message}
+                  </div>
+                )}
               </div>
               <div>
-                <label htmlFor="reenteredPassword" className="block text-start">
+                <label
+                  htmlFor="passwordConfirmation"
+                  className="block text-start">
                   パスワード再入力
                 </label>
                 <input
-                  id="reenteredPassword"
+                  id="passwordConfirmation"
                   type="password"
                   placeholder="password#123!"
                   className="border w-full text-sm pl-1 h-8"
-                  {...register(`reenteredPassword`)}
+                  {...register(`passwordConfirmation`)}
                 />
+                {errors.passwordConfirmation && (
+                  <div className="text-red-400 w-full text-start text-sm">
+                    {errors.passwordConfirmation.message}
+                  </div>
+                )}
               </div>
             </>
           )}
         </div>
-        <Link href={'/register/step2'} className="w-fit block mx-auto">
+        {errors.length === 0 ? (
           <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
-            <p className="leading-none">次へ</p>
+            <p className="leading-none disabled-text-color">次へ</p>
           </Button>
-        </Link>
+        ) : (
+          <Link href={'/register/step2'} className="w-fit block mx-auto">
+            <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
+              <p className="leading-none">次へ</p>
+            </Button>
+          </Link>
+        )}
       </main>
     </>
   )

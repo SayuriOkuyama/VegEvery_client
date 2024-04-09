@@ -1,29 +1,39 @@
 'use client'
 import { createContext } from 'react'
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { registerFormSchema } from '@/lib/zod/registerFormSchema'
 
 export const FormContext = createContext()
 
 export const RegisterProvider = ({ children }) => {
-  const { register, setValue, handleSubmit, watch } = useForm({
-    // resolver: zodResolver(formSchema),
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerFormSchema),
     defaultValues: {
+      account_id: '',
       name: '',
       password: '',
-      reenteredPassword: '',
-      iconFile: null,
-      iconUrl: null,
+      passwordConfirmation: '',
+      iconFile: '',
+      iconUrl: '',
       vegeType: 'none',
       secretQuestion: '',
       secretAnswer: '',
       provider: '',
-      providerId: '',
+      provider_id: '',
     },
-    mode: 'onChange', // リアルタイムで入力値を取得する
+    mode: 'onChange',
   })
 
   return (
-    <FormContext.Provider value={[register, setValue, handleSubmit, watch]}>
+    <FormContext.Provider
+      value={[register, setValue, handleSubmit, watch, errors]}>
       {children}
     </FormContext.Provider>
   )

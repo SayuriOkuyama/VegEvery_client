@@ -5,14 +5,21 @@ import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import Dropzone from 'react-dropzone'
 
-const Steps = ({ register, control, stepImages, setStepImages, errors }) => {
+const Steps = ({
+  register,
+  control,
+  setValue,
+  stepImages,
+  setStepImages,
+  errors,
+}) => {
   const { fields, append, remove } = useFieldArray({
     name: 'steps',
     control,
   })
 
-  // console.log(fields)
-  // console.log(stepImages)
+  console.log(fields)
+  console.log(stepImages)
 
   return (
     <div className="container pb-8">
@@ -56,13 +63,14 @@ const Steps = ({ register, control, stepImages, setStepImages, errors }) => {
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
-                    onClick={() =>
+                    onClick={() => {
                       setStepImages(prevState => {
                         const newState = [...prevState]
                         newState[index] = ''
                         return newState
                       })
-                    }>
+                      setValue(`steps.${index}.image`, '')
+                    }}>
                     ✕
                   </button>
                   {stepImages[index].url && (
@@ -79,6 +87,7 @@ const Steps = ({ register, control, stepImages, setStepImages, errors }) => {
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
                     const createdUrl = URL.createObjectURL(file)
+                    setValue(`steps.${index}.image`, file)
                     setStepImages(prevState => {
                       const newState = [...prevState]
                       newState[index] = { url: createdUrl, file: file }

@@ -15,7 +15,10 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   } = useSWR('/api/user', () =>
     axios
       .get('/api/user')
-      .then(res => res.data)
+      .then(res => {
+        console.log(res.data)
+        return res.data
+      })
       .catch(error => {
         if (error.response.status !== 409) throw error
 
@@ -30,15 +33,19 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   const csrf = () => axios.get('/sanctum/csrf-cookie')
 
   // データを渡して register ルートに post
-  const authRegister = async ({ setErrors, ...props }) => {
+  const authRegister = async ({ setErrors, formData }) => {
     await csrf()
 
     setErrors([])
 
     axios
-      .post('api/user/register', props)
+      .post('api/user/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       .then(res => {
-        // console.log(res)
+        console.log(res.data.token)
         // トークンをクッキーに保存
         Cookie.set('sanctum_token', res.data.token, {
           expires: 7,
@@ -64,7 +71,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post('api/user/login', props)
       .then(res => {
-        // console.log(res)
+        console.log(res.data.token)
         // トークンをクッキーに保存
         Cookie.set('sanctum_token', res.data.token, {
           expires: 7,

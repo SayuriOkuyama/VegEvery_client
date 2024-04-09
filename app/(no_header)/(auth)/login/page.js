@@ -9,16 +9,50 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '@/hooks/auth'
 import { useEffect, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 const page = () => {
   const router = useRouter()
-  const [errors, setErrors] = useState([])
+  const [error, setErrors] = useState([])
   // const [errors, setErrors] = useState([])
   const [, setStatus] = useState(null)
   // const [status, setStatus] = useState(null)
 
-  const { register, handleSubmit } = useForm({
-    // resolver: zodResolver(formSchema),
+  const formSchema = z.object({
+    account_id: z
+      .string()
+      .min(1, {
+        message: '※ 入力が必須です。',
+      })
+      .max(225, {
+        message: '※ 225 文字以内で入力してください。',
+      })
+      .refine(value => /^[A-Za-z0-9]+$/.test(value), {
+        message: '半角英数字で入力してください。',
+      }),
+    password: z
+      .string()
+      .min(8, {
+        message: '※ 入力が必須です。',
+      })
+      .max(225, {
+        message: '※ 225 文字以内で入力してください。',
+      })
+      .refine(
+        value => /^[A-Za-z0-9!@#$%^&*()_+={}\[\]:;"'<>,.?/~`-]+$/.test(value),
+        {
+          message: 'パスワードは半角英数字、記号で入力してください。',
+        },
+      ),
+  })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       password: '',
@@ -31,13 +65,13 @@ const page = () => {
     redirectIfAuthenticated: '/',
   })
   useEffect(() => {
-    if (router.reset?.length > 0 && errors.length === 0) {
+    if (router.reset?.length > 0 && error.length === 0) {
       setStatus(atob(router.reset))
     } else {
       setStatus(null)
     }
   })
-  // console.log(errors)
+  console.log(errors)
   // console.log(status)
 
   const handleGoogleLogin = async () => {
@@ -46,8 +80,9 @@ const page = () => {
   }
 
   const handleLogin = async values => {
+    console.log('login')
     login({
-      name: values.name,
+      account_id: values.account_id,
       password: values.password,
       setErrors,
       setStatus,
@@ -73,18 +108,25 @@ const page = () => {
         </Button>
         <p className="text-center my-8">または</p>
         <div>
-          <label htmlFor="name" className="block text-start">
+          <label htmlFor="account_id" className="block text-start">
             アカウント ID
           </label>
-          <div className="flex items-center">
-            <span className="text-lg mr-1">@</span>
-            <input
-              id="name"
-              type="text"
-              placeholder=""
-              className="border w-full text-sm pl-1 h-8"
-              {...register(`name`)}
-            />
+          <div className="flex flex-col items-center">
+            <div className="flex items-center w-full">
+              <span className="text-lg mr-1">@</span>
+              <input
+                id="account_id"
+                type="text"
+                placeholder="vegevery123"
+                className="border w-full text-sm pl-1 h-8"
+                {...register(`account_id`)}
+              />
+            </div>
+            {errors.name && (
+              <div className="text-red-400 w-full text-start text-sm">
+                {errors.name.message}
+              </div>
+            )}
           </div>
         </div>
         <div className="mt-2">
@@ -104,6 +146,11 @@ const page = () => {
               <span className="ml-1 text-blue-600">こちら</span>
             </Link>
           </p>
+          {errors.password && (
+            <div className="text-red-400  text-sm">
+              {errors.password.message}
+            </div>
+          )}
         </div>
         <Button
           onClick={handleSubmit(handleLogin)}

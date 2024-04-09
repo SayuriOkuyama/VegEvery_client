@@ -22,12 +22,9 @@ function SideButtons({
   const [likeState, setLikeState] = useState()
   const [isOpen, setIsOpen] = useState(false)
 
-  // console.log(likeState)
-
   useEffect(() => {
     if (likes) {
-      const userLikes = likes.find(({ user_id }) => user_id == 1)
-      // console.log(userLikes)
+      const userLikes = likes.find(({ user_id }) => user_id == user.id)
       if (userLikes) {
         setLikeState(prev => {
           return {
@@ -77,7 +74,7 @@ function SideButtons({
           id: '',
           likeable_type: likeableType,
           likeable_id: articleId,
-          user_id: 1,
+          user_id: user.id,
           like: false,
         })
         setArticlesData(prev => ({
