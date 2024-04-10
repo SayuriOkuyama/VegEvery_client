@@ -2,18 +2,67 @@
 
 import Logo from '@/components/ui/Logo'
 import { Button } from '@/components/ui/button'
-// import Image from 'next/image'
 import Link from 'next/link'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FormContext } from '@/contexts/registerProvider'
+import axios from '@/lib/axios'
+import useSWR from 'swr'
 
 const page = () => {
   const [register, , , watch, errors] = useContext(FormContext)
   const provider = watch('provider')
-  // const watcher = watch()
+  const [isValid, setIsValid] = useState(false)
+  // const [inputAccountId, setInputAccountId] = useState(false)
+  const [isAccountIdAvailable, setAccountIdAvailable] = useState(false)
+  const watcher = watch()
+  // const timer = useRef(null)
+  const [query, setQuery] = useState(null)
 
-  // console.log(errors)
-  // console.log(watcher)
+  console.log(errors)
+  console.log(watcher)
+
+  useEffect(() => {
+    let check
+    if (watcher.provider) {
+      check = !errors.name
+    } else {
+      check =
+        !errors.name &&
+        !errors.account_id &&
+        !errors.password &&
+        !errors.passwordConfirmation
+    }
+
+    if (check) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
+  }, [])
+
+  const fetcher = async () => {
+    const res = await axios.post(`api/user/check_account_id`, {
+      id: watcher.account_id,
+    })
+
+    setAccountIdAvailable(res.data.result)
+    console.log(`res.data.result: ${res.data.result}`)
+
+    return res.data
+  }
+  const { data } = useSWR(query, fetcher)
+
+  useEffect(() => {
+    // timer にまだタイマーがセットされていたら(5秒未経過)、そのタイマーは削除する
+    const timer = setTimeout(() => {
+      setQuery(watcher.account_id)
+    }, 2000)
+
+    return () => clearTimeout(timer)
+  }, [watcher.account_id])
+
+  console.log(`result: ${data}`)
+  console.log(`isAccountIdAvailable: ${isAccountIdAvailable}`)
 
   return (
     <>
@@ -68,6 +117,25 @@ const page = () => {
                   <div className="text-red-400 w-full text-start text-sm">
                     {errors.account_id.message}
                   </div>
+                )}
+                {watcher.account_id.length > 0 &&
+                !errors.account_id &&
+                !data ? (
+                  <div className="text-red-400 text-sm text-start">
+                    検索中...
+                  </div>
+                ) : (
+                  watcher.account_id.length > 0 &&
+                  !errors.account_id &&
+                  (isAccountIdAvailable ? (
+                    <div className="text-green-500 w-full text-start text-sm">
+                      そのアカウント ID は使用できます。
+                    </div>
+                  ) : (
+                    <div className="text-red-400 w-full text-start text-sm">
+                      そのアカウント ID はすでに使われています。
+                    </div>
+                  ))
                 )}
               </div>
               <div>
@@ -133,16 +201,16 @@ const page = () => {
             </>
           )}
         </div>
-        {errors.length === 0 ? (
-          <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
-            <p className="leading-none disabled-text-color">次へ</p>
-          </Button>
-        ) : (
+        {isValid ? (
           <Link href={'/register/step2'} className="w-fit block mx-auto">
             <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
               <p className="leading-none">次へ</p>
             </Button>
           </Link>
+        ) : (
+          <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
+            <p className="leading-none disabled-text-color">次へ</p>
+          </Button>
         )}
       </main>
     </>
