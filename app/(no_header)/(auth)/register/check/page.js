@@ -20,9 +20,11 @@ const page = () => {
 
   const watcher = watch()
   // console.log(watcher.iconUrl)
-  // console.log(user)
+  // console.log(errors)
 
   const onSubmit = async data => {
+    // console.log(watcher)
+
     // console.log(data)
 
     // FormDataオブジェクトを作成
@@ -34,6 +36,11 @@ const page = () => {
       // console.log(data[key])
       formData.append(key, data[key])
     }
+
+    // console.log(watcher.providerId)
+
+    formData.append('iconUrl', watcher.iconUrl)
+    formData.append('providerId', watcher.providerId)
 
     // register ルートに post し、user データを登録
     // レスポンスのトークンを Cookie に保存

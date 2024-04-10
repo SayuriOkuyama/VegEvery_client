@@ -16,8 +16,8 @@ const page = () => {
   const watcher = watch()
   const [query, setQuery] = useState(null)
 
-  console.log(errors)
-  console.log(watcher)
+  // console.log(errors)
+  // console.log(watcher)
 
   useEffect(() => {
     let check
@@ -44,7 +44,7 @@ const page = () => {
     })
 
     setAccountIdAvailable(res.data.result)
-    console.log(`res.data.result: ${res.data.result}`)
+    // console.log(`res.data.result: ${res.data.result}`)
 
     return res.data
   }
@@ -59,8 +59,8 @@ const page = () => {
     return () => clearTimeout(timer)
   }, [watcher.account_id])
 
-  console.log(`result: ${data}`)
-  console.log(`isAccountIdAvailable: ${isAccountIdAvailable}`)
+  // console.log(`result: ${data}`)
+  // console.log(`isAccountIdAvailable: ${isAccountIdAvailable}`)
 
   return (
     <>

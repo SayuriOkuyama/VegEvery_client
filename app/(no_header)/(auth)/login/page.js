@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '@/hooks/auth'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 
@@ -71,7 +71,7 @@ const page = () => {
   //     setStatus(null)
   //   }
   // })
-  console.log(errors)
+  // console.log(errors)
   // console.log(status)
 
   const handleGoogleLogin = async () => {

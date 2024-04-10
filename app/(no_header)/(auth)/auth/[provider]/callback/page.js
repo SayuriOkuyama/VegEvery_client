@@ -46,7 +46,7 @@ const page = ({ params }) => {
       if (data.message === 'registered') {
         login({
           provider: provider,
-          provider_id: data.socialAccountId,
+          providerId: data.socialAccountId,
           setErrors,
           setStatus,
         })
