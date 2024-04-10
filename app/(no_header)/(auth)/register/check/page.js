@@ -19,10 +19,12 @@ const page = () => {
   })
 
   const watcher = watch()
-  // console.log(watcher)
-  // console.log(user)
+  // console.log(watcher.iconUrl)
+  // console.log(errors)
 
   const onSubmit = async data => {
+    // console.log(watcher)
+
     // console.log(data)
 
     // FormDataオブジェクトを作成
@@ -35,33 +37,17 @@ const page = () => {
       formData.append(key, data[key])
     }
 
+    // console.log(watcher.providerId)
+
+    formData.append('iconUrl', watcher.iconUrl)
+    formData.append('providerId', watcher.providerId)
+
     // register ルートに post し、user データを登録
     // レスポンスのトークンを Cookie に保存
-    // axios.get('/sanctum/csrf-cookie')
-    // console.log(formData.get('name'))
     authRegister({
       setErrors,
       formData,
     })
-
-    // await axios.get('/sanctum/csrf-cookie')
-    // axios
-    //   .post('api/user/register', formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   })
-    //   .then(res => {
-    //     console.log(res.data.token)
-    //     // トークンをクッキーに保存
-    //     Cookie.set('sanctum_token', res.data.token, {
-    //       expires: 7,
-    //       secure: false,
-    //       sameSite: 'lax',
-    //     })
-    //     // キャッシュの更新
-    //     // mutate()
-    //   })
   }
 
   return (
@@ -81,7 +67,7 @@ const page = () => {
                   alt="Uploaded Image"
                 />
                 <Link
-                  href={`/resister/step3`}
+                  href={`/register/step3`}
                   className="absolute bottom-0 right-0">
                   <div className="rounded-full p-1 bg-register-edit">
                     <PiNotePencilLight size="28px" />
@@ -92,7 +78,7 @@ const page = () => {
             {watcher.account_id && (
               <div className=" border-b flex justify-between items-center">
                 <div>アカウント ID：{watcher.account_id}</div>
-                <Link href={`/resister/step1`} className="">
+                <Link href={`/register/step1`} className="">
                   <div className="rounded-full p-1 side_icon">
                     <PiNotePencilLight size="28px" />
                   </div>
@@ -102,7 +88,7 @@ const page = () => {
             {watcher.name && (
               <div className=" border-b flex justify-between items-center">
                 <div>ユーザーネーム：{watcher.name}</div>
-                <Link href={`/resister/step1`} className="">
+                <Link href={`/register/step1`} className="">
                   <div className="rounded-full p-1 side_icon">
                     <PiNotePencilLight size="28px" />
                   </div>
@@ -112,7 +98,7 @@ const page = () => {
             {watcher.password && (
               <div className=" border-b flex justify-between items-center">
                 <div>パスワード：**********</div>
-                <Link href={`/resister/step1`} className="">
+                <Link href={`/register/step1`} className="">
                   <div className="rounded-full p-1 side_icon">
                     <PiNotePencilLight size="28px" />
                   </div>
@@ -125,7 +111,7 @@ const page = () => {
                 ベジタリアンの種類：
                 {watcher.vegeType === 'none' ? '未選択' : watcher.vegeType}
               </div>
-              <Link href={`/resister/step2`} className="">
+              <Link href={`/register/step2`} className="">
                 <div className="rounded-full p-1 side_icon">
                   <PiNotePencilLight size="28px" />
                 </div>
@@ -136,7 +122,7 @@ const page = () => {
               <>
                 <div className=" border-b flex justify-between items-center">
                   <div>秘密の質問：{watcher.secretQuestion}</div>
-                  <Link href={`/resister/step4`} className="">
+                  <Link href={`/register/step4`} className="">
                     <div className="rounded-full p-1 side_icon">
                       <PiNotePencilLight size="28px" />
                     </div>
@@ -144,7 +130,7 @@ const page = () => {
                 </div>
                 <div className=" border-b flex justify-between items-center">
                   <div>秘密の質問の答え：**********</div>
-                  <Link href={`/resister/step4`} className="">
+                  <Link href={`/register/step4`} className="">
                     <div className="rounded-full p-1 side_icon">
                       <PiNotePencilLight size="28px" />
                     </div>
