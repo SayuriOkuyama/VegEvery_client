@@ -18,6 +18,7 @@ function page() {
   // const position = { lat: 35.2713215, lng: 139.1797686 };
 
   useEffect(() => {
+    // 現在地を取得
     const success = res => {
       // console.log(res)
       setPosition({

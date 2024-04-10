@@ -3,7 +3,7 @@
 import {
   GoogleMap,
   useLoadScript,
-  AdvancedMarker,
+  // AdvancedMarker,
 } from '@react-google-maps/api'
 
 // 初期化用の定数
@@ -16,19 +16,20 @@ import {
 
 const libraries = ['places']
 
+// マップの大きさ
 const containerStyle = {
   width: '100%',
   height: '86vh',
 }
 
-const center = {
-  lat: 34.7293466708865,
-  lng: 135.49939605607292,
-}
+// const center = {
+//   lat: 34.7293466708865,
+//   lng: 135.49939605607292,
+// }
 
 const zoom = 13
 
-const Map = () => {
+const Map = ({ position }) => {
   // const mapRef = useRef()
   // const [map, setMap] = useState() | null
 
@@ -57,8 +58,8 @@ const Map = () => {
 
   return (
     // <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
-    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={zoom}>
-      <AdvancedMarker position={center} />
+    <GoogleMap mapContainerStyle={containerStyle} center={position} zoom={zoom}>
+      {/* <AdvancedMarker position={position} /> */}
     </GoogleMap>
     // </LoadScript>
   )

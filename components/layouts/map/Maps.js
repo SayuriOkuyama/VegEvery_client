@@ -3,10 +3,8 @@
 // import React, { useCallback } from 'react'
 import {
   APIProvider,
-  ControlPosition,
   Map,
   // useMapsLibrary,
-  MapControl,
   // AdvancedMarker,
   // InfoWindow,
   // useAdvancedMarkerRef,
@@ -14,8 +12,8 @@ import {
 } from '@vis.gl/react-google-maps'
 // import Image from 'next/image'
 import { useState } from 'react'
-import AutoComplete from '@/components/layouts/map/AutoComplete'
 import MapHandler from '@/components/layouts/map/MapHandler'
+import CustomMapControl from '@/components/layouts/map/CustomMapControl'
 // import {
 //   Drawer,
 //   DrawerClose,
@@ -139,28 +137,10 @@ const Maps = ({ position }) => {
             </DrawerContent>
           </Drawer>
         )} */}
-        <MapControl position={ControlPosition.TOP}>
-          <AutoComplete
-            setSelectedPlace={setSelectedPlace}
-            // setMarkersData={setMarkersData}
-          />
-        </MapControl>
-        <MapControl position={ControlPosition.BOTTOM}>
-          <div className="w-dvw flex justify-end">
-            <div>
-              <button
-                className="block h-8 w-8 mx-2 my-2 text-xl bg-white border"
-                onClick={() => setZoom(prev => (prev < 19 ? prev + 1 : 20))}>
-                ＋
-              </button>
-              <button
-                className="block h-8 w-8 mx-2 mb-6 text-xl bg-white border"
-                onClick={() => setZoom(prev => (prev > 2 ? prev - 1 : 1))}>
-                ー
-              </button>
-            </div>
-          </div>
-        </MapControl>
+        <CustomMapControl
+          setSelectedPlace={setSelectedPlace}
+          setZoom={setZoom}
+        />
         {/* <div id="marker_point"></div> */}
         {/* {markersData &&
           markersData.map(markerData => (
