@@ -7,6 +7,7 @@ import Dropzone from 'react-dropzone'
 
 const Reports = ({
   register,
+  setValue,
   control,
   reportImages,
   setReportImages,
@@ -48,6 +49,7 @@ const Reports = ({
                         newState[index] = ''
                         return newState
                       })
+                      setValue(`reports.${index}.image`, '')
                     }}>
                     ✕
                   </button>
@@ -70,6 +72,7 @@ const Reports = ({
                       newState[index] = { url: createdUrl, file: file }
                       return newState
                     })
+                    setValue(`reports.${index}.image`, file)
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>

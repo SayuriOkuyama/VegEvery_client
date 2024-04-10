@@ -29,8 +29,6 @@ export default function Navigation() {
   } else {
     accountPath = '/login'
   }
-  console.log(user)
-  console.log(accountPath)
 
   return (
     <>

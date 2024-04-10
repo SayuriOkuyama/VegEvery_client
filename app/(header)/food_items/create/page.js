@@ -3,8 +3,6 @@
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
-import { supabase } from '@/lib/utils/supabase/supabase'
-import { v4 as uuidv4 } from 'uuid'
 import Tags from './Tags'
 import Reports from './Reports'
 import Items from './Items'
@@ -21,7 +19,7 @@ const page = () => {
   const [image, setImage] = useState(null)
   const [reportImages, setReportImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
-  const [user, setUser] = useState()
+  const [, setUser] = useState()
 
   useEffect(() => {
     const getUser = async () => {
@@ -35,29 +33,38 @@ const page = () => {
     register,
     setValue,
     handleSubmit,
-    control, // watch,
+    control,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(itemFormSchema),
     defaultValues: {
       title: '',
       tags: [{ name: '' }],
-      items: [{ name: '', place: '', price: '' }],
+      items: [{ name: '', where_to_buy: '', price: '' }],
       thumbnail: '',
-      thumbnail_path: 'a',
-      thumbnail_url: 'a',
       reports: [{ text: '' }],
+      vege_type: {
+        vegan: false,
+        oriental_vegetarian: false,
+        ovo_vegetarian: false,
+        pescatarian: false,
+        lacto_vegetarian: false,
+        pollo_vegetarian: false,
+        fruitarian: false,
+        other_vegetarian: false,
+      },
     },
-    mode: 'onChange', // リアルタイムで入力値を取得する
+    mode: 'onChange',
   })
   // console.log(errors)
 
+  const watcher = watch()
+  // console.log(watcher)
+
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
-    setImage({
-      file,
-      image: URL.createObjectURL(file),
-    })
+    setImage(URL.createObjectURL(file))
     setValue('thumbnail', file)
   }
 
@@ -65,79 +72,68 @@ const page = () => {
 
   async function onSubmit(values) {
     // console.log(values)
-    let tags = []
-    values.tags.map(tag => {
-      if (tag.name === '') {
-        return
-      }
-      tags.push(tag.name)
+    // FormDataオブジェクトを作成
+    const formData = new FormData()
+
+    // フォームデータをFormDataオブジェクトに追加
+    for (const key in values) {
+      formData.append(key, values[key])
+    }
+
+    const types = [
+      'vegan',
+      'oriental_vegetarian',
+      'ovo_vegetarian',
+      'pescatarian',
+      'lacto_vegetarian',
+      'pollo_vegetarian',
+      'fruitarian',
+      'other_vegetarian',
+    ]
+
+    // チェックボックスがチェックされているかどうかを確認し、
+    // 文字列として 'true' または 'false' を設定
+    types.map(type => {
+      formData.append(type, values.vege_type[type])
     })
 
-    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-    let thumbnail_path
-    let thumbnail_url
-    const reportImagesData = []
+    values.reports.forEach((report, index) => {
+      formData.append(`reports[${index}][order]`, report.order)
+      formData.append(`reports[${index}][text]`, report.text)
 
-    try {
-      const fileExtension = values.thumbnail.name.split('.').pop()
-
-      const response = await supabase.storage
-        .from('VegEvery-backet')
-        .upload(
-          `items/thumbnail/${uuidv4()}.${fileExtension}`,
-          values.thumbnail,
+      if (watcher.reports[index].image) {
+        formData.append(
+          `reports[${index}][image]`,
+          watcher.reports[index].image,
         )
-      thumbnail_path = response.data.path
-      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
+      }
+    })
 
-      await Promise.all(
-        reportImages.map(async (report, index) => {
-          if (report && report.file) {
-            const fileExtension = report.file.name.split('.').pop()
+    values.items.forEach((item, index) => {
+      formData.append(`items[${index}][name]`, item.name)
+      formData.append(`items[${index}][price]`, item.price)
+      formData.append(`items[${index}][where_to_buy]`, item.where_to_buy)
+    })
 
-            const response = await supabase.storage
-              .from('VegEvery-backet')
-              .upload(
-                `items/report_image/${uuidv4()}.${fileExtension}`,
-                report.file,
-              )
-            // console.log('Report image upload successful:', response.data)
-            reportImagesData[index] = {
-              image_path: response.data.path,
-              image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-            }
-          }
-        }),
-      )
-      // console.log({
-      //   values,
-      //   thumbnail_path,
-      //   thumbnail_url,
-      //   reportImagesData,
-      // })
+    values.tags.forEach((tag, index) => {
+      if (tag.name !== '') {
+        formData.append(`tags[${index}][name]`, tag.name)
+      }
+    })
 
-      const res = await axios.post(`api/food_items`, {
-        user_id: user.id,
-        title: values.title,
-        thumbnail: {
-          thumbnail_path: thumbnail_path,
-          thumbnail_url: thumbnail_url,
-        },
-        tags: tags,
-        vege_type: values.vege_type,
-        items: values.items,
-        reports: {
-          reports_order_text: values.reports,
-          reportImages: reportImagesData,
-        },
-      })
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1])
+    // }
 
-      // console.log(res.data)
-      // console.log('画面遷移')
-      router.push(`/food_items/${res.data.article.id}`)
-    } catch (error) {
-      // console.error('Error handling form submission:', error)
-    }
+    const res = await axios.post(`/api/food_items`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    // console.log(res.data)
+    // console.log('画面遷移')
+    router.push(`/food_items/${res.data.article.id}`)
   }
 
   return (
@@ -155,7 +151,7 @@ const page = () => {
                 ✕
               </button>
               <img
-                src={image.image}
+                src={image}
                 className="object-cover w-full h-full block"
                 alt="Uploaded Image"
               />

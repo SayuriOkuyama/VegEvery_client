@@ -77,7 +77,7 @@ const page = () => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
-  async function onSubmit(data) {
+  async function onSubmit(values) {
     // console.log('submit')
     // console.log(data)
 
@@ -85,8 +85,8 @@ const page = () => {
     const formData = new FormData()
 
     // フォームデータをFormDataオブジェクトに追加
-    for (const key in data) {
-      formData.append(key, data[key])
+    for (const key in values) {
+      formData.append(key, values[key])
     }
 
     const types = [
@@ -103,10 +103,10 @@ const page = () => {
     // チェックボックスがチェックされているかどうかを確認し、
     // 文字列として 'true' または 'false' を設定
     types.map(type => {
-      formData.append(type, data.type ? 'true' : 'false')
+      formData.append(type, values.vege_type[type])
     })
 
-    data.steps.forEach((step, index) => {
+    values.steps.forEach((step, index) => {
       formData.append(`steps[${index}][order]`, step.order)
       formData.append(`steps[${index}][text]`, step.text)
       // console.log(stepImages[index])
@@ -119,13 +119,13 @@ const page = () => {
       }
     })
 
-    data.materials.forEach((material, index) => {
+    values.materials.forEach((material, index) => {
       formData.append(`materials[${index}][name]`, material.name)
       formData.append(`materials[${index}][quantity]`, material.quantity)
       formData.append(`materials[${index}][unit]`, material.unit)
     })
 
-    data.tags.forEach((tag, index) => {
+    values.tags.forEach((tag, index) => {
       if (tag.name !== '') {
         formData.append(`tags[${index}][name]`, tag.name)
       }
