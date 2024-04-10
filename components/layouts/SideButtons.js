@@ -23,7 +23,7 @@ function SideButtons({
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    if (likes) {
+    if (likes && user) {
       const userLikes = likes.find(({ user_id }) => user_id == user.id)
       if (userLikes) {
         setLikeState(prev => {
@@ -49,7 +49,7 @@ function SideButtons({
         })
       }
     }
-  }, [likes])
+  }, [likes, user])
 
   const handleLike = async () => {
     if (likeState && likeState.user_id) {
