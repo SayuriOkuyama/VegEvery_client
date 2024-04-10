@@ -63,7 +63,11 @@ const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
                       const createdUrl = URL.createObjectURL(file)
                       setStepImages(prevState => {
                         const newState = [...prevState]
-                        newState[index] = { url: createdUrl, file: file }
+                        newState[index] = {
+                          url: createdUrl,
+                          path: '',
+                          file: file,
+                        }
                         return newState
                       })
                       // ↓これ入れたらテキスト消える
