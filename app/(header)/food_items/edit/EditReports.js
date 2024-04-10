@@ -4,18 +4,11 @@ import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import Dropzone from 'react-dropzone'
 
-const Reports = ({
-  register,
-  control,
-  reportsData,
-  setReportsData,
-  errors,
-}) => {
+const Reports = ({ register, setValue, control, errors, watcher }) => {
   const { fields, append, remove } = useFieldArray({
     name: 'reports',
     control,
   })
-  // console.log(fields)
 
   return (
     <div className="container pb-8">
@@ -35,23 +28,25 @@ const Reports = ({
               {...register(`reports.${index}.order`)}
             />
             <div className="bg-orange h-52 w-full mx-auto">
-              {reportsData[index].url ? (
+              {watcher.reports[index].url ? (
                 <div className="image-preview relative flex h-52 mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
                     onClick={() => {
-                      setReportsData(prevState => {
-                        const newState = [...prevState]
-                        newState[index] = ''
-                        return newState
-                      })
+                      // setReportsData(prevState => {
+                      //   const newState = [...prevState]
+                      //   newState[index] = ''
+                      //   return newState
+                      // })
+                      setValue(`reports.${index}.file`, '')
+                      setValue(`reports.${index}.url`, '')
                     }}>
                     ✕
                   </button>
-                  {reportsData[index].url && (
+                  {watcher.reports[index].url && (
                     <img
-                      src={reportsData[index].url}
+                      src={watcher.reports[index].url}
                       className="object-cover w-full h-full block"
                       alt="Uploaded Image"
                     />
@@ -63,11 +58,8 @@ const Reports = ({
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
                     const createdUrl = URL.createObjectURL(file)
-                    setReportsData(prevState => {
-                      const newState = [...prevState]
-                      newState[index] = { url: createdUrl, file: file }
-                      return newState
-                    })
+                    setValue(`reports.${index}.file`, file)
+                    setValue(`reports.${index}.url`, createdUrl)
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>
@@ -110,15 +102,6 @@ const Reports = ({
                 type="button"
                 onClick={() => {
                   remove(index)
-                  setReportsData(prevState => {
-                    const newData = []
-                    for (let i = 0; i < fields.length; i++) {
-                      if (i !== index) {
-                        newData.push(prevState[i])
-                      }
-                    }
-                    return newData
-                  })
                 }}>
                 ✕
               </button>
@@ -133,10 +116,13 @@ const Reports = ({
           type="button"
           onClick={() => {
             let nextOrder = fields.length + 1
-            setReportsData(prevState => {
-              return [...prevState, '']
+            return append({
+              order: nextOrder,
+              text: '',
+              url: '',
+              path: '',
+              file: '',
             })
-            return append({ order: nextOrder, image_url: '', text: '' })
           }}>
           レポートを追加
         </button>

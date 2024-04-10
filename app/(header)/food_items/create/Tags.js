@@ -21,7 +21,7 @@ const Tags = ({ register, control, errors }) => {
                 type="text"
                 placeholder="無添加"
                 // これを入れないと、remove を押した時にそれ以降の要素の入力値がクリアされる
-                {...register(`tags.${index}.tag`)}
+                {...register(`tags.${index}.name`)}
               />
               {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
               {index !== 0 && (
@@ -46,7 +46,7 @@ const Tags = ({ register, control, errors }) => {
         <button
           className="border mt-4 mx-auto block px-2 bg-button border-button-color rounded-full text-sm"
           type="button"
-          onClick={() => append({ tag: '' })}>
+          onClick={() => append({ name: '' })}>
           タグを追加
         </button>
       </div>

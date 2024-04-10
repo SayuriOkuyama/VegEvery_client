@@ -56,11 +56,9 @@ const page = () => {
   useEffect(() => {
     if (data) {
       // console.log(data)
-      const arrayPath = []
-      const preOldStepImages = []
+
       data.article.recipe_steps.forEach((step, index) => {
         if (step) {
-          preOldStepImages.push({ path: step.image_path, url: step.image_url })
           data.article.recipe_steps[index].order = index + 1
 
           setValue(`steps.${index}`, {
@@ -74,8 +72,6 @@ const page = () => {
             newState.push({ url: step.image_url, path: step.image_path })
             return newState
           })
-          // 比較用
-          arrayPath.push(step.image_path)
         }
       })
 
