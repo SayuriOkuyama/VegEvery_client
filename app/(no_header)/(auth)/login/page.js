@@ -14,10 +14,8 @@ import { z } from 'zod'
 
 const page = () => {
   const router = useRouter()
-  const [error, setErrors] = useState([])
-  // const [errors, setErrors] = useState([])
+  const [loginErrors, setErrors] = useState([])
   const [, setStatus] = useState(null)
-  // const [status, setStatus] = useState(null)
 
   const formSchema = z.object({
     account_id: z
@@ -33,7 +31,7 @@ const page = () => {
       }),
     password: z
       .string()
-      .min(8, {
+      .min(1, {
         message: '※ 入力が必須です。',
       })
       .max(225, {
@@ -64,14 +62,16 @@ const page = () => {
     middleware: 'guest',
     redirectIfAuthenticated: '/',
   })
-  useEffect(() => {
-    if (router.reset?.length > 0 && error.length === 0) {
-      setStatus(atob(router.reset))
-    } else {
-      setStatus(null)
-    }
-  })
-  // console.log(errors)
+
+  // useEffect(() => {
+  //   console.log(router.reset)
+  //   if (router.reset?.length > 0 && loginErrors.length === 0) {
+  //     setStatus(atob(router.reset))
+  //   } else {
+  //     setStatus(null)
+  //   }
+  // })
+  console.log(errors)
   // console.log(status)
 
   const handleGoogleLogin = async () => {
@@ -82,10 +82,10 @@ const page = () => {
   const handleLogin = async values => {
     // console.log('login')
     login({
-      account_id: values.account_id,
-      password: values.password,
       setErrors,
       setStatus,
+      account_id: values.account_id,
+      password: values.password,
     })
   }
 
@@ -122,9 +122,9 @@ const page = () => {
                 {...register(`account_id`)}
               />
             </div>
-            {errors.name && (
+            {errors.account_id && (
               <div className="text-red-400 w-full text-start text-sm">
-                {errors.name.message}
+                {errors.account_id.message}
               </div>
             )}
           </div>
@@ -147,11 +147,16 @@ const page = () => {
             </Link>
           </p>
           {errors.password && (
-            <div className="text-red-400  text-sm">
+            <div className="text-red-400 text-sm">
               {errors.password.message}
             </div>
           )}
         </div>
+        {loginErrors && (
+          <div className="text-start text-sm text-red-400">
+            {loginErrors.login}
+          </div>
+        )}
         <Button
           onClick={handleSubmit(handleLogin)}
           className="border flex items-center py-3 px-4 mt-4 mx-auto w-52">

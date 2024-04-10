@@ -12,10 +12,8 @@ const page = () => {
   const [register, , , watch, errors] = useContext(FormContext)
   const provider = watch('provider')
   const [isValid, setIsValid] = useState(false)
-  // const [inputAccountId, setInputAccountId] = useState(false)
   const [isAccountIdAvailable, setAccountIdAvailable] = useState(false)
   const watcher = watch()
-  // const timer = useRef(null)
   const [query, setQuery] = useState(null)
 
   console.log(errors)
