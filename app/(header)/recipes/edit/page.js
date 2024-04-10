@@ -2,11 +2,9 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { recipeFormSchema } from '@/lib/zod/recipeFormSchema'
+import { EditRecipeFormSchema } from '@/lib/zod/EditRecipeFormSchema'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
-import { supabase } from '@/lib/utils/supabase/supabase'
-import { v4 as uuidv4 } from 'uuid'
 import EditTags from '@/app/(header)/recipes/edit/EditTags.js'
 import EditMaterials from '@/app/(header)/recipes/edit/EditMaterials.js'
 import EditStep from '@/app/(header)/recipes/edit/EditStep.js'
@@ -34,9 +32,6 @@ const page = () => {
   const articleId = query.get('id')
   const path = 'recipes'
 
-  const [oldThumbnail, setOldThumbnail] = useState()
-  const [arrayOldPath, setArrayOldPath] = useState()
-  const [image, setImage] = useState(null)
   const [stepImages, setStepImages] = useState([])
 
   const {
@@ -45,13 +40,13 @@ const page = () => {
     handleSubmit,
     control,
     reset,
-    // watch,
+    watch,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(recipeFormSchema),
-    mode: 'onChange', // リアルタイムで入力値を取得する
+    resolver: zodResolver(EditRecipeFormSchema),
+    mode: 'onChange',
   })
-  // const watcher = watch()
+  const watcher = watch()
   // console.log(watcher)
   // console.log(errors)
 
@@ -61,10 +56,6 @@ const page = () => {
   useEffect(() => {
     if (data) {
       // console.log(data)
-      setOldThumbnail({
-        path: data.article.thumbnail_path,
-        url: data.article.thumbnail_url,
-      })
       const arrayPath = []
       const preOldStepImages = []
       data.article.recipe_steps.forEach((step, index) => {
@@ -87,13 +78,12 @@ const page = () => {
           arrayPath.push(step.image_path)
         }
       })
-      setArrayOldPath(arrayPath)
 
       reset({
         title: data.article.title,
         thumbnail_path: data.article.thumbnail_path,
         thumbnail_url: data.article.thumbnail_url,
-        thumbnail: data.article.thumbnail_url,
+        thumbnail_newFile: '',
         tags: data.article.tags,
         materials: data.article.materials,
         steps: data.article.recipe_steps,
@@ -110,133 +100,83 @@ const page = () => {
           other_vegetarian: data.article.other_vegetarian,
         },
       })
-
-      setImage({
-        image: data.article.thumbnail_url,
-      })
     }
   }, [data])
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]
-    setImage({
-      file,
-      image: URL.createObjectURL(file),
-    })
-    setValue('thumbnail', file)
+    const url = URL.createObjectURL(file)
+    setValue('thumbnail_url', url)
+    setValue('thumbnail_newFile', file)
   }
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function onSubmit(values) {
     // console.log(values)
 
-    let tags = []
-    values.tags.map(tag => {
-      if (tag.name === '') {
-        return
-      }
-      tags.push(tag.name)
-    })
+    // FormDataオブジェクトを作成
+    const formData = new FormData()
 
-    const supabase_url = process.env.NEXT_PUBLIC_SUPABASE_BUCKET_URL
-    let thumbnail_path
-    let thumbnail_url
-    const stepImagesData = []
-    const pathOnly = []
-
-    // try {
-    // サムネイルに変更があった場合のみ、ストレージにアップロード
-    if (values.thumbnail.name) {
-      // 拡張子部分を切り出す
-      const fileExtension = values.thumbnail.name.split('.').pop()
-
-      // サムネイルのアップロード
-      const response = await supabase.storage.from('VegEvery-backet').upload(
-        // ランダムな文字列に拡張子を付けたものをパスとする
-        `recipes/thumbnail/${uuidv4()}.${fileExtension}`,
-        values.thumbnail,
-      )
-
-      thumbnail_path = response.data.path
-      thumbnail_url = `${supabase_url}/object/public/${response.data.fullPath}`
-
-      await supabase.storage.from('VegEvery-backet').remove(oldThumbnail.path)
-    } else {
-      thumbnail_path = values.thumbnail_path
-      thumbnail_url = values.thumbnail_url
+    // フォームデータをFormDataオブジェクトに追加
+    for (const key in values) {
+      formData.append(key, values[key])
     }
 
-    // console.log(stepImages)
-    await Promise.all(
-      // 新しい画像をストレージに保存
-      stepImages.map(async (step, index) => {
-        // console.log(step)
-        if (step && step.file && step.url.substr(0, 4) === 'blob') {
-          const fileExtension = step.file.name.split('.').pop()
+    const types = [
+      'vegan',
+      'oriental_vegetarian',
+      'ovo_vegetarian',
+      'pescatarian',
+      'lacto_vegetarian',
+      'pollo_vegetarian',
+      'fruitarian',
+      'other_vegetarian',
+    ]
 
-          const response = await supabase.storage
-            .from('VegEvery-backet')
-            .upload(
-              `recipes/step_image/${uuidv4()}.${fileExtension}`,
-              step.file,
-            )
+    types.map(type => {
+      formData.append(type, values.vege_type[type])
+    })
 
-          stepImagesData[index] = {
-            image_path: response.data.path,
-            image_url: `${supabase_url}/object/public/${response.data.fullPath}`,
-          }
-          // console.log(stepImagesData)
-
-          pathOnly.push(response.data.path)
-        } else {
-          stepImagesData[index] = {
-            image_path: step.path,
-            image_url: step.url,
-          }
-          // console.log(stepImagesData)
-          pathOnly.push(step.path)
+    values.steps.forEach((step, index) => {
+      formData.append(`steps[${index}][order]`, step.order)
+      formData.append(`steps[${index}][text]`, step.text)
+      // console.log(stepImages[index])
+      if (stepImages[index]) {
+        // console.log(stepImages[index].file)
+        // ↓ なぜかこれだと undefined になる
+        // console.log(step.image)
+        if (stepImages[index].url) {
+          formData.append(`steps[${index}][url]`, stepImages[index].url)
+          formData.append(`steps[${index}][path]`, stepImages[index].path)
+          formData.append(`steps[${index}][file]`, stepImages[index].file)
         }
-      }),
-    )
+      }
+    })
 
-    // 要らなくなった画像をストレージから削除
-    await Promise.all(
-      arrayOldPath.map(oldPath => {
-        if (!pathOnly.includes(oldPath)) {
-          supabase.storage
-            .from('VegEvery-backet')
-            .remove(oldPath)
-            .catch(error => {
-              throw error
-            })
-        }
-      }),
-    )
-    // console.log({
-    //   values,
-    //   thumbnail_path,
-    //   thumbnail_url,
-    //   stepImagesData,
-    // })
+    values.materials.forEach((material, index) => {
+      formData.append(`materials[${index}][name]`, material.name)
+      formData.append(`materials[${index}][quantity]`, material.quantity)
+      formData.append(`materials[${index}][unit]`, material.unit)
+    })
 
-    const res = await axios.put(`/api/recipes/${data.article.id}`, {
-      title: values.title,
-      thumbnail: {
-        thumbnail_path: thumbnail_path,
-        thumbnail_url: thumbnail_url,
-      },
-      cooking_time: values.time,
-      servings: values.servings,
-      tags: tags,
-      vege_type: values.vege_type,
-      materials: values.materials,
-      recipe_step: {
-        step_order_text: values.steps,
-        stepImages: stepImagesData,
+    values.tags.forEach((tag, index) => {
+      if (tag.name !== '') {
+        formData.append(`tags[${index}][name]`, tag.name)
+      }
+    })
+
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1])
+    // }
+
+    const res = await axios.post(`/api/recipes/${data.article.id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'X-HTTP-Method-Override': 'PUT',
       },
     })
 
-    // console.log(res.data)
+    // console.log(`レス：${res.data}`)
     // console.log('画面遷移')
     router.push(`/recipes/${res.data.article.id}`)
     // } catch (error) {
@@ -262,19 +202,20 @@ const page = () => {
         <EditFormVegeTypes register={register} control={control} />
 
         <div className="bg-orange">
-          {image ? (
+          {watcher.thumbnail_url ? (
             <div className="image-preview relative flex w-full h-64">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
                 onClick={() => {
-                  setValue('thumbnail', '')
-                  setImage('')
+                  setValue('thumbnail_newFile', '')
+                  setValue('thumbnail_url', '')
+                  setValue('thumbnail_path', '')
                 }}>
                 ✕
               </button>
               <img
-                src={image.image}
+                src={watcher.thumbnail_url}
                 className="object-cover w-full h-full block"
                 alt="Uploaded Image"
               />
@@ -290,9 +231,9 @@ const page = () => {
             </div>
           )}
         </div>
-        {errors.thumbnail && (
+        {errors.thumbnail_newFile && (
           <div className="container text-red-400">
-            {errors.thumbnail.message}
+            {errors.thumbnail_newFile.message}
           </div>
         )}
 
