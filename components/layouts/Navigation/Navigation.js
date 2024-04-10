@@ -9,9 +9,11 @@ import { CiApple } from 'react-icons/ci'
 import { CiUser } from 'react-icons/ci'
 import { useEffect, useState } from 'react'
 import axios from '@/lib/axios'
+import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
   const [user, setUser] = useState()
+  const pathname = usePathname()
 
   useEffect(() => {
     const getUser = async () => {
@@ -19,7 +21,7 @@ export default function Navigation() {
       axios.get('/api/user').then(res => setUser(res.data))
     }
     getUser()
-  }, [])
+  }, [pathname])
 
   let accountPath
   if (user) {
@@ -27,6 +29,8 @@ export default function Navigation() {
   } else {
     accountPath = '/login'
   }
+  console.log(user)
+  console.log(accountPath)
 
   return (
     <>
@@ -72,6 +76,7 @@ export default function Navigation() {
           <div className={`${styles.menu_wrapper}`}>
             <div
               className={`${styles.icon_wrapper} flex justify-center items-center`}>
+              {/* アカウント */}
               <CiUser size="80%" />
             </div>
             <div className={`${styles.menu} text-center text-sm`}>Account</div>
