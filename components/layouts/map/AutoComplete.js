@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import { useMap, useMapsLibrary } from '@vis.gl/react-google-maps'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PiMagnifyingGlassLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons' //IconContextをインポート
+import { MarkersDataContext } from '@/contexts/markerProvider'
 
-const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
+const AutoComplete = ({ setSelectedPlace }) => {
   const map = useMap()
   const places = useMapsLibrary('places')
+  const [markersData, setMarkersData] = useContext(MarkersDataContext)
 
   // https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompleteSessionToken
   const [sessionToken, setSessionToken] = useState()

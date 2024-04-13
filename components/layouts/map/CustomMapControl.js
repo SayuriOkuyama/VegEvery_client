@@ -1,15 +1,19 @@
 import { ControlPosition, MapControl } from '@vis.gl/react-google-maps'
 import AutoComplete from '@/components/layouts/map/AutoComplete'
+import { SelectedPlaceContext } from '@/contexts/selectedPlaceProvider'
+import { useContext } from 'react'
 
-const CustomMapControl = ({ setSelectedPlace, setZoom }) => {
+const CustomMapControl = ({ setZoom }) => {
+  const [, setSelectedPlace] = useContext(SelectedPlaceContext)
+
   return (
     <>
+      {/* 検索バー */}
       <MapControl position={ControlPosition.TOP}>
-        <AutoComplete
-          setSelectedPlace={setSelectedPlace}
-          // setMarkersData={setMarkersData}
-        />
+        <AutoComplete setSelectedPlace={setSelectedPlace} />
       </MapControl>
+
+      {/* Zoom ボタン */}
       <MapControl position={ControlPosition.BOTTOM}>
         <div className="w-dvw flex justify-end">
           <div>
