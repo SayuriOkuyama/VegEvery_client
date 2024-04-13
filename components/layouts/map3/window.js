@@ -3,6 +3,7 @@ import {
   useMapsLibrary,
   useMap,
   useApiIsLoaded,
+  AdvancedMarker,
 } from '@vis.gl/react-google-maps'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -18,6 +19,7 @@ const Window = ({ clickedPlace, setClickedPlace }) => {
   const placesLib = useMapsLibrary('places')
   const [placesService, setPlacesService] = useState(null)
   const [show, setShow] = useState(false)
+  const [selectedCarousel, setSelectedCarousel] = useState(null)
   const [data, setData] = useState(null)
   const apiIsLoaded = useApiIsLoaded()
   console.log(`map: ${map}`)
@@ -67,33 +69,51 @@ const Window = ({ clickedPlace, setClickedPlace }) => {
     }
   }, [placesService, clickedPlace])
 
+  const handleSelectCarousel = place => {
+    setSelectedCarousel(place)
+  }
+
+  useEffect(() => {
+    if (!selectedCarousel) return
+    map.fitBounds(selectedCarousel.geometry?.viewport)
+  }, [selectedCarousel])
+
   // const closeWindow = () => {
   //   setClickedPlace(false)
   // }
-
+  // console.log(selectedCarousel)
+  // console.log(selectedCarousel.geometry.location)
   return (
     <>
       {show && (
-        <Carousel className=" w-2/3 max-w-sm  inset-x-0 mx-auto fixed bottom-20 lex justify-center">
-          <CarouselContent className="-ml-1">
-            {data.map((place, index) => (
-              <CarouselItem key={index} className="pl-1 ">
-                <div className="p-1">
-                  <Card>
-                    <CardContent className="flex aspect-square items-center justify-center p-6">
-                      <span className="text-2xl font-semibold">
-                        {place.name}
-                      </span>
-                      <button onClick={() => setShow(false)}>close</button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
+        <>
+          {selectedCarousel && (
+            <AdvancedMarker position={selectedCarousel.geometry.location} />
+          )}
+          <Carousel className=" w-2/3 max-w-sm  inset-x-0 mx-auto fixed bottom-20 lex justify-center">
+            <CarouselContent className="-ml-1">
+              {data.map((place, index) => (
+                <CarouselItem
+                  key={index}
+                  className="pl-1 "
+                  onClick={() => handleSelectCarousel(place)}>
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-6">
+                        <span className="text-2xl font-semibold">
+                          {place.name}
+                        </span>
+                        <button onClick={() => setShow(false)}>close</button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        </>
       )}
     </>
   )

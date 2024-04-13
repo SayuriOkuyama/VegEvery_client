@@ -3,6 +3,7 @@ import {
   Map,
   useMapsLibrary,
   useMap,
+  AdvancedMarker,
 } from '@vis.gl/react-google-maps'
 import { useEffect, useState } from 'react'
 import Window from '@/components/layouts/map3/window'
@@ -44,6 +45,7 @@ const App = ({ position }) => {
             <SelectedPlaceProvider>
               <CustomMapControl setZoom={setZoom} />
               <div id="marker_point" />
+              <AdvancedMarker />
               {/* <CustomMarker /> */}
               {/* <MarkerWindow
                 clickedPlace={clickedPlace}

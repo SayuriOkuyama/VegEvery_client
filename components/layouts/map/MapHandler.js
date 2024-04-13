@@ -228,7 +228,7 @@ const MapHandler = () => {
         // console.log(res.data)
         // if (status == service.PlacesServiceStatus.OK) {
         for (var i = 0; i < result.length; i++) {
-          Markers.push(createMarker(result[i]))
+          // Markers.push(createMarker(result[i]))
         }
         // }
       }
