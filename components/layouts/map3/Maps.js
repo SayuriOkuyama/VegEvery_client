@@ -45,7 +45,7 @@ const App = ({ position }) => {
             <SelectedPlaceProvider>
               <CustomMapControl setZoom={setZoom} />
               <div id="marker_point" />
-              <AdvancedMarker />
+              {}
               {/* <CustomMarker /> */}
               {/* <MarkerWindow
                 clickedPlace={clickedPlace}

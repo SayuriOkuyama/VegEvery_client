@@ -13,8 +13,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
+import Link from 'next/link'
 
-const Window = ({ clickedPlace, setClickedPlace }) => {
+const Window = ({ clickedPlace }) => {
   const map = useMap()
   const placesLib = useMapsLibrary('places')
   const [placesService, setPlacesService] = useState(null)
@@ -43,8 +44,6 @@ const Window = ({ clickedPlace, setClickedPlace }) => {
       const request = {
         location: clickedPlace,
         radius: 50,
-        // includedTypes: ['food', 'restaurant', 'cafe', 'store'],
-        // excludedTypes: ['route'],
         type: 'restaurant',
         keyword: '飲食店 カフェ レストラン',
         maxResultCount: 1,
@@ -93,25 +92,53 @@ const Window = ({ clickedPlace, setClickedPlace }) => {
           <Carousel className=" w-2/3 max-w-sm  inset-x-0 mx-auto fixed bottom-20 lex justify-center">
             <CarouselContent className="-ml-1">
               {data.map((place, index) => (
-                <CarouselItem
-                  key={index}
-                  className="pl-1 "
-                  onClick={() => handleSelectCarousel(place)}>
+                <CarouselItem key={index} className="pl-1 ">
                   <div className="p-1">
                     <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-6">
-                        <span className="text-2xl font-semibold">
+                      <CardContent className="aspect-square relative p-6">
+                        <button
+                          onClick={() => setShow(false)}
+                          className="leading-none absolute border top-1 right-1 text-sm p-1">
+                          ✕
+                        </button>
+                        {place.photos[0] && (
+                          <div className="w-full h-32 overflow-hidden flex items-center">
+                            <img
+                              src={place.photos[0].getUrl()}
+                              alt="レシピ画像1"
+                              className="object-contain m-auto block"
+                            />
+                          </div>
+                          // <img src={place.photos[0].getUrl()} className=''/>
+                        )}
+                        <div className="font-semibold text-center my-1">
                           {place.name}
-                        </span>
-                        <button onClick={() => setShow(false)}>close</button>
+                        </div>
+                        <div className="flex justify-between">
+                          <div>vageTag</div>
+                          <button
+                            onClick={() => handleSelectCarousel(place)}
+                            className="block border">
+                            ここに移動
+                          </button>
+                        </div>
+                        <div>
+                          ベジクチコミはありません
+                          <Link
+                            href={`/map/review/${place.place_id}/create?name=${place.name}&lat=${place.geometry.location.lat()}&lng=${place.geometry.location.lng()}`}>
+                            <button className="border">
+                              最初のクチコミを投稿
+                            </button>
+                          </Link>
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="carousel-color" />
+            <CarouselNext className="carousel-color" />
           </Carousel>
         </>
       )}
