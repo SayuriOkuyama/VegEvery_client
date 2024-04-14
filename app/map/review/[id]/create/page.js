@@ -92,6 +92,11 @@ const page = ({ params }) => {
       formData.append(key, values[key])
     }
 
+    formData.append(`restaurant[name]`, values.restaurant.name)
+    formData.append(`restaurant[place_id]`, values.restaurant.place_id)
+    formData.append(`restaurant[latitude]`, values.restaurant.latitude)
+    formData.append(`restaurant[longitude]`, values.restaurant.longitude)
+
     const types = [
       'vegan',
       'oriental_vegetarian',
@@ -114,19 +119,19 @@ const page = ({ params }) => {
       })
     })
 
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1])
-    }
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1])
+    // }
 
-    // const res = await axios.post(`/api/food_items`, formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // })
+    const res = await axios.post(`/api/maps/reviews`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
 
     // console.log(res.data)
     // console.log('画面遷移')
-    // router.push(`/map/${res.data.article.id}`)
+    router.push(`/map/review/${res.data.restaurantData.place_id}`)
   }
 
   return (
@@ -178,6 +183,18 @@ const page = ({ params }) => {
 
         <Menus register={register} control={control} errors={errors} />
 
+        <div className="container">
+          <textarea
+            className="border mt-4 w-full"
+            cols="30"
+            rows="10"
+            placeholder="コメントを入力"
+            {...register(`text`)}
+          />
+          {errors.text && (
+            <div className="text-red-400">{errors.text.message}</div>
+          )}
+        </div>
         <div className="">
           <Button
             type="submit"
