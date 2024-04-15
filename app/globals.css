@@ -228,3 +228,8 @@ h3 {
 .bg-register-edit {
   background-color: #fff0e9;
 }
+
+.carousel-color {
+  background: #c7dfb4e3 !important;
+  color: #557540;
+}

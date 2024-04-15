@@ -3,23 +3,25 @@
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
-import Tags from './Tags'
-import Reports from './Reports'
-import Items from './Items'
-import FormVegeType from '@/components/layouts/recipes/FormVegeType.js'
 import { useEffect, useState } from 'react'
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
-import { useRouter } from 'next/navigation.js'
+import { useRouter, useSearchParams } from 'next/navigation.js'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { itemFormSchema } from '@/lib/zod/itemFormSchema'
+import { reviewFormSchema } from '@/lib/zod/reviewFormSchema'
+import Menus from '@/components/layouts/reviews/Menus'
+import Stars from '@/components/layouts/reviews/Stars'
 
-const page = () => {
+const page = ({ params }) => {
   const [image, setImage] = useState(null)
-  const [reportImages, setReportImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
   const [, setUser] = useState()
+  const query = useSearchParams()
+  const lat = query.get('lat')
+  const lng = query.get('lng')
+  const restaurant_name = query.get('name')
+  const place_id = params.id
 
   useEffect(() => {
     const getUser = async () => {
@@ -37,23 +39,33 @@ const page = () => {
     watch,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(itemFormSchema),
+    resolver: zodResolver(reviewFormSchema),
     defaultValues: {
-      title: '',
-      tags: [{ name: '' }],
-      items: [{ name: '', where_to_buy: '', price: '' }],
-      thumbnail: '',
-      reports: [{ text: '' }],
-      vege_type: {
-        vegan: false,
-        oriental_vegetarian: false,
-        ovo_vegetarian: false,
-        pescatarian: false,
-        lacto_vegetarian: false,
-        pollo_vegetarian: false,
-        fruitarian: false,
-        other_vegetarian: false,
+      restaurant: {
+        name: restaurant_name,
+        place_id: place_id,
+        latitude: lat,
+        longitude: lng,
       },
+      thumbnail: '',
+      stars: 0,
+      menus: [
+        {
+          name: '',
+          price: '',
+          vege_type: {
+            vegan: false,
+            oriental_vegetarian: false,
+            ovo_vegetarian: false,
+            pescatarian: false,
+            lacto_vegetarian: false,
+            pollo_vegetarian: false,
+            fruitarian: false,
+            other_vegetarian: false,
+          },
+        },
+      ],
+      text: '',
     },
     mode: 'onChange',
   })
@@ -80,6 +92,11 @@ const page = () => {
       formData.append(key, values[key])
     }
 
+    formData.append(`restaurant[name]`, values.restaurant.name)
+    formData.append(`restaurant[place_id]`, values.restaurant.place_id)
+    formData.append(`restaurant[latitude]`, values.restaurant.latitude)
+    formData.append(`restaurant[longitude]`, values.restaurant.longitude)
+
     const types = [
       'vegan',
       'oriental_vegetarian',
@@ -91,41 +108,22 @@ const page = () => {
       'other_vegetarian',
     ]
 
-    // チェックボックスがチェックされているかどうかを確認し、
-    // 文字列として 'true' または 'false' を設定
-    types.map(type => {
-      formData.append(type, values.vege_type[type])
-    })
-
-    values.reports.forEach((report, index) => {
-      formData.append(`reports[${index}][order]`, report.order)
-      formData.append(`reports[${index}][text]`, report.text)
-
-      if (watcher.reports[index].image) {
+    values.menus.forEach((menu, index) => {
+      formData.append(`menus[${index}][name]`, menu.name)
+      formData.append(`menus[${index}][price]`, menu.price)
+      types.map(type => {
         formData.append(
-          `reports[${index}][image]`,
-          watcher.reports[index].image,
+          `menus[${index}][vege_type][${type}]`,
+          menu.vege_type[type],
         )
-      }
-    })
-
-    values.items.forEach((item, index) => {
-      formData.append(`items[${index}][name]`, item.name)
-      formData.append(`items[${index}][price]`, item.price)
-      formData.append(`items[${index}][where_to_buy]`, item.where_to_buy)
-    })
-
-    values.tags.forEach((tag, index) => {
-      if (tag.name !== '') {
-        formData.append(`tags[${index}][name]`, tag.name)
-      }
+      })
     })
 
     // for (let pair of formData.entries()) {
     //   console.log(pair[0] + ', ' + pair[1])
     // }
 
-    const res = await axios.post(`/api/food_items`, formData, {
+    const res = await axios.post(`/api/maps/reviews`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -133,13 +131,13 @@ const page = () => {
 
     // console.log(res.data)
     // console.log('画面遷移')
-    router.push(`/food_items/${res.data.article.id}`)
+    router.push(`/map/review/${res.data.restaurantData.place_id}`)
   }
 
   return (
     <main className="pb-32">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
-        <FormVegeType register={register} control={control} />
+        <div className="text-center text-2xl">{watcher.restaurant.name}</div>
 
         <div className="bg-orange">
           {image ? (
@@ -175,32 +173,28 @@ const page = () => {
 
         <div className="container py-4 space-y-4">
           <div>
-            <h3>タイトル</h3>
-            <input
-              className="border w-full"
-              type="text"
-              {...register(`title`)}
-              placeholder="新発売のヴィーガンヌードルを試してみた"
-            />
-            {errors.title && (
-              <div className="text-red-400">{errors.title.message}</div>
+            <h3>評価</h3>
+            <Stars setValue={setValue} />
+            {errors.stars && (
+              <div className="text-red-400">{errors.stars.message}</div>
             )}
           </div>
-          <Tags register={register} control={control} errors={errors} />
         </div>
 
-        <Items register={register} control={control} errors={errors} />
+        <Menus register={register} control={control} errors={errors} />
 
-        <Reports
-          register={register}
-          control={control}
-          reportImages={reportImages}
-          setReportImages={setReportImages}
-          setValue={setValue}
-          errors={errors}
-        />
-        <hr className="mx-4" />
-
+        <div className="container">
+          <textarea
+            className="border mt-4 w-full"
+            cols="30"
+            rows="10"
+            placeholder="コメントを入力"
+            {...register(`text`)}
+          />
+          {errors.text && (
+            <div className="text-red-400">{errors.text.message}</div>
+          )}
+        </div>
         <div className="">
           <Button
             type="submit"

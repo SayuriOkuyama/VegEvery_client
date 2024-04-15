@@ -3,20 +3,17 @@ import { useMap, useMapsLibrary } from '@vis.gl/react-google-maps'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PiMagnifyingGlassLight } from 'react-icons/pi'
-import { IconContext } from 'react-icons' //IconContextをインポート
+import { IconContext } from 'react-icons'
 
-const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
+const AutoComplete = ({ setSelectedPlace, setClickedPlace }) => {
   const map = useMap()
   const places = useMapsLibrary('places')
 
-  // https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompleteSessionToken
   const [sessionToken, setSessionToken] = useState()
 
-  // https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service
   // オートコンプリート サービス インスタンス
   const [autocompleteService, setAutocompleteService] = useState(null)
 
-  // https://developers.google.com/maps/documentation/javascript/reference/places-service
   // place サービス インスタンス
   const [placesService, setPlacesService] = useState(null)
 
@@ -110,42 +107,47 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
       // ↑ のオプションと関数を渡して、place 情報を取得する
       placesService?.getDetails(detailRequestOptions, detailsRequestCallback)
     },
-    [setSelectedPlace, places, placesService, sessionToken, markersData],
+    [setSelectedPlace, places, placesService, sessionToken],
   )
 
   // テキスト検索をクリックしたときに発火
   // useCallback で、変わらない時には発火しないようにする
-  const handleTextSearchClick = useCallback(
-    value => {
-      // console.log('handleTextSearchClick!!')
-      // console.log(value)
-      if (!value) return
-      // console.log('valueあり!!')
+  // const handleTextSearchClick = useCallback(
+  //   value => {
+  //     // console.log('handleTextSearchClick!!')
+  //     // console.log(value)
+  //     if (!value) return
+  //     // console.log('valueあり!!')
 
-      const bounds = map.getBounds()
+  //     const bounds = map.getBounds()
 
-      var request = {
-        bounds: bounds,
-        radius: 100,
-        keyword: value,
-      }
+  //     var request = {
+  //       bounds: bounds,
+  //       radius: 100,
+  //       keyword: value,
+  //     }
 
-      // getDetails が成功した時に実行する関数
-      const callback = placeDetails => {
-        // console.log(placeDetails)
-        // ここでセットして、MapHandler コンポーネントで画面表示に使う
-        setSelectedPlace(placeDetails)
-        // サジェストを消す
-        setPredictionResults([])
-        // setSessionToken(new places.AutocompleteSessionToken())
-        setMarkersData(placeDetails)
-      }
+  //     // getDetails が成功した時に実行する関数
+  //     const callback = placeDetails => {
+  //       // console.log(placeDetails)
+  //       // ここでセットして、MapHandler コンポーネントで画面表示に使う
+  //       setSelectedPlace(placeDetails)
+  //       // サジェストを消す
+  //       setPredictionResults([])
+  //       // setSessionToken(new places.AutocompleteSessionToken())
+  //       setMarkersData(placeDetails)
+  //     }
 
-      // ↑ のオプションと関数を渡して、place 情報を取得する
-      placesService?.nearbySearch(request, callback)
-    },
-    [inputValue, places, placesService, sessionToken],
-  )
+  //     // ↑ のオプションと関数を渡して、place 情報を取得する
+  //     placesService?.nearbySearch(request, callback)
+  //   },
+  //   [inputValue, places, placesService, sessionToken],
+  // )
+
+  const handleSearch = () => {
+    const center = map.getCenter()
+    setClickedPlace(center)
+  }
 
   return (
     <div className="w-dvw flex justify-end items-center mt-5 mr-2">
@@ -154,27 +156,19 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
           <Input
             value={inputValue}
             onInput={event => onInputChange(event)}
-            placeholder="お店を検索"
+            placeholder="マップを移動"
             type="text"
             className="pr-0 block w-72 h-8 ml-auto"
           />
-          {/* <Button
-            onClick={() => MapController()}
-            className="py-3 px-1 ml-1 border border-button-color h-6 bg-button">
-            <IconContext.Provider
-              value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
-              <PiMagnifyingGlassLight className="self-center text-lg" />
-            </IconContext.Provider>
-          </Button> */}
         </div>
         {predictionResults.length > 0 ? (
           <ul className="bg-white rounded-sm mt-2 mr-1 p-2 space-y-1">
-            <li
-              key={1}
-              className=" border-b-2 text-xs"
-              onClick={() => handleTextSearchClick(inputValue)}>
-              {inputValue}
-            </li>
+            {/* <li
+                key={1}
+                className=" border-b-2 text-xs"
+                onClick={() => handleTextSearchClick(inputValue)}>
+                {inputValue}
+              </li> */}
             {predictionResults.map(({ place_id, description }) => {
               return (
                 <li
@@ -189,9 +183,9 @@ const AutoComplete = ({ setSelectedPlace, setMarkersData, markersData }) => {
         ) : (
           inputValue && (
             <Button
-              onClick={() => handleTextSearchClick(inputValue)}
+              onClick={handleSearch}
               className="mt-2 border-button-color bg-button py-1 px-2 h-7">
-              このエリアを検索
+              このエリアのお店を表示
               <IconContext.Provider
                 value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
                 <PiMagnifyingGlassLight className="self-center text-lg" />
