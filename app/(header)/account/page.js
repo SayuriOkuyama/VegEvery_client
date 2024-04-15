@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import React from 'react'
 import { PiBooksThin } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { PiUserRectangleThin } from 'react-icons/pi'
@@ -19,18 +18,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+
 const page = () => {
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
 
-  const handleLogout = () => {}
-
+  if (!user) return <p>Loading...</p>
   return (
     <>
       <main className="pb-24 container flex flex-col justify-around h-4/5">
         <div className="mt-8 flex justify-around">
           <div className="border border-button-color rounded-md w-36 h-40">
             <Link
-              href={'/account/book-shelf'}
+              href={`/bookshelves/${user.id}`}
               className="h-40 flex flex-col justify-around pb-2">
               <p className="text-center pt-2 h-10">本棚一覧</p>
               <IconContext.Provider
@@ -83,9 +82,7 @@ const page = () => {
           <Dialog>
             <DialogTrigger asChild>
               <div className="border border-button-color rounded-md w-36 h-40">
-                <button
-                  onClick={handleLogout}
-                  className="h-40 w-36 flex flex-col justify-around pb-2">
+                <button className="h-40 w-36 flex flex-col justify-around pb-2">
                   <p className="text-center w-full p-2">ログアウト</p>
                   <IconContext.Provider
                     value={{
