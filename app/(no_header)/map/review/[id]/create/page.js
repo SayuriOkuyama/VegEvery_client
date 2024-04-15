@@ -69,10 +69,10 @@ const page = ({ params }) => {
     },
     mode: 'onChange',
   })
-  console.log(errors)
+  // console.log(errors)
 
   const watcher = watch()
-  console.log(watcher)
+  // console.log(watcher)
 
   const onDrop = acceptedFiles => {
     const file = acceptedFiles[0]

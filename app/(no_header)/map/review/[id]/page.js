@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dialog'
 import ShowStars from '@/components/layouts/reviews/ShowStars'
 import VegeTag from '@/components/layouts/VegeTag'
-import { PiNotePencilLight } from 'react-icons/pi'
+// import { PiNotePencilLight } from 'react-icons/pi'
 
 const page = ({ params }) => {
   const id = params.id
@@ -50,7 +50,6 @@ const page = ({ params }) => {
     reviews: [],
   })
   const [isOpen, setIsOpen] = useState(false)
-  console.log(restaurantData)
 
   const { data, error } = useSWR(`/api/maps/reviews/${id}`, getArticles)
   // console.log(restaurantData)
@@ -81,7 +80,7 @@ const page = ({ params }) => {
 
   const handleCommentDelete = async reviewId => {
     await axios.delete(`/api/maps/reviews/${reviewId}`)
-    router.replace()
+    router.push('/map')
   }
 
   if (error) return <p>Error: {error.message}</p>
@@ -167,15 +166,8 @@ const page = ({ params }) => {
                   </div>
                   {user && review.user_id === user.id && (
                     <div className="flex justify-center mt-2">
-                      <Link
-                        href={`/maps/reviews/edit?id=${review.id}`}
-                        className="block mr-2">
-                        <Button className="rounded-full px-2 border-button-color flex bg-button">
-                          <PiNotePencilLight size="20px" />
-                        </Button>
-                      </Link>
                       <Dialog className="mt-0">
-                        <DialogTrigger className="rounded-full px-2 border-button-color bg-button">
+                        <DialogTrigger className="rounded-full p-1 border-button-color bg-button">
                           <div className="flex items-center">
                             <GoTrash size={18} />
                           </div>

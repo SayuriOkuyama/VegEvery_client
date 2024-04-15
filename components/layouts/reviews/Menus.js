@@ -23,14 +23,17 @@ const Menus = ({ register, control, errors }) => {
                   {...register(`menus.${index}.name`)}
                 />
               </label>
-              <label className="block py-1">
+              <label className="py-1 block">
                 価格
-                <input
-                  className="border block w-full mt-1 px-1"
-                  type="text"
-                  placeholder="1,500円"
-                  {...register(`menus.${index}.price`)}
-                />
+                <div className="flex items-center gap-1">
+                  <input
+                    className="border block w-1/2 mt-1 px-1"
+                    type="text"
+                    placeholder="1,500"
+                    {...register(`menus.${index}.price`)}
+                  />
+                  円
+                </div>
               </label>
 
               <FormVegeType register={register} type="menu" index={index} />

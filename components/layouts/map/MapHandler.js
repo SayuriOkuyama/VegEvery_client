@@ -1,5 +1,4 @@
 // 検索結果によってマップ表示を切り替える
-// 切り替えた先の周辺情報の取得、マーカー表示
 
 import {
   useMap,
@@ -10,28 +9,17 @@ import {
 } from '@vis.gl/react-google-maps'
 // import axios from '@/lib/axios'
 import { useContext, useEffect, useState } from 'react'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  // DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Button } from '@/components/ui/button'
-import { MarkersDataContext } from '@/contexts/markerProvider'
+// import { MarkersDataContext } from '@/contexts/markerProvider'
 import { SelectedPlaceContext } from '@/contexts/selectedPlaceProvider'
 
 const MapHandler = () => {
   const map = useMap()
   // const [markerRef, marker] = useAdvancedMarkerRef()
   const placesLib = useMapsLibrary('places')
-  const [placesService, setPlacesService] = useState(null)
-  const google = window.google
-  const [, setMarkersData] = useContext(MarkersDataContext)
-  const [open, setOpen] = useState(false)
+  const [, setPlacesService] = useState(null)
+  // const google = window.google
+  // const [, setMarkersData] = useContext(MarkersDataContext)
+  // const [open, setOpen] = useState(false)
   const [selectedPlace] = useContext(SelectedPlaceContext)
 
   useEffect(() => {
@@ -40,7 +28,7 @@ const MapHandler = () => {
     setPlacesService(new placesLib.PlacesService(map))
   }, [placesLib, map])
 
-  let infoWindows = []
+  // let infoWindows = []
 
   // map.addListener('click', function (event) {
   // クリックした場所の緯度経度を取得
@@ -108,106 +96,106 @@ const MapHandler = () => {
   //   )
   // })
 
-  function createMarker(placeData) {
-    console.log('createMarker')
+  // function createMarker(placeData) {
+  //   console.log('createMarker')
 
-    if (!placeData.geometry || !placeData.geometry.location) return
-    // お店情報マーカー
-    // new google.maps.marker.AdvancedMarkerClickEvent
-    const marker = new google.maps.Marker({
-      map: map,
-      position: placeData.geometry.location,
-      title: placeData.name,
-      // label: placeData.name?.substr(0, 1),
-      optimized: false,
-    })
-    // const marker = new google.maps.AdvancedMarkerElement({
-    //   map: Map,
-    //   position: placeData.geometry.location,
-    //   title: placeData.name,
-    //   label: placeData.name?.substr(0, 1),
-    //   optimized: false,
-    // })
-    // console.log('make')
+  //   if (!placeData.geometry || !placeData.geometry.location) return
+  //   // お店情報マーカー
+  //   // new google.maps.marker.AdvancedMarkerClickEvent
+  //   const marker = new google.maps.Marker({
+  //     map: map,
+  //     position: placeData.geometry.location,
+  //     title: placeData.name,
+  //     // label: placeData.name?.substr(0, 1),
+  //     optimized: false,
+  // })
+  // const marker = new google.maps.AdvancedMarkerElement({
+  //   map: Map,
+  //   position: placeData.geometry.location,
+  //   title: placeData.name,
+  //   label: placeData.name?.substr(0, 1),
+  //   optimized: false,
+  // })
+  // console.log('make')
 
-    // お店情報ウィンドウ
-    infoWindows[0] = new google.maps.InfoWindow()
+  // お店情報ウィンドウ
+  // infoWindows[0] = new google.maps.InfoWindow()
 
-    // ウィンドウにて表示する情報
-    const price = placeData.price_level
-      ? placeData.price_level
-      : '取得できませんでした'
+  // ウィンドウにて表示する情報
+  //   const price = placeData.price_level
+  //     ? placeData.price_level
+  //     : '取得できませんでした'
 
-    const infoList = [
-      placeData.name,
-      `ランク：${placeData.rating}`,
-      `金額：${price}`,
-      placeData.photos && placeData.photos.length > 0
-        ? `<p><img style="max-width:200px" src="${placeData.photos[0].getUrl()}"/></p>`
-        : null,
-    ]
+  //   const infoList = [
+  //     placeData.name,
+  //     `ランク：${placeData.rating}`,
+  //     `金額：${price}`,
+  //     placeData.photos && placeData.photos.length > 0
+  //       ? `<p><img style="max-width:200px" src="${placeData.photos[0].getUrl()}"/></p>`
+  //       : null,
+  //   ]
 
-    const info = infoList.join('<br>') // 改行区切りで加工して見せる
+  //   const info = infoList.join('<br>') // 改行区切りで加工して見せる
 
-    const div = document.getElementById('marker_point')
-    div.innerHTML = `
-    <Drawer open={open} onOpenChange={setOpen}>
-        {/* <DrawerTrigger></DrawerTrigger> */}
-        <DrawerContent className="pb-20">
-          <DrawerHeader>
-            <DrawerTitle>タイトル</DrawerTitle>
-            <DrawerDescription>
-              This action cannot be undone.
-            </DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    `
+  //   const div = document.getElementById('marker_point')
+  //   div.innerHTML = `
+  //   <Drawer open={open} onOpenChange={setOpen}>
+  //       {/* <DrawerTrigger></DrawerTrigger> */}
+  //       <DrawerContent className="pb-20">
+  //         <DrawerHeader>
+  //           <DrawerTitle>タイトル</DrawerTitle>
+  //           <DrawerDescription>
+  //             This action cannot be undone.
+  //           </DrawerDescription>
+  //         </DrawerHeader>
+  //         <DrawerFooter>
+  //           <Button>Submit</Button>
+  //           <DrawerClose>
+  //             <Button variant="outline">Cancel</Button>
+  //           </DrawerClose>
+  //         </DrawerFooter>
+  //       </DrawerContent>
+  //     </Drawer>
+  //   `
 
-    // マーカーにクリックイベントを付与
-    google.maps.event.addListener(marker, 'click', () => {
-      console.log('イベント')
-      // すでに他のマーカーがオープンになっている場合はそのマーカーを閉じる
-      if (infoWindows[1]) infoWindows[1].close()
-      if (infoWindows[0] == undefined || infoWindows[0] == null) return
-      infoWindows[0].close()
-      infoWindows[0].setContent(info)
-      infoWindows[0].open(marker.getMap(), marker)
-      return (
-        <Drawer open={open} onOpenChange={setOpen}>
-          {/* <DrawerTrigger></DrawerTrigger> */}
-          <DrawerContent className="pb-20">
-            <DrawerHeader>
-              <DrawerTitle>タイトル</DrawerTitle>
-              <DrawerDescription>
-                This action cannot be undone.
-              </DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>Submit</Button>
-              <DrawerClose>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      )
-    })
-  }
+  //   // マーカーにクリックイベントを付与
+  //   google.maps.event.addListener(marker, 'click', () => {
+  //     console.log('イベント')
+  //     // すでに他のマーカーがオープンになっている場合はそのマーカーを閉じる
+  //     if (infoWindows[1]) infoWindows[1].close()
+  //     if (infoWindows[0] == undefined || infoWindows[0] == null) return
+  //     infoWindows[0].close()
+  //     infoWindows[0].setContent(info)
+  //     infoWindows[0].open(marker.getMap(), marker)
+  //     return (
+  //       <Drawer open={open} onOpenChange={setOpen}>
+  //         {/* <DrawerTrigger></DrawerTrigger> */}
+  //         <DrawerContent className="pb-20">
+  //           <DrawerHeader>
+  //             <DrawerTitle>タイトル</DrawerTitle>
+  //             <DrawerDescription>
+  //               This action cannot be undone.
+  //             </DrawerDescription>
+  //           </DrawerHeader>
+  //           <DrawerFooter>
+  //             <Button>Submit</Button>
+  //             <DrawerClose>
+  //               <Button variant="outline">Cancel</Button>
+  //             </DrawerClose>
+  //           </DrawerFooter>
+  //         </DrawerContent>
+  //       </Drawer>
+  //     )
+  //   })
+  // }
 
-  const Markers = []
+  // const Markers = []
 
   // 検索結果を中心に表示＆周辺データを取得しマーカー表示
   useEffect(() => {
     if (!map || !selectedPlace) return
-    console.log('handle')
-    console.log(selectedPlace)
+    // console.log('handle')
+    // console.log(selectedPlace)
 
     if (selectedPlace.geometry?.viewport) {
       // AutoComplete コンポーネントで取得した place 情報から
@@ -217,35 +205,35 @@ const MapHandler = () => {
       // console.log('handle inner')
 
       // ↓ の nearbySearch で渡す関数
-      const callback = async result => {
-        // const callback = async (result, status) => {
-        setMarkersData(result)
+      // const callback = async result => {
+      //   // const callback = async (result, status) => {
+      //   // setMarkersData(result)
 
-        // const res = await axios.post(
-        //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/maps`,
-        //   result,
-        // )
-        // console.log(res.data)
-        // if (status == service.PlacesServiceStatus.OK) {
-        for (var i = 0; i < result.length; i++) {
-          // Markers.push(createMarker(result[i]))
-        }
-        // }
-      }
+      //   // const res = await axios.post(
+      //   //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/maps`,
+      //   //   result,
+      //   // )
+      //   // console.log(res.data)
+      //   // if (status == service.PlacesServiceStatus.OK) {
+      //   for (var i = 0; i < result.length; i++) {
+      //     // Markers.push(createMarker(result[i]))
+      //   }
+      //   // }
+      // }
 
-      // ↓ の nearbySearch で渡すオプション
-      var request = {
-        location: map.getCenter(),
-        radius: 50,
-        type: 'food',
-        keyword: '飲食店 カフェ レストラン', // 検索地点の付近を`keyword`を使って検索する
-      }
+      // // ↓ の nearbySearch で渡すオプション
+      // var request = {
+      //   location: map.getCenter(),
+      //   radius: 50,
+      //   type: 'food',
+      //   keyword: '飲食店 カフェ レストラン', // 検索地点の付近を`keyword`を使って検索する
+      // }
 
-      placesService?.nearbySearch(request, callback)
+      // placesService?.nearbySearch(request, callback)
     }
   }, [map, selectedPlace])
 
-  return <div>{Markers && Markers.map(marker => marker)}</div>
+  return
 }
 
 export default MapHandler

@@ -1,9 +1,7 @@
 'use client'
 
 import Logo from '@/components/ui/Logo'
-// import Maps from '@/components/layouts/map/Maps'
-// import Maps from '@/components/layouts/map2/Maps'
-import Maps from '@/components/layouts/map3/Maps'
+import Maps from '@/components/layouts/map/Maps'
 
 import { useEffect, useState } from 'react'
 

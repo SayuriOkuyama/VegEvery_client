@@ -7,10 +7,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'via.placeholder.com',
       },
-      {
-        protocol: 'https',
-        hostname: 'sbbfkhueljpgbvhxguip.supabase.co',
-      },
+      // {
+      //   protocol: 'https',
+      //   hostname: 'sbbfkhueljpgbvhxguip.supabase.co',
+      // },
       {
         protocol: 'https',
         hostname: 'maps.googleapis.com',

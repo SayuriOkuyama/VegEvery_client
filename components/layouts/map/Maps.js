@@ -1,66 +1,41 @@
-'use client'
-
-import {
-  APIProvider,
-  Map,
-  // useMapsLibrary,
-  AdvancedMarker,
-  InfoWindow,
-  useAdvancedMarkerRef,
-  // useMap,
-} from '@vis.gl/react-google-maps'
-// import Image from 'next/image'
+import { APIProvider, Map } from '@vis.gl/react-google-maps'
 import { useState } from 'react'
+import CreateCarousel from '@/components/layouts/map/CreateCarousel'
 import MapHandler from '@/components/layouts/map/MapHandler'
 import CustomMapControl from '@/components/layouts/map/CustomMapControl'
-import CustomMarker from '@/components/layouts/map/CustomMarker'
-import { MarkersDataProvider } from '@/contexts/markerProvider'
-import { SelectedMarkerProvider } from '@/contexts/selectedMarkerProvider'
 import { SelectedPlaceProvider } from '@/contexts/selectedPlaceProvider'
-import MarkerWindow from '@/components/layouts/map/MarkerWindow'
 
-const Maps = () => {
-  // const [clickedPlace, setClickedPlace] = useState(null)
-  // const [zoom, setZoom] = useState(18)
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+
+const App = ({ position }) => {
+  const [clickedPlace, setClickedPlace] = useState()
+  const [zoom, setZoom] = useState(18)
+
+  const handleClick = e => {
+    setClickedPlace(e.detail.latLng)
+  }
 
   return (
-    <APIProvider
-      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-      region="JP"
-      language="ja">
+    <APIProvider apiKey={API_KEY}>
       <Map
-        onClick={() => console.log('MapOnClick')}
-        defaultCenter={{
-          lat: 35.66581861,
-          lng: 139.72951166,
-        }}
-        // defaultZoom={zoom}
-        zoom={18}
-        disableDefaultUI={true}
-        // gestureHandling={'greedy'}
+        id="46ff2cf41492db8c"
         mapId="46ff2cf41492db8c"
-        // onZoomChanged={ev => setZoom(ev.detail.zoom)}
-      >
-        {/* <MarkersDataProvider>
-          <SelectedMarkerProvider>
-            <SelectedPlaceProvider>
-              <CustomMapControl setZoom={setZoom} /> */}
-        {/* <div id="marker_point" /> */}
-        {/* <CustomMarker /> */}
-        {/* <MarkerWindow
-                clickedPlace={clickedPlace}
-                setClickedPlace={setClickedPlace}
-              />
-              <InfoWindow position={clickedPlace}>Hello World!</InfoWindow>
-              <MapHandler
-              // setClickedPlace={setClickedPlace}
-              />
-            </SelectedPlaceProvider>
-          </SelectedMarkerProvider>
-        </MarkersDataProvider> */}
+        defaultCenter={position}
+        zoom={zoom}
+        disableDefaultUI={true}
+        gestureHandling={'greedy'}
+        onClick={e => handleClick(e)}>
+        {clickedPlace && <CreateCarousel clickedPlace={clickedPlace} />}
+        <SelectedPlaceProvider>
+          <CustomMapControl
+            setZoom={setZoom}
+            setClickedPlace={setClickedPlace}
+          />
+          <MapHandler />
+        </SelectedPlaceProvider>
       </Map>
     </APIProvider>
   )
 }
 
-export default Maps
+export default App

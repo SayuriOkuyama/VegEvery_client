@@ -3,14 +3,17 @@ import AutoComplete from '@/components/layouts/map/AutoComplete'
 import { SelectedPlaceContext } from '@/contexts/selectedPlaceProvider'
 import { useContext } from 'react'
 
-const CustomMapControl = ({ setZoom }) => {
+const CustomMapControl = ({ setZoom, setClickedPlace }) => {
   const [, setSelectedPlace] = useContext(SelectedPlaceContext)
 
   return (
     <>
       {/* 検索バー */}
       <MapControl position={ControlPosition.TOP}>
-        <AutoComplete setSelectedPlace={setSelectedPlace} />
+        <AutoComplete
+          setSelectedPlace={setSelectedPlace}
+          setClickedPlace={setClickedPlace}
+        />
       </MapControl>
 
       {/* Zoom ボタン */}
