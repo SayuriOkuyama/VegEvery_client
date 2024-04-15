@@ -39,7 +39,7 @@ const page = ({ params }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      axios.get('/sanctum/csrf-cookie')
+      await axios.get('/sanctum/csrf-cookie')
       axios.get('/api/user').then(res => setUser(res.data))
     }
     getUser()
