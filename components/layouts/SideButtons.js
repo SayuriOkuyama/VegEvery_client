@@ -2,6 +2,7 @@ import { PiShareFatFill } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { GoHeart } from 'react-icons/go'
 import { GoHeartFill } from 'react-icons/go'
+import { PiBookBookmarkLight } from 'react-icons/pi'
 import { useEffect, useState } from 'react'
 import axios from '@/lib/axios'
 import {
@@ -89,21 +90,38 @@ function SideButtons({
   }
 
   return (
-    <div className="fixed bottom-20 right-0 w-12 ">
+    <div className="fixed bottom-20 right-0 w-14">
       {user ? (
-        <button className="flex flex-col items-center" onClick={handleLike}>
-          <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
-            {likeState && likeState.like ? <GoHeartFill /> : <GoHeart />}
-          </IconContext.Provider>
-          <div className="text-xs">いいね</div>
-        </button>
+        <>
+          <button className="flex flex-col items-center" onClick={handleLike}>
+            <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
+              {likeState && likeState.like ? <GoHeartFill /> : <GoHeart />}
+            </IconContext.Provider>
+            <div className="text-xs">いいね</div>
+          </button>
+          <button className="flex flex-col items-center" onClick={handleLike}>
+            <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
+              <PiBookBookmarkLight />
+            </IconContext.Provider>
+            <div className="text-xs">保存</div>
+          </button>
+        </>
       ) : (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger className="flex flex-col items-center">
-            <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
-              <GoHeart />
-            </IconContext.Provider>
-            <div className="text-xs">いいね</div>
+            <div className="side_icon flex flex-col items-center rounded-full py-1 px-2 mb-1">
+              <IconContext.Provider value={{ size: '24px', color: '#eb829a' }}>
+                <GoHeart />
+              </IconContext.Provider>
+              <div className="text-xs">いいね</div>
+            </div>
+            <div className="side_icon flex flex-col items-center rounded-full py-1 px-3">
+              <IconContext.Provider
+                value={{ size: '28px', color: '', className: 'rounded-full' }}>
+                <PiBookBookmarkLight />
+              </IconContext.Provider>
+              <div className="text-xs">保存</div>
+            </div>
           </PopoverTrigger>
           <PopoverContent className="mr-8">
             <div className="p-4">
@@ -118,7 +136,7 @@ function SideButtons({
         </Popover>
       )}
 
-      <button className="flex flex-col items-center mt-1">
+      <button className="side_icon flex flex-col items-center mt-1 rounded-full py-1 px-2">
         <IconContext.Provider value={{ size: '24px' }}>
           <PiShareFatFill />
         </IconContext.Provider>
