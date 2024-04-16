@@ -130,8 +130,8 @@ export default async function Home() {
         </section>
         <section className="pt-8">
           <h3 className="text-center text-lg font-bold">レストラン Map</h3>
-          <div className="pt-4 py-8 mt-8 w-full h-80 bg-slate-50 flex justify-center items-center">
-            <Link href={'/map'} className="flex items-start">
+          <div className="mt-8 w-full h-80 bg-slate-50 flex justify-center items-center">
+            <Link href={'/map'} className="flex items-center relative bg-map">
               <Button className="mx-auto bg-button border-button-color">
                 現在地から探す
               </Button>
