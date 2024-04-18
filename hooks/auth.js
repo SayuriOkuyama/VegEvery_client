@@ -20,6 +20,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         return res.data
       })
       .catch(error => {
+        console.log(error)
         if (error.response.status !== 409) throw error
 
         router.push('/verify-email')
@@ -136,6 +137,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     if (window.location.pathname === '/verify-email' && user?.email_verified_at)
       router.push(redirectIfAuthenticated)
     if (middleware === 'auth' && error) logout()
+    // if (middleware === 'auth' && error && error.response.status !== 401)
+    //   console.log(error)
+    // router.push('/login')
   }, [user, error])
 
   return {
@@ -147,5 +151,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     // resendEmailVerification,
     logout,
     csrf,
+    error,
   }
 }

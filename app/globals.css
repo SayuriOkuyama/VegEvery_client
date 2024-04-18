@@ -164,6 +164,10 @@ h3 {
   background: var(--bg-color-button);
 }
 
+.text-color {
+  color: var(--text-color);
+}
+
 .disabled-text-color {
   color: #8c695470;
 }

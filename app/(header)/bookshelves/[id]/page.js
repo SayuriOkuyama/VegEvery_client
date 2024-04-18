@@ -59,8 +59,7 @@ const page = () => {
   })
 
   const onSubmit = async value => {
-    const response = await axios.post(`/api/bookshelves/${user.id}`, {
-      user_id: user.id,
+    const response = await axios.post(`/api/bookshelves/create/${user.id}`, {
       name: value.name,
     })
     // console.log(response.data)

@@ -7,9 +7,17 @@ import ArticleCard from '@/components/layouts/ArticleCard.js'
 import PaginationParts from '@/components/layouts/PaginationParts'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const page = ({ params }) => {
-  const { user, csrf } = useAuth()
+  const { user, csrf, error } = useAuth()
+  const router = useRouter()
+
+  if (error) {
+    if (error.request.status === 401) {
+      router.push('/login')
+    }
+  }
   const [bookshelfData, setBookshelfData] = useState()
   const bookshelfId = params.bookshelf_id
   // console.log(bookshelfData)
@@ -27,28 +35,29 @@ const page = ({ params }) => {
   return (
     <div>
       <>
-        {bookshelfData && bookshelfData.data.length > 0 ? (
+        {bookshelfData && Object.keys(bookshelfData.data).length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-            {bookshelfData.data.map(article => {
+            {Object.keys(bookshelfData.data).map(key => {
+              // console.log(bookshelfData.data[key].user)
               return (
                 <ArticleCard
-                  key={article.id}
+                  key={bookshelfData.data[key].id}
                   tagSize="small"
-                  id={article.id}
-                  title={article.title}
-                  thumbnail={article.thumbnail_url}
-                  user={article.user}
-                  likes={article.number_of_likes}
-                  time={article.cooking_time}
+                  id={bookshelfData.data[key].id}
+                  title={bookshelfData.data[key].title}
+                  thumbnail={bookshelfData.data[key].thumbnail_url}
+                  user={bookshelfData.data[key].user}
+                  likes={bookshelfData.data[key].number_of_likes}
+                  time={bookshelfData.data[key].cooking_time}
                   vegeTags={[
-                    article.vegan,
-                    article.oriental_vegetarian,
-                    article.ovo_vegetarian,
-                    article.pescatarian,
-                    article.lacto_vegetarian,
-                    article.pollo_vegetarian,
-                    article.fruitarian,
-                    article.other_vegetarian,
+                    bookshelfData.data[key].vegan,
+                    bookshelfData.data[key].oriental_vegetarian,
+                    bookshelfData.data[key].ovo_vegetarian,
+                    bookshelfData.data[key].pescatarian,
+                    bookshelfData.data[key].lacto_vegetarian,
+                    bookshelfData.data[key].pollo_vegetarian,
+                    bookshelfData.data[key].fruitarian,
+                    bookshelfData.data[key].other_vegetarian,
                   ]}
                 />
               )
@@ -68,7 +77,7 @@ const page = ({ params }) => {
         )}
         {bookshelfData && bookshelfData.data && (
           <PaginationParts
-            pageData={bookshelfData.articles}
+            pageData={bookshelfData}
             path={`/bookshelves/${user.id}/${bookshelfData.bookshelf_id}`}
           />
         )}
