@@ -32,18 +32,13 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog'
+import { useAuth } from '@/hooks/auth'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 const page = ({ params }) => {
   const id = params.id
-  const [user, setUser] = useState()
-
-  useEffect(() => {
-    const getUser = async () => {
-      await axios.get('/sanctum/csrf-cookie')
-      axios.get('/api/user').then(res => setUser(res.data))
-    }
-    getUser()
-  }, [])
+  const { user, csrf } = useAuth()
+  const [isAlertVisible, setAlertVisible] = useState(false)
 
   const [articlesData, setArticlesData] = useState({
     article_id: '',
@@ -59,7 +54,7 @@ const page = ({ params }) => {
     vegeTags: '',
   })
   const [isOpen, setIsOpen] = useState(false)
-  // console.log(articlesData)
+  const [bookshelves, setBookshelves] = useState()
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
   // console.log(articlesData)
@@ -96,6 +91,18 @@ const page = ({ params }) => {
       })
     }
   }, [data])
+
+  useEffect(() => {
+    if (user) {
+      const getBookshelves = async () => {
+        await csrf()
+        const res = await axios.get(`/api/bookshelves/${user.id}`)
+
+        setBookshelves(res.data.data)
+      }
+      getBookshelves()
+    }
+  }, [user])
 
   const commentFormSchema = z.object({
     comment: z
@@ -150,10 +157,23 @@ const page = ({ params }) => {
   }
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data) return <p>Loading...</p>
+  if (!data || !bookshelves) return <p>Loading...</p>
 
   return (
     <main className="pb-20">
+      {isAlertVisible && (
+        <div className="container z-50 absolute animate-bounce">
+          <button
+            className="block w-full"
+            onClick={() => setAlertVisible(false)}>
+            <Alert className="container z-50">
+              <AlertDescription className="text-color text-center text-md">
+                保存しました
+              </AlertDescription>
+            </Alert>
+          </button>
+        </div>
+      )}
       {user && articlesData.user.id === user.id && (
         <Link
           href={`/recipes/edit?id=${articlesData.article_id}`}
@@ -366,7 +386,12 @@ const page = ({ params }) => {
         likeableType="ArticleOfRecipe"
         likes={articlesData.likes}
         setArticlesData={setArticlesData}
+        bookshelves={bookshelves}
+        setBookshelves={setBookshelves}
         user={user}
+        csrf={csrf}
+        isAlertVisible={isAlertVisible}
+        setAlertVisible={setAlertVisible}
       />
     </main>
   )

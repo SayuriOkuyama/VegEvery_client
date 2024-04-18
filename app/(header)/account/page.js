@@ -18,9 +18,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth({ middleware: 'auth' })
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login')
+    }
+  }, [])
+
+  // console.log(user)
 
   if (!user) return <p>Loading...</p>
   return (
