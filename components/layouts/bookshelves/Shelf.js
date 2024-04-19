@@ -5,7 +5,7 @@ import { PiBooksThin } from 'react-icons/pi'
 
 const Shelf = ({ userId, bookshelfId, thumbnailUrl, name }) => {
   return (
-    <div className="border border-button-color h-44 w-36">
+    <div className="border border-button-color h-44 w-full">
       <Link href={`/bookshelves/${userId}/${bookshelfId}`}>
         <div className="relative">
           {thumbnailUrl ? (
