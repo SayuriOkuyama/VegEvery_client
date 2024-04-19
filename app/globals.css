@@ -160,6 +160,10 @@ h3 {
   background: var(--bg-color-orange);
 }
 
+.bg-black-20 {
+  background: #81818133;
+}
+
 .bg-button {
   background: var(--bg-color-button);
 }

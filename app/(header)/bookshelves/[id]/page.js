@@ -79,7 +79,7 @@ const page = () => {
     <main className="pb-24 container mt-8">
       <h2 className="text-center mb-4">本棚一覧</h2>
       <p className="text-center mb-4">お気に入りの投稿を保存・整理</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+      <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4">
         {bookshelves.data &&
           bookshelves.data.length > 0 &&
           bookshelves.data.map(bookshelf => {
