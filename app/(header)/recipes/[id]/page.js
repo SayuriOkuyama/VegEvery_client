@@ -209,13 +209,15 @@ const page = ({ params }) => {
           })}
       </div>
       <div className="container flex py-4 justify-between">
-        <div className="flex">
+        <Link
+          href={`/account/user/${articlesData.user.id}?article=recipes`}
+          className="flex">
           <Avatar className="self-end mr-2">
             <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
             <AvatarFallback>Icon</AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{articlesData.user.name}</div>
-        </div>
+        </Link>
         <div>
           <div className="flex text-lg ml-auto justify-end">
             <TfiTimer className="flex self-center" />
