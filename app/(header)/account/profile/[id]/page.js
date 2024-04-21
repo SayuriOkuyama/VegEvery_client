@@ -68,6 +68,7 @@ const page = () => {
     resolver: zodResolver(EditUserFormSchema),
     mode: 'onChange',
   })
+  console.log(form.formState.errors)
 
   const editProfile = () => {
     setIsEdit(true)
@@ -287,7 +288,7 @@ const page = () => {
               )}
             </div>
             <div className="flex mt-8">
-              <div className="w-28 mr-2">アカウント ID</div>
+              <div className="w-1/3 mr-2">アカウント ID</div>
               {/* {isEdit ? (
             <div className="w-56 mr-2">
               <input
@@ -302,7 +303,7 @@ const page = () => {
             </div>
             <hr />
             <div className="flex mt-4">
-              <div className="w-28 mr-2">ユーザー名</div>
+              <div className="w-1/3 mr-2">ユーザー名</div>
               {isEdit ? (
                 <div className="w-56 mr-2">
                   <input
@@ -317,7 +318,7 @@ const page = () => {
             </div>
             <hr />
             <div className="flex mt-4">
-              <div className="w-28 mr-2">ベジタリアンの種類</div>
+              <div className="w-1/3 mr-2">ベジタリアンの種類</div>
               {isEdit ? (
                 <Form {...form}>
                   <FormField
@@ -363,15 +364,22 @@ const page = () => {
             </div>
             <hr />
             <div className="flex mt-2">
-              <div className="w-28 mr-2">自己紹介</div>
+              <div className="w-1/3 mr-2">自己紹介</div>
               {isEdit ? (
-                <textarea
-                  {...form.register(`introduction`)}
-                  rows="5"
-                  className="border w-56"
-                />
+                <div className="flex flex-col">
+                  <textarea
+                    {...form.register(`introduction`)}
+                    rows="5"
+                    className="border w-56"
+                  />
+                  {form.formState.errors.introduction && (
+                    <div className="text-red-400">
+                      {form.formState.errors.introduction.message}
+                    </div>
+                  )}
+                </div>
               ) : (
-                <div>{user.introduction}</div>
+                <div className="w-2/3">{user.introduction}</div>
               )}
             </div>
             {isEdit && (

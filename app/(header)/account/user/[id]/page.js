@@ -12,7 +12,7 @@ const page = ({ params }) => {
   const query = useSearchParams()
   const articleType = query.get('article')
   const { data, error } = useSWR(`/api/user/get/${userId}`, getArticles)
-
+  console.log(data)
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
@@ -29,6 +29,13 @@ const page = ({ params }) => {
           <p className="text-2xl">{data.name}</p>
           <p className="text-base">@{data.account_id}</p>
         </div>
+      </div>
+      <div className="mx-auto w-4/5 bg-green mt-4 rounded-sm p-4">
+        {data.introduction ? (
+          <div>{data.introduction}</div>
+        ) : (
+          <div className="text-center">自己紹介がありません。</div>
+        )}
       </div>
       <Tabs defaultValue={articleType} className="flex flex-col mt-4">
         <TabsList className="w-100 self-center">
