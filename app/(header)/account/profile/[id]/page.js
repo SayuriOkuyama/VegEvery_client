@@ -277,11 +277,13 @@ const page = () => {
                   )}
                 </div>
               ) : (
-                <img
-                  src={user.icon_url}
-                  className="object-cover w-full h-full block rounded-full"
-                  alt="ユーザーアイコン"
-                />
+                <Link href={`/account/user/${user.id}?article=recipes`}>
+                  <img
+                    src={user.icon_url}
+                    className="object-cover w-full h-full block rounded-full"
+                    alt="ユーザーアイコン"
+                  />
+                </Link>
               )}
             </div>
             <div className="flex mt-8">
