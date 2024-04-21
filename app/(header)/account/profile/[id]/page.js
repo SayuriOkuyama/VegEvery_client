@@ -22,14 +22,13 @@ import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import EditUserFormSchema from '@/lib/zod/EditUserFormSchema'
 import axios from '@/lib/axios'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import {
@@ -42,12 +41,13 @@ import {
 import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import SettingPassword from '@/components/layouts/user/SettingPassword'
 
 const page = () => {
   const { user } = useAuth({ middleware: 'auth' })
   const [isEdit, setIsEdit] = useState(false)
-  const router = useRouter()
+  const [isResettingPassword, setIsResettingPassword] = useState(false)
 
   const vegetarian_type = {
     vegan: 'ヴィーガン',
@@ -60,55 +60,10 @@ const page = () => {
     other_vegetarian: 'その他のベジタリアン',
   }
 
-  const ACCEPTED_IMAGE_TYPES = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/webp',
-  ]
-
-  const FormSchema = z.object({
-    account_id: z.string(),
-    name: z
-      .string()
-      .min(1, {
-        message: '※ 入力が必須です。',
-      })
-      .max(30, {
-        message: '※ 30 文字以内で入力してください。',
-      }),
-    icon_path: z.string(),
-    icon_url: z.string(),
-    icon_file: z
-      .custom(
-        file =>
-          file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type),
-        {
-          message:
-            'jpeg, jpg, png, webp のいずれかの画像ファイルを選択してください。',
-        },
-      )
-      .optional()
-      .or(z.literal('')),
-    vegetarian_type: z.string(),
-    introduction: z.string().max(30, {
-      message: '※ 30 文字以内で入力してください。',
-    }),
+  const form = useForm({
+    resolver: zodResolver(EditUserFormSchema),
+    mode: 'onChange',
   })
-
-  const form =
-    // register,
-    // control,
-    // reset,
-    // handleSubmit,
-    // formState: { errors },
-    useForm({
-      resolver: zodResolver(FormSchema),
-      defaultValues: {
-        name: '',
-      },
-      mode: 'onChange',
-    })
 
   const editProfile = () => {
     setIsEdit(true)
@@ -124,7 +79,6 @@ const page = () => {
   }
 
   const editComplete = async values => {
-    console.log(values)
     // FormDataオブジェクトを作成
     const formData = new FormData()
 
@@ -140,7 +94,13 @@ const page = () => {
       },
     })
 
-    router.refresh()
+    user.name = res.data.name
+    user.vegetarian_type = res.data.vegetarian_type
+    user.introduction = res.data.introduction
+    user.icon_path = res.data.icon_path
+    user.icon_url = res.data.icon_url
+
+    setIsEdit(false)
   }
 
   const onDrop = acceptedFiles => {
@@ -152,7 +112,6 @@ const page = () => {
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   if (!user) return <p>Loading...</p>
-  console.log(user)
 
   return (
     <main className="pb-24">
@@ -169,11 +128,13 @@ const page = () => {
               className="text-base">
               プロフィール編集
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-base">
-              パスワード再設定
+            <DropdownMenuItem
+              onClick={() => setIsResettingPassword(true)}
+              className="text-base">
+              パスワード変更
             </DropdownMenuItem>
             <Dialog className="mx-auto mt-0">
-              <DialogTrigger className="">
+              <DialogTrigger>
                 <div className="px-2 py-1.5">アカウント削除</div>
               </DialogTrigger>
               <DialogContent>
@@ -200,51 +161,86 @@ const page = () => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <h2 className="text-center mt-8">プロフィール</h2>
-      <div className="container">
-        <div className="mx-auto mt-4 w-20">
-          {isEdit ? (
-            <div>
-              {form.watch().icon_url ? (
-                <div className="image-preview relative flex rounded-full w-20 h-20">
-                  <button
-                    className="absolute right-1 bottom-1 bg-white w-6 h-6 leading-none border rounded-full text-center p-1"
+      {isResettingPassword ? (
+        <>
+          <h2 className="text-center mt-8">パスワード変更</h2>
+          {user.secret_question ? (
+            <SettingPassword
+              user={user}
+              type="reset"
+              setIsResettingPassword={setIsResettingPassword}
+            />
+          ) : (
+            <>
+              <div className="mt-16 mx-auto">
+                <p className="text-center">パスワードは未登録です。</p>
+                <p className="text-center mt-4">パスワードを設定しますか？</p>
+              </div>
+              <div className="flex justify-around mt-16">
+                <Button
+                  type="button"
+                  onClick={() => setIsResettingPassword(false)}
+                  className="border border-button-color bg-button flex items-center">
+                  <p>やめる</p>
+                </Button>
+                <Link href={`/account/setting_password`} className="block">
+                  <Button
                     type="button"
-                    onClick={() => {
-                      form.setValue('icon_url', '')
-                      form.setValue('icon_file', '')
-                    }}>
-                    ✕
-                  </button>
-                  <img
-                    src={form.watch().icon_url}
-                    className="object-cover w-full h-full block rounded-full p-2"
-                    alt="Uploaded Image"
-                  />
+                    className="border border-button-color bg-button flex items-center">
+                    <p>設定する</p>
+                  </Button>
+                </Link>
+              </div>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <h2 className="text-center mt-8">プロフィール</h2>
+          <div className="container">
+            <div className="mx-auto mt-4 w-20">
+              {isEdit ? (
+                <div>
+                  {form.watch().icon_url ? (
+                    <div className="image-preview relative flex rounded-full w-20 h-20">
+                      <button
+                        className="absolute right-1 bottom-1 bg-white w-6 h-6 leading-none border rounded-full text-center p-1"
+                        type="button"
+                        onClick={() => {
+                          form.setValue('icon_url', '')
+                          form.setValue('icon_file', '')
+                        }}>
+                        ✕
+                      </button>
+                      <img
+                        src={form.watch().icon_url}
+                        className="object-cover w-full h-full block rounded-full p-2"
+                        alt="Uploaded Image"
+                      />
+                    </div>
+                  ) : (
+                    <div {...getRootProps()} className="rounded-full border">
+                      <input {...getInputProps()} />
+                      <div className="h-full flex justify-center items-center p-2">
+                        <IconContext.Provider
+                          value={{ color: '#ccc', size: '60px' }}>
+                          <PiCameraLight />
+                        </IconContext.Provider>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div {...getRootProps()} className="rounded-full border">
-                  <input {...getInputProps()} />
-                  <div className="h-full flex justify-center items-center p-2">
-                    <IconContext.Provider
-                      value={{ color: '#ccc', size: '60px' }}>
-                      <PiCameraLight />
-                    </IconContext.Provider>
-                  </div>
-                </div>
+                <img
+                  src={user.icon_url}
+                  className="object-cover w-full h-full block rounded-full"
+                  alt="ユーザーアイコン"
+                />
               )}
             </div>
-          ) : (
-            <img
-              src={user.icon_url}
-              className="object-cover w-full h-full block rounded-full"
-              alt="ユーザーアイコン"
-            />
-          )}
-        </div>
-        <div className="flex mt-8">
-          <div className="w-28 mr-2">アカウント ID</div>
-          {/* {isEdit ? (
+            <div className="flex mt-8">
+              <div className="w-28 mr-2">アカウント ID</div>
+              {/* {isEdit ? (
             <div className="w-56 mr-2">
               <input
                 type="text"
@@ -253,90 +249,94 @@ const page = () => {
               />
             </div>
           ) : ( */}
-          <div>{user.account_id}</div>
-          {/* )} */}
-        </div>
-        <hr />
-        <div className="flex mt-4">
-          <div className="w-28 mr-2">ユーザー名</div>
-          {isEdit ? (
-            <div className="w-56 mr-2">
-              <input
-                type="text"
-                {...form.register(`name`)}
-                className="block border w-full"
-              />
+              <div>{user.account_id}</div>
+              {/* )} */}
             </div>
-          ) : (
-            <div>{user.name}</div>
-          )}
-        </div>
-        <hr />
-        <div className="flex mt-4">
-          <div className="w-28 mr-2">ベジタリアンの種類</div>
-          {isEdit ? (
-            <Form {...form}>
-              <FormField
-                control={form.control}
-                name="vegetarian_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="mt-6">
-                      <FormControl>
-                        <SelectTrigger className="focus:ring-0">
-                          <SelectValue
-                            placeholder="種類を選択"
-                            className="block w-56"
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.entries(vegetarian_type).map(([key, value]) => {
-                          return (
-                            <SelectItem
-                              key={key}
-                              value={value}
-                              className="text-color">
-                              {value}
-                            </SelectItem>
-                          )
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </Form>
-          ) : (
-            <div>{vegetarian_type[user.vegetarian_type]}</div>
-          )}
-        </div>
-        <hr />
-        <div className="flex mt-2">
-          <div className="w-28 mr-2">自己紹介</div>
-          {isEdit ? (
-            <textarea
-              {...form.register(`introduction`)}
-              rows="5"
-              className="border w-56"
-            />
-          ) : (
-            <div>{user.introduction}</div>
-          )}
-        </div>
-        {isEdit && (
-          <Button
-            type="button"
-            onClick={form.handleSubmit(editComplete)}
-            className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
-            保存
-          </Button>
-        )}
-      </div>
+            <hr />
+            <div className="flex mt-4">
+              <div className="w-28 mr-2">ユーザー名</div>
+              {isEdit ? (
+                <div className="w-56 mr-2">
+                  <input
+                    type="text"
+                    {...form.register(`name`)}
+                    className="block border w-full"
+                  />
+                </div>
+              ) : (
+                <div>{user.name}</div>
+              )}
+            </div>
+            <hr />
+            <div className="flex mt-4">
+              <div className="w-28 mr-2">ベジタリアンの種類</div>
+              {isEdit ? (
+                <Form {...form}>
+                  <FormField
+                    control={form.control}
+                    name="vegetarian_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="mt-6">
+                          <FormControl>
+                            <SelectTrigger className="focus:ring-0">
+                              <SelectValue
+                                placeholder="種類を選択"
+                                className="block w-56"
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(vegetarian_type).map(
+                              ([key, value]) => {
+                                return (
+                                  <SelectItem
+                                    key={key}
+                                    value={value}
+                                    className="text-color">
+                                    {value}
+                                  </SelectItem>
+                                )
+                              },
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </Form>
+              ) : (
+                <div>{vegetarian_type[user.vegetarian_type]}</div>
+              )}
+            </div>
+            <hr />
+            <div className="flex mt-2">
+              <div className="w-28 mr-2">自己紹介</div>
+              {isEdit ? (
+                <textarea
+                  {...form.register(`introduction`)}
+                  rows="5"
+                  className="border w-56"
+                />
+              ) : (
+                <div>{user.introduction}</div>
+              )}
+            </div>
+            {isEdit && (
+              <Button
+                type="button"
+                onClick={form.handleSubmit(editComplete)}
+                className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                保存
+              </Button>
+            )}
+          </div>
+        </>
+      )}
     </main>
   )
 }
