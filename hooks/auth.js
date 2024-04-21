@@ -1,12 +1,13 @@
 import useSWR from 'swr'
 import axios from '@/lib/axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Cookie from 'js-cookie'
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   const router = useRouter()
   const params = useParams()
+  const [error401, setError401] = useState(false)
 
   const {
     data: user,
@@ -20,10 +21,12 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         return res.data
       })
       .catch(error => {
-        console.log(error)
-        if (error.response.status !== 409) throw error
+        if (error.response.status !== 401) {
+          setError401(true)
+        }
+        // if (error.response.status !== 409) throw error
 
-        router.push('/verify-email')
+        // router.push('/verify-email')
       }),
   )
   // revalidateOnFocus: false, // フォーカス時に再検証しない
@@ -134,8 +137,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   useEffect(() => {
     if (middleware === 'guest' && redirectIfAuthenticated && user)
       router.push(redirectIfAuthenticated)
-    if (window.location.pathname === '/verify-email' && user?.email_verified_at)
-      router.push(redirectIfAuthenticated)
+    // if (window.location.pathname === '/verify-email' && user?.email_verified_at)
+    //   router.push(redirectIfAuthenticated)
     if (middleware === 'auth' && error) logout()
     // if (middleware === 'auth' && error && error.response.status !== 401)
     //   console.log(error)

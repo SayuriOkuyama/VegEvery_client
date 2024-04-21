@@ -56,8 +56,13 @@ const SettingPassword = ({ user, type, setIsResettingPassword }) => {
   })
 
   const submit = async values => {
-    await axios.post(`api/user/password/reset/${user.id}`, values)
-    setIsComplete(true)
+    if (type === 'forget') {
+      await axios.post(`api/user/forget_password/reset/${user.id}`, values)
+      setIsComplete(true)
+    } else {
+      await axios.post(`api/user/password/reset/${user.id}`, values)
+      setIsComplete(true)
+    }
   }
 
   return (
@@ -76,9 +81,13 @@ const SettingPassword = ({ user, type, setIsResettingPassword }) => {
                 </AlertTitle>
               )}
               <AlertDescription className="flex justify-center text-color">
-                {type === 'setting' ? (
+                {type === 'setting' || type === 'forget' ? (
                   <Link
-                    href={`/account/profile/${user.id}`}
+                    href={
+                      type === 'setting'
+                        ? `/account/profile/${user.id}`
+                        : `/login`
+                    }
                     className="block mt-8">
                     <Button
                       type="button"
