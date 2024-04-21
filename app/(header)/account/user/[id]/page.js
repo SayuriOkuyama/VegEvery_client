@@ -12,7 +12,7 @@ const page = ({ params }) => {
   const query = useSearchParams()
   const articleType = query.get('article')
   const { data, error } = useSWR(`/api/user/get/${userId}`, getArticles)
-  console.log(data)
+
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (

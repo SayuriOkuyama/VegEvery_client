@@ -68,7 +68,6 @@ const page = () => {
     resolver: zodResolver(EditUserFormSchema),
     mode: 'onChange',
   })
-  console.log(form.formState.errors)
 
   const editProfile = () => {
     setIsEdit(true)
@@ -118,8 +117,7 @@ const page = () => {
 
   const handleDelete = async () => {
     setIsDeletingAccount(true)
-    const res = await axios.delete(`/api/user/delete/account/${user.id}`)
-    console.log(res.data)
+    await axios.delete(`/api/user/delete/account/${user.id}`)
     setDeletedAccount(true)
   }
 

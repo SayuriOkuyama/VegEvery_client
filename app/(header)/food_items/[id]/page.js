@@ -174,20 +174,22 @@ const page = ({ params }) => {
             return (
               <div
                 key={tag.id}
-                className="border rounded-full text-xs px-1 mt-2">
+                className="border rounded-full text-sm px-1 mt-2">
                 #{tag.name}
               </div>
             )
           })}
       </div>
       <div className="container flex py-4 justify-between">
-        <div className="flex">
+        <Link
+          href={`/account/user/${articlesData.user.id}?article=food_items`}
+          className="flex">
           <Avatar className="self-end mr-2">
             <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="text-lg self-end">{articlesData.user.name}</div>
-        </div>
+        </Link>
         <div className="">
           <div className="flex text-lg">
             <PiHeart className="self-center" />
