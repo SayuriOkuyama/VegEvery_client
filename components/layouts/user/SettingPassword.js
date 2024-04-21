@@ -9,7 +9,7 @@ import axios from '@/lib/axios'
 import { useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
-const SettingPassword = ({ user, type, setIsResettingPassword }) => {
+const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
   const [isComplete, setIsComplete] = useState(false)
 
   const FormSchema = z
@@ -91,6 +91,11 @@ const SettingPassword = ({ user, type, setIsResettingPassword }) => {
                     className="block mt-8">
                     <Button
                       type="button"
+                      onClick={() => {
+                        if (type === 'forget') {
+                          setPage('checkSecretQuestion')
+                        }
+                      }}
                       className="border border-button-color bg-button flex items-center">
                       <p>戻る</p>
                     </Button>

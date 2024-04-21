@@ -19,7 +19,7 @@ const page = () => {
           <CheckSecretQuestion setPage={setPage} setUser={setUser} />
         )}
         {page === 'resetPassword' && (
-          <SettingPassword user={user} type="forget" />
+          <SettingPassword user={user} type="forget" setPage={setPage} />
         )}
       </main>
     </>
