@@ -63,17 +63,6 @@ const page = () => {
     redirectIfAuthenticated: '/',
   })
 
-  // useEffect(() => {
-  //   console.log(router.reset)
-  //   if (router.reset?.length > 0 && loginErrors.length === 0) {
-  //     setStatus(atob(router.reset))
-  //   } else {
-  //     setStatus(null)
-  //   }
-  // })
-  // console.log(errors)
-  // console.log(status)
-
   const handleGoogleLogin = async () => {
     const res = await axios.get(`/api/user/auth/google`)
     router.push(res.data)
@@ -140,7 +129,7 @@ const page = () => {
             className="border w-full text-sm pl-1 h-8"
             {...register(`password`)}
           />
-          <p className="text-end text-xs">
+          <p className="text-end text-sm">
             パスワードをお忘れの場合は
             <Link href={'/forget-password'}>
               <span className="ml-1 text-blue-600">こちら</span>
