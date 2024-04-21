@@ -43,11 +43,15 @@ import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
 import Link from 'next/link'
 import SettingPassword from '@/components/layouts/user/SettingPassword'
+import { LiaSpinnerSolid } from 'react-icons/lia'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 const page = () => {
   const { user } = useAuth({ middleware: 'auth' })
   const [isEdit, setIsEdit] = useState(false)
   const [isResettingPassword, setIsResettingPassword] = useState(false)
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false)
+  const [deletedAccount, setDeletedAccount] = useState(false)
 
   const vegetarian_type = {
     vegan: 'ヴィーガン',
@@ -111,10 +115,52 @@ const page = () => {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
+  const handleDelete = async () => {
+    setIsDeletingAccount(true)
+    const res = await axios.delete(`/api/user/delete/account/${user.id}`)
+    console.log(res.data)
+    setDeletedAccount(true)
+  }
+
   if (!user) return <p>Loading...</p>
 
   return (
     <main className="pb-24">
+      {isDeletingAccount && (
+        <div className="w-screen h-svh mt-32">
+          <div className="flex justify-center container">
+            <Alert>
+              {deletedAccount ? (
+                <>
+                  <AlertTitle className="text-center mt-4 text-color">
+                    アカウントを削除しました。
+                  </AlertTitle>
+                  <AlertDescription className="flex justify-center text-color mb-4">
+                    <div className="flex flex-col justify-center mt-4 text-base">
+                      <p className="mt-4">これまでご利用いただき</p>
+                      <p className="mt-2">ありがとうございました！</p>
+                      <Link href={`/`} className="block mt-8">
+                        <Button
+                          type="button"
+                          className="border border-button-color bg-button flex items-center">
+                          <p>トップページへ</p>
+                        </Button>
+                      </Link>
+                    </div>
+                  </AlertDescription>
+                </>
+              ) : (
+                <AlertTitle className="text-center text-color">
+                  <div className="flex justify-center items-center space-x-1">
+                    <LiaSpinnerSolid className="animate-spin" />
+                    <p>アカウントを削除しています。</p>
+                  </div>
+                </AlertTitle>
+              )}
+            </Alert>
+          </div>
+        </div>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="fixed top-3 right-3 w-10 h-10">
           <button className="flex justify-center items-center rounded-full p-1 side_icon">
@@ -142,7 +188,7 @@ const page = () => {
                   <DialogTitle>本当にアカウントを削除しますか？</DialogTitle>
                   <DialogDescription className="flex">
                     <Button
-                      // onClick={() => handleDelete()}
+                      onClick={() => handleDelete()}
                       type="button"
                       className="mx-auto bg-button block py-1 mt-8 border-button-color ">
                       削除する

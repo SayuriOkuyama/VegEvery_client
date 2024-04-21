@@ -30,19 +30,17 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
 
   const submit = async values => {
     setIsSearchingAccount(true)
-    try {
-      const res = await axios.post(
-        `api/user/forget_password/search_user`,
-        values,
-      )
+
+    const res = await axios.post(`api/user/forget_password/search_user`, values)
+    console.log(res.data)
+
+    if (res.data.message === 'failed') {
+      reset()
+      setIsError(true)
+    } else {
       setUser(res.data)
       reset()
       setPage('resetPassword')
-    } catch (error) {
-      if (error.response.status !== 401) {
-        reset()
-        setIsError(true)
-      }
     }
   }
 
