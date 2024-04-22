@@ -63,6 +63,7 @@ const SelectBookshelf = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       checkNewBookshelf: false,
+      newBookshelfName: '',
     },
     mode: 'onChange',
   })
@@ -84,7 +85,7 @@ const SelectBookshelf = ({
       bookshelf_id: values.id,
       article_id: articleId,
     }
-    if (values.checkNewBookshelf) {
+    if (values.checkNewBookshelf || watcher.newBookshelf) {
       const data = await createBookshelf(values)
       request = {
         user_id: user.id,
@@ -135,6 +136,7 @@ const SelectBookshelf = ({
     return res.data
   }
 
+  if (!user) return
   return (
     <>
       {bookshelves && bookshelves.length > 0 ? (
@@ -231,7 +233,6 @@ const SelectBookshelf = ({
         </>
       ) : (
         <>
-          {/* <p className="text-center mb-8">保存する本棚を作成</p> */}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(storeArticle)}
@@ -250,6 +251,12 @@ const SelectBookshelf = ({
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+              <input
+                type="text"
+                hidden
+                {...form.register('newBookshelf')}
+                value={true}
               />
               <Button
                 type="submit"
