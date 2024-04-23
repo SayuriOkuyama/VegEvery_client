@@ -47,15 +47,13 @@ const ArticleCard = ({
         </CardHeader>
 
         <CardFooter>
-          <Link
-            href={`/account/user/${user.id}?article=recipes`}
-            className="flex">
+          <div className="flex">
             <Avatar>
               <AvatarImage src={user.icon_url} alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="text-sm self-end">{user.name}</div>
-          </Link>
+          </div>
           <div className="flex justify-end">
             <PiHeart className="self-center" />
             <p className="text-xs">{likes}</p>

@@ -49,7 +49,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         },
       })
       .then(res => {
-        console.log(res.data.token)
         // トークンをクッキーに保存
         Cookie.set('sanctum_token', res.data.token, {
           expires: 7,

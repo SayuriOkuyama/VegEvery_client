@@ -240,7 +240,7 @@ const page = ({ params }) => {
                 <div>・{material.name}</div>
                 <div>
                   <span>{material.quantity}</span>
-                  <span>{material.unit}</span>
+                  <span>{material.unit === 'null' ? '' : material.unit}</span>
                 </div>
               </li>
             )
