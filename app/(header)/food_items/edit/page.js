@@ -201,6 +201,8 @@ const page = () => {
                 type="button"
                 onClick={() => {
                   setValue('thumbnail_newFile', '')
+                  setValue('thumbnail_url', '')
+                  setValue('thumbnail_path', '')
                 }}>
                 ✕
               </button>
@@ -212,7 +214,7 @@ const page = () => {
             </div>
           ) : (
             <div {...getRootProps()} className="h-64">
-              <input {...getInputProps()} />
+              <input accept="image/*" {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
                   <PiCameraLight />

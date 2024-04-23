@@ -172,8 +172,6 @@ const page = () => {
       },
     })
 
-    // console.log(`レス：${res.data}`)
-    // console.log('画面遷移')
     router.push(`/recipes/${res.data.article.id}`)
     // } catch (error) {
     //   throw error
@@ -218,7 +216,7 @@ const page = () => {
             </div>
           ) : (
             <div {...getRootProps()} className="h-64">
-              <input accept="image/* " {...getInputProps()} />
+              <input accept="image/*" {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
                   <PiCameraLight />
