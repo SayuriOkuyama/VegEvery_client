@@ -38,8 +38,10 @@ const page = () => {
   }, [page, search, type])
 
   return (
-    <main className="pb-24">
-      <h3 className="text-center text-lg font-bold mt-8">レシピ一覧</h3>
+    <main className="pb-24 max-w-4xl mx-auto">
+      <h3 className="text-center text-lg font-bold mt-8 sm:mt-16 sm:text-2xl">
+        レシピ一覧
+      </h3>
       <div className="flex justify-end mt-4 mb-1">
         <Button className="py-0 px-2 mr-2 bg-button border-button-color">
           <div className="flex items-end">
@@ -49,15 +51,17 @@ const page = () => {
         </Button>
       </div>
       <Tabs defaultValue="search" className="flex flex-col">
-        <TabsList className="w-100 self-center">
+        <TabsList className="w-100 self-center sm:mb-8 sm:space-x-4">
           <TabsTrigger
             value="popular"
-            onClick={() => router.push('/recipes?page=1')}>
+            onClick={() => router.push('/recipes?page=1')}
+            className="sm:text-base">
             人気のレシピ
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/recipes/search/vegan?page=1')}>
+            onClick={() => router.push('/recipes/search/vegan?page=1')}
+            className="sm:text-base">
             ワード検索
           </TabsTrigger>
         </TabsList>

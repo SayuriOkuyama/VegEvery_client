@@ -22,14 +22,14 @@ const page = () => {
       <div className="pt-8">
         <Logo size="100" />
       </div>
-      <main className="container mx-auto mt-8 pb-24">
-        <div className="text-center space-y-3">
+      <main className="container mx-auto mt-8 pb-24 max-w-md">
+        <div className="mx-auto text-center space-y-3 w-4/5">
           <p className="text-center my-8">ベジタリアンの種類を選択</p>
           <div className="text-center space-y-4">
             <div>
               <label
                 htmlFor="vegan"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'vegan' && 'bg-orange-200'}`}>
                 ヴィーガン
               </label>
               <input
@@ -43,7 +43,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="oriental_vegetarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'oriental_vegetarian' && 'bg-orange-200'}`}>
                 <input
                   id="oriental_vegetarian"
                   type="radio"
@@ -57,7 +57,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="ovo_vegetarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'ovo_vegetarian' && 'bg-orange-200'}`}>
                 <input
                   id="ovo_vegetarian"
                   name="vegeType"
@@ -72,7 +72,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="pescatarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'pescatarian' && 'bg-orange-200'}`}>
                 <input
                   id="pescatarian"
                   name="vegeType"
@@ -87,7 +87,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="lacto_vegetarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'lacto_vegetarian' && 'bg-orange-200'}`}>
                 <input
                   id="lacto_vegetarian"
                   name="vegeType"
@@ -102,7 +102,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="pollo_vegetarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'pollo_vegetarian' && 'bg-orange-200'}`}>
                 <input
                   id="pollo_vegetarian"
                   name="vegeType"
@@ -117,7 +117,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="fruitarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'fruitarian' && 'bg-orange-200'}`}>
                 <input
                   id="fruitarian"
                   name="vegeType"
@@ -132,7 +132,7 @@ const page = () => {
             <div>
               <label
                 htmlFor="other_vegetarian"
-                className="border flex flex-col w-full py-2 mx-auto text-center rounded-full hover:bg-orange-200 ">
+                className={`border flex flex-col w-full py-2 mx-auto text-center rounded-full ${watch().vegeType === 'other_vegetarian' && 'bg-orange-200'}`}>
                 <input
                   id="other_vegetarian"
                   name="vegeType"
@@ -162,7 +162,7 @@ const page = () => {
           <button
             onClick={noStoreRoute}
             className="text-sm text-center border-b-2">
-            今はしない
+            あとで
           </button>
         </div>
       </main>

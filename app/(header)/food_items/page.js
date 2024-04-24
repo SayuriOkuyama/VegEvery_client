@@ -28,8 +28,10 @@ const page = () => {
     }
   }
   return (
-    <main className="pb-24">
-      <h3 className="text-center text-lg font-bold mt-8">フードアイテム情報</h3>
+    <main className="pb-24 max-w-4xl mx-auto">
+      <h3 className="text-center text-lg font-bold mt-8 sm:text-4xl sm:tracking-wide sm:mt-16">
+        フードアイテム情報
+      </h3>
       <div className="flex justify-end mt-4 mb-1">
         <Button
           onClick={handleRouteCreate}
@@ -41,15 +43,17 @@ const page = () => {
         </Button>
       </div>
       <Tabs defaultValue="popular" className="flex flex-col">
-        <TabsList className="w-100 self-center">
+        <TabsList className="w-100 self-center sm:mb-8 sm:space-x-4">
           <TabsTrigger
             value="popular"
-            onClick={() => router.push('/food_items')}>
+            onClick={() => router.push('/food_items')}
+            className="sm:text-base">
             人気の投稿
           </TabsTrigger>
           <TabsTrigger
             value="search"
-            onClick={() => router.push('/food_items/search?type=vegan')}>
+            onClick={() => router.push('/food_items/search?type=vegan')}
+            className="sm:text-base">
             タグ・ワード検索
           </TabsTrigger>
         </TabsList>

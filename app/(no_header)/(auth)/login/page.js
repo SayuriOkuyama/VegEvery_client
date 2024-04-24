@@ -83,13 +83,14 @@ const page = () => {
       <div className="pt-8">
         <Logo size="100" />
       </div>
-      <main className="container mx-auto mt-8 pb-24">
+      <main className="container mx-auto mt-8 pb-24 max-w-md">
         <Button
           className="border flex items-center py-3 px-4 mt-12 mx-auto"
           onClick={handleGoogleLogin}>
           <Image
             width={20}
             height={20}
+            alt="Google"
             src={'/google-logo.png'}
             className="block mr-2"
           />
@@ -148,7 +149,7 @@ const page = () => {
         )}
         <Button
           onClick={handleSubmit(handleLogin)}
-          className="border flex items-center py-3 px-4 mt-4 mx-auto w-52">
+          className="border flex items-center py-3 px-4 mt-4 mx-auto w-52 sm:mt-8">
           <p className="leading-none">ログイン</p>
         </Button>
         <p className="text-center mt-16 text-sm">
