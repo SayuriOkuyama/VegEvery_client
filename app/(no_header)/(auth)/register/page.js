@@ -21,7 +21,7 @@ const page = () => {
       <div className="pt-8">
         <Logo size="100" />
       </div>
-      <main className="container mx-auto mt-8">
+      <main className="container mx-auto mt-8 max-w-md">
         <Button
           className="border flex items-center py-3 px-4 mt-12 mx-auto"
           onClick={handleGoogleLogin}>

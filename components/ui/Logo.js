@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 function Logo({ size }) {
   return (
-    <Link href={'/'} className="logo_link">
+    <Link href={'/'} className="logo_link w-fit">
       <Image
         priority
         src="/logo.png"

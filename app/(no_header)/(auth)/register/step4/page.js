@@ -19,8 +19,8 @@ const page = () => {
       <div className="pt-8">
         <Logo size="100" />
       </div>
-      <main className="container mx-auto mt-8">
-        <div className="text-center space-y-4">
+      <main className="container mx-auto mt-8 max-w-md">
+        <div className="text-center space-y-8">
           <p className="text-center my-8">秘密の質問を設定</p>
           <div>
             <label htmlFor="name" className="block text-start">
@@ -59,12 +59,12 @@ const page = () => {
         </div>
         {!errors.length && watcher.secretAnswer && watcher.secretAnswer ? (
           <Link href={'/register/check'}>
-            <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color">
+            <Button className="border flex items-center py-3 px-20 mt-8 sm:mt-16 mx-auto bg-button border-button-color">
               <p className="leading-none">次へ</p>
             </Button>
           </Link>
         ) : (
-          <Button className="border flex items-center py-3 px-20 mt-8 mx-auto bg-button border-button-color disabled-text-color">
+          <Button className="border flex items-center py-3 px-20 mt-8 sm:mt-16 mx-auto bg-button border-button-color disabled-text-color">
             <p className="leading-none">次へ</p>
           </Button>
         )}

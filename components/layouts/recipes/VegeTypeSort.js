@@ -41,94 +41,99 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
 
   return (
     <Tabs defaultValue={type ? type : 'vegan'} className="flex flex-col">
-      <TabsList className="">
-        <TabsTrigger
-          value="vegan"
-          className="rounded-full bg-color-v opacity-60 mr-1 text-xs h-8"
-          onClick={() => {
-            router.push(`/${path}?type=vegan&search=${search}&page=1`)
-          }}>
-          V
-        </TabsTrigger>
-        <TabsTrigger
-          value="oriental_vegetarian"
-          className="rounded-full bg-color-ori opacity-60 mr-1 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(
-              `/${path}?type=oriental_vegetarian&search=${search}&page=1`,
-            )
-          }}>
-          Ori
-        </TabsTrigger>
-        <TabsTrigger
-          value="ovo_vegetarian"
-          className="rounded-full bg-color-ovo opacity-60 mr-1 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(`/${path}?type=ovo_vegetarian&search=${search}&page=1`)
-          }}>
-          Ovo
-        </TabsTrigger>
-        <TabsTrigger
-          value="pescatarian"
-          className="rounded-full bg-color-psc opacity-60 mr-1 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(`/${path}?type=pescatarian&search=${search}&page=1`)
-          }}>
-          Psc
-        </TabsTrigger>
-        <TabsTrigger
-          value="lacto_vegetarian"
-          className="rounded-full bg-color-lct opacity-60 mr-1 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(
-              `/${path}?type=lacto_vegetarian&search=${search}&page=1`,
-            )
-          }}>
-          Lct
-        </TabsTrigger>
-        <TabsTrigger
-          value="pollo_vegetarian"
-          className="rounded-full bg-color-pol opacity-60 mr-1 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(
-              `/${path}?type=pollo_vegetarian&search=${search}&page=1`,
-            )
-          }}>
-          Pol
-        </TabsTrigger>
-        <TabsTrigger
-          value="fruitarian"
-          className="rounded-full bg-color-flu opacity-60 mr-1 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(`/${path}?type=fruitarian&search=${search}&page=1`)
-          }}>
-          Flu
-        </TabsTrigger>
-        <TabsTrigger
-          value="other_vegetarian"
-          className="rounded-full bg-color-oth opacity-60 text-sm w-8 h-8"
-          onClick={() => {
-            router.push(
-              `/${path}?type=other_vegetarian&search=${search}&page=1`,
-            )
-          }}>
-          Oth
-        </TabsTrigger>
-      </TabsList>
-      <div className="container flex items-center justify-end">
-        <Input
-          ref={refInput}
-          type="text"
-          placeholder="search"
-          className="pr-0 block w-64"
-        />
-        <Button onClick={() => handleSearch()} className="p-0 ml-0">
-          <IconContext.Provider
-            value={{ size: '25px', className: 'p-0 ml-0 mr-0' }}>
-            <PiMagnifyingGlassLight className="self-center text-lg ml-4 mr-2" />
-          </IconContext.Provider>
-        </Button>
+      <div className="flex justify-center space-x-0 mb-4">
+        <TabsList className="w-fit sm:m-0">
+          <TabsTrigger
+            value="vegan"
+            className="rounded-full bg-color-v opacity-60 mr-1 text-xs h-8"
+            onClick={() => {
+              router.push(`/${path}?type=vegan&search=${search}&page=1`)
+            }}>
+            V
+          </TabsTrigger>
+          <TabsTrigger
+            value="oriental_vegetarian"
+            className="rounded-full bg-color-ori opacity-60 mr-1 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(
+                `/${path}?type=oriental_vegetarian&search=${search}&page=1`,
+              )
+            }}>
+            Ori
+          </TabsTrigger>
+          <TabsTrigger
+            value="ovo_vegetarian"
+            className="rounded-full bg-color-ovo opacity-60 mr-1 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(
+                `/${path}?type=ovo_vegetarian&search=${search}&page=1`,
+              )
+            }}>
+            Ovo
+          </TabsTrigger>
+          <TabsTrigger
+            value="pescatarian"
+            className="rounded-full bg-color-psc opacity-60 mr-1 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(`/${path}?type=pescatarian&search=${search}&page=1`)
+            }}>
+            Psc
+          </TabsTrigger>
+          <TabsTrigger
+            value="lacto_vegetarian"
+            className="rounded-full bg-color-lct opacity-60 mr-1 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(
+                `/${path}?type=lacto_vegetarian&search=${search}&page=1`,
+              )
+            }}>
+            Lct
+          </TabsTrigger>
+          <TabsTrigger
+            value="pollo_vegetarian"
+            className="rounded-full bg-color-pol opacity-60 mr-1 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(
+                `/${path}?type=pollo_vegetarian&search=${search}&page=1`,
+              )
+            }}>
+            Pol
+          </TabsTrigger>
+          <TabsTrigger
+            value="fruitarian"
+            className="rounded-full bg-color-flu opacity-60 mr-1 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(`/${path}?type=fruitarian&search=${search}&page=1`)
+            }}>
+            Flu
+          </TabsTrigger>
+          <TabsTrigger
+            value="other_vegetarian"
+            className="rounded-full bg-color-oth opacity-60 text-sm w-8 h-8"
+            onClick={() => {
+              router.push(
+                `/${path}?type=other_vegetarian&search=${search}&page=1`,
+              )
+            }}>
+            Oth
+          </TabsTrigger>
+        </TabsList>
+        <div className="container flex items-center justify-end sm:justify-start sm:w-fit sm:pl-2 sm:pr-0">
+          <Input
+            ref={refInput}
+            type="text"
+            placeholder="search"
+            className="pr-0 block w-64 sm:text-base"
+          />
+          <Button onClick={() => handleSearch()} className="p-0 ml-0">
+            <IconContext.Provider
+              value={{ size: '25px', className: 'p-0 ml-0 mr-0' }}>
+              <PiMagnifyingGlassLight className="self-center text-lg ml-4 mr-2" />
+            </IconContext.Provider>
+          </Button>
+        </div>
       </div>
+
       {vegeTags.map(vegeTag => {
         return (
           <TabsContent key={vegeTag} value={vegeTag}>

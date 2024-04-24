@@ -7,33 +7,33 @@ import { PiMapPinLineLight } from 'react-icons/pi'
 import { PiCookingPotLight } from 'react-icons/pi'
 import { CiApple } from 'react-icons/ci'
 import { CiUser } from 'react-icons/ci'
-import { useEffect, useState } from 'react'
-import axios from '@/lib/axios'
-import { usePathname } from 'next/navigation'
+// import { useEffect, useState } from 'react'
+// import axios from '@/lib/axios'
+// import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
-  const [user, setUser] = useState()
-  const pathname = usePathname()
+  // const [user, setUser] = useState()
+  // const pathname = usePathname()
 
-  useEffect(() => {
-    const getUser = async () => {
-      axios.get('/sanctum/csrf-cookie')
-      axios.get('/api/user').then(res => setUser(res.data))
-    }
-    getUser()
-  }, [pathname])
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     axios.get('/sanctum/csrf-cookie')
+  //     axios.get('/api/user').then(res => setUser(res.data))
+  //   }
+  //   getUser()
+  // }, [pathname])
 
-  let accountPath
-  if (user) {
-    accountPath = '/account'
-  } else {
-    accountPath = '/login'
-  }
+  // let accountPath
+  // if (user) {
+  //   accountPath = '/account'
+  // } else {
+  //   accountPath = '/login'
+  // }
 
   return (
     <>
       <div
-        className={`${styles.wrapper} ${styles.footer_nav} h-16 footer_nav flex pb-2`}>
+        className={`${styles.wrapper} ${styles.footer_nav} h-16 footer_nav flex pb-2 sm:hidden`}>
         <Link href={'/'} className={styles.link}>
           <div className={`${styles.menu_wrapper}`}>
             <div
@@ -70,7 +70,7 @@ export default function Navigation() {
             <div className={`${styles.menu}  text-center text-sm`}>Map</div>
           </div>
         </Link>
-        <Link href={accountPath} className={styles.link}>
+        <Link href="/account" className={styles.link}>
           <div className={`${styles.menu_wrapper}`}>
             <div
               className={`${styles.icon_wrapper} flex justify-center items-center`}>

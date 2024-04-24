@@ -2,17 +2,16 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import axios from '@/lib/axios'
 import Link from 'next/link'
 import { useState } from 'react'
 import { LiaSpinnerSolid } from 'react-icons/lia'
 
-const CheckSecretQuestion = ({ setPage, setUser }) => {
-  const [isSearchingAccount, setIsSearchingAccount] = useState()
+const CheckSecretAnswer = ({ setPage, user }) => {
+  const [isCheckingAnswer, setIsCheckingAnswer] = useState()
   const [isError, setIsError] = useState(false)
 
   const FormSchema = z.object({
-    id: z.string().min(1, {
+    answer: z.string().min(1, {
       message: '※ 入力が必須です。',
     }),
   })
@@ -26,51 +25,38 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
   } = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      id: '',
+      answer: '',
     },
     mode: 'onChange',
   })
 
   const submit = async values => {
-    setIsSearchingAccount(true)
+    setIsCheckingAnswer(true)
 
     console.log(values)
-    const res = await axios.post(`api/user/forget_password/search_user`, values)
 
-    if (res.data.message === 'failed') {
+    if (values.answer === user.secretAnswer) {
       reset()
-      setIsError('id')
+      setPage('resetPassword')
     } else {
-      setUser(res.data)
       reset()
-      if (res.data.secretAnswer) {
-        setPage('checkSecretAnswer')
-      } else {
-        setIsError('question')
-      }
+      setIsError(true)
     }
   }
 
   return (
-    <div className="container sm:mt-16">
-      {isSearchingAccount ? (
+    <div className="container">
+      {isCheckingAnswer ? (
         <div>
           {isError ? (
             <>
-              {isError === 'id' ? (
-                <div className="text-center mt-16">
-                  アカウントが見つかりませんでした。
-                </div>
-              ) : (
-                <div className="text-center mt-16">
-                  <p>パスワードは設定されていません。</p>
-                  <p>ソーシャルアカウントでログインしてください。</p>
-                </div>
-              )}
+              <div className="text-center mt-16">
+                秘密の質問の答えが間違っています。
+              </div>
               <Button
                 type="button"
                 onClick={() => {
-                  setIsSearchingAccount(false)
+                  setIsCheckingAnswer(false)
                   setIsError(false)
                 }}
                 className="border border-button-color bg-button flex items-center mt-16 mx-auto">
@@ -81,25 +67,31 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
             <>
               <div className="flex justify-center items-center space-x-1 mt-16">
                 <LiaSpinnerSolid className="animate-spin" />
-                <p>アカウントを検索しています。</p>
+                <p>確認中</p>
               </div>
             </>
           )}
         </div>
       ) : (
         <form onSubmit={handleSubmit(submit)} className="mt-8">
+          <div>
+            <p>秘密の質問</p>
+            <p>{user.secretAnswer}</p>
+          </div>
           <div className="flex flex-col">
             <label htmlFor="password" className="block text-start">
-              アカウント ID
+              秘密の質問の答え
             </label>
             <input
               id="password"
               type="password"
               placeholder="password#123!"
               className="border w-full text-sm pl-1 h-8"
-              {...register(`id`)}
+              {...register(`answer`)}
             />
-            {errors.id && errors.id.message && <div>{errors.id.message}</div>}
+            {errors.id && errors.answer.message && (
+              <div>{errors.answer.message}</div>
+            )}
           </div>
           <div className="flex justify-around mt-16">
             <>
@@ -123,4 +115,4 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
   )
 }
 
-export default CheckSecretQuestion
+export default CheckSecretAnswer

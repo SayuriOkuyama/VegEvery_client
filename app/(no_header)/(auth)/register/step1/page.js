@@ -22,13 +22,18 @@ const page = () => {
   useEffect(() => {
     let check
     if (watcher.provider) {
-      check = !errors.name
+      check = watcher.name && !errors.name
     } else {
       check =
+        watcher.name &&
+        watcher.account_id &&
+        watcher.password &&
+        watcher.passwordConfirmation &&
         !errors.name &&
         !errors.account_id &&
         !errors.password &&
         !errors.passwordConfirmation
+      console.log(check)
     }
 
     if (check) {
@@ -36,7 +41,7 @@ const page = () => {
     } else {
       setIsValid(false)
     }
-  }, [])
+  }, [watcher, errors])
 
   const fetcher = async () => {
     const res = await axios.post(`api/user/check_account_id`, {
@@ -67,8 +72,8 @@ const page = () => {
       <div className="pt-8">
         <Logo size="100" />
       </div>
-      <main className="container mx-auto mt-8">
-        <div className="text-center space-y-3">
+      <main className="container mx-auto mt-8 max-w-md">
+        <div className="text-center space-y-3 sm:space-y-6">
           {provider ? (
             <>
               <div className="mt-20 mb-20">
