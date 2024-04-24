@@ -124,7 +124,7 @@ const page = () => {
   if (!user) return <p>Loading...</p>
 
   return (
-    <main className="pb-24">
+    <main className="pb-24 max-w-3xl">
       {isDeletingAccount && (
         <div className="w-screen h-svh mt-32">
           <div className="flex justify-center container">
@@ -161,7 +161,9 @@ const page = () => {
         </div>
       )}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="fixed top-3 right-3 w-10 h-10">
+        <DropdownMenuTrigger
+          asChild
+          className="fixed top-3 right-3 w-10 h-10 sm:hidden">
           <button className="flex justify-center items-center rounded-full p-1 side_icon">
             <SlSettings size="24px" />
           </button>
@@ -241,53 +243,97 @@ const page = () => {
         </>
       ) : (
         <>
-          <h2 className="text-center mt-8">プロフィール</h2>
-          <div className="container">
-            <div className="mx-auto mt-4 w-20">
-              {isEdit ? (
-                <div>
-                  {form.watch().icon_url ? (
-                    <div className="image-preview relative flex rounded-full w-20 h-20">
-                      <button
-                        className="absolute right-1 bottom-1 bg-white w-6 h-6 leading-none border rounded-full text-center p-1"
-                        type="button"
-                        onClick={() => {
-                          form.setValue('icon_url', '')
-                          form.setValue('icon_file', '')
-                        }}>
-                        ✕
-                      </button>
-                      <img
-                        src={form.watch().icon_url}
-                        className="object-cover w-full h-full block rounded-full p-2"
-                        alt="Uploaded Image"
-                      />
-                    </div>
-                  ) : (
-                    <div {...getRootProps()} className="rounded-full border">
-                      <input {...getInputProps()} />
-                      <div className="h-full flex justify-center items-center p-2">
-                        <IconContext.Provider
-                          value={{ color: '#ccc', size: '60px' }}>
-                          <PiCameraLight />
-                        </IconContext.Provider>
+          <h2 className="text-center mt-8 sm:mb-16">プロフィール</h2>
+          <div className="container justify-around sm:flex">
+            <ul className="hidden sm:block space-y-4 border rounded-md p-3 h-fit">
+              <li>
+                <button onClick={() => editProfile()} className="text-lg">
+                  プロフィール編集
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setIsResettingPassword(true)}
+                  className="text-lg">
+                  パスワード変更
+                </button>
+              </li>
+              <li>
+                <Dialog className="mt-0">
+                  <DialogTrigger>
+                    <div className="text-lg text-start">アカウント削除</div>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        本当にアカウントを削除しますか？
+                      </DialogTitle>
+                      <DialogDescription className="flex">
+                        <Button
+                          onClick={() => handleDelete()}
+                          type="button"
+                          className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                          削除する
+                        </Button>
+                        <DialogClose asChild>
+                          <Button
+                            type="button"
+                            className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                            戻る
+                          </Button>
+                        </DialogClose>
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </li>
+            </ul>
+            <div>
+              <div className="mx-auto mt-4 w-20">
+                {isEdit ? (
+                  <div>
+                    {form.watch().icon_url ? (
+                      <div className="image-preview relative flex rounded-full w-20 h-20">
+                        <button
+                          className="absolute right-1 bottom-1 bg-white w-6 h-6 leading-none border rounded-full text-center p-1"
+                          type="button"
+                          onClick={() => {
+                            form.setValue('icon_url', '')
+                            form.setValue('icon_file', '')
+                          }}>
+                          ✕
+                        </button>
+                        <img
+                          src={form.watch().icon_url}
+                          className="object-cover w-full h-full block rounded-full p-2"
+                          alt="Uploaded Image"
+                        />
                       </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link href={`/account/user/${user.id}?article=recipes`}>
-                  <img
-                    src={user.icon_url}
-                    className="object-cover w-full h-full block rounded-full"
-                    alt="ユーザーアイコン"
-                  />
-                </Link>
-              )}
-            </div>
-            <div className="flex mt-8">
-              <div className="w-1/3 mr-2">アカウント ID</div>
-              {/* {isEdit ? (
+                    ) : (
+                      <div {...getRootProps()} className="rounded-full border">
+                        <input {...getInputProps()} />
+                        <div className="h-full flex justify-center items-center p-2">
+                          <IconContext.Provider
+                            value={{ color: '#ccc', size: '60px' }}>
+                            <PiCameraLight />
+                          </IconContext.Provider>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link href={`/account/user/${user.id}?article=recipes`}>
+                    <img
+                      src={user.icon_url}
+                      className="object-cover w-full h-full block rounded-full"
+                      alt="ユーザーアイコン"
+                    />
+                  </Link>
+                )}
+              </div>
+              <div className="flex mt-8">
+                <div className="w-1/3 mr-2">アカウント ID</div>
+                {/* {isEdit ? (
             <div className="w-56 mr-2">
               <input
                 type="text"
@@ -296,98 +342,107 @@ const page = () => {
               />
             </div>
           ) : ( */}
-              <div>{user.account_id}</div>
-              {/* )} */}
-            </div>
-            <hr />
-            <div className="flex mt-4">
-              <div className="w-1/3 mr-2">ユーザー名</div>
-              {isEdit ? (
-                <div className="w-56 mr-2">
-                  <input
-                    type="text"
-                    {...form.register(`name`)}
-                    className="block border w-full"
-                  />
-                </div>
-              ) : (
-                <div>{user.name}</div>
-              )}
-            </div>
-            <hr />
-            <div className="flex mt-4">
-              <div className="w-1/3 mr-2">ベジタリアンの種類</div>
-              {isEdit ? (
-                <Form {...form}>
-                  <FormField
-                    control={form.control}
-                    name="vegetarian_type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="mt-6">
-                          <FormControl>
-                            <SelectTrigger className="focus:ring-0">
-                              <SelectValue
-                                placeholder="種類を選択"
-                                className="block w-56"
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.entries(vegetarian_type).map(
-                              ([key, value]) => {
-                                return (
-                                  <SelectItem
-                                    key={key}
-                                    value={value}
-                                    className="text-color">
-                                    {value}
-                                  </SelectItem>
-                                )
-                              },
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
+                <div>{user.account_id}</div>
+                {/* )} */}
+              </div>
+              <hr />
+              <div className="flex mt-4">
+                <div className="w-1/3 mr-2">ユーザー名</div>
+                {isEdit ? (
+                  <div className="w-56 mr-2">
+                    <input
+                      type="text"
+                      {...form.register(`name`)}
+                      className="block border w-full"
+                    />
+                  </div>
+                ) : (
+                  <div>{user.name}</div>
+                )}
+              </div>
+              <hr />
+              <div className="flex mt-4">
+                <div className="w-1/3 mr-2">ベジタリアンの種類</div>
+                {isEdit ? (
+                  <Form {...form}>
+                    <FormField
+                      control={form.control}
+                      name="vegetarian_type"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="mt-6">
+                            <FormControl>
+                              <SelectTrigger className="focus:ring-0">
+                                <SelectValue
+                                  placeholder="種類を選択"
+                                  className="block w-56"
+                                />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(vegetarian_type).map(
+                                ([key, value]) => {
+                                  return (
+                                    <SelectItem
+                                      key={key}
+                                      value={value}
+                                      className="text-color">
+                                      {value}
+                                    </SelectItem>
+                                  )
+                                },
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </Form>
+                ) : (
+                  <div>{vegetarian_type[user.vegetarian_type]}</div>
+                )}
+              </div>
+              <hr />
+              <div className="flex mt-2">
+                <div className="w-1/3 mr-2">自己紹介</div>
+                {isEdit ? (
+                  <div className="flex flex-col">
+                    <textarea
+                      {...form.register(`introduction`)}
+                      rows="5"
+                      className="border w-56"
+                    />
+                    {form.formState.errors.introduction && (
+                      <div className="text-red-400">
+                        {form.formState.errors.introduction.message}
+                      </div>
                     )}
-                  />
-                </Form>
-              ) : (
-                <div>{vegetarian_type[user.vegetarian_type]}</div>
-              )}
-            </div>
-            <hr />
-            <div className="flex mt-2">
-              <div className="w-1/3 mr-2">自己紹介</div>
-              {isEdit ? (
-                <div className="flex flex-col">
-                  <textarea
-                    {...form.register(`introduction`)}
-                    rows="5"
-                    className="border w-56"
-                  />
-                  {form.formState.errors.introduction && (
-                    <div className="text-red-400">
-                      {form.formState.errors.introduction.message}
-                    </div>
-                  )}
+                  </div>
+                ) : (
+                  <div className="w-2/3">{user.introduction}</div>
+                )}
+              </div>
+              {isEdit && (
+                <div className="flex space-x-4">
+                  <Button
+                    type="button"
+                    onClick={() => setIsEdit(false)}
+                    className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                    やめる
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={form.handleSubmit(editComplete)}
+                    className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                    保存
+                  </Button>
                 </div>
-              ) : (
-                <div className="w-2/3">{user.introduction}</div>
               )}
             </div>
-            {isEdit && (
-              <Button
-                type="button"
-                onClick={form.handleSubmit(editComplete)}
-                className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
-                保存
-              </Button>
-            )}
           </div>
         </>
       )}

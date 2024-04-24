@@ -37,7 +37,7 @@ const page = () => {
   return (
     <>
       <main className="pb-24 mt-16 container flex justify-around items-center">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:gap-20">
           {/* <div className="flex justify-around"> */}
           <div className="border border-button-color rounded-md w-36 h-40">
             <Link

@@ -33,8 +33,6 @@ const CheckSecretAnswer = ({ setPage, user }) => {
   const submit = async values => {
     setIsCheckingAnswer(true)
 
-    console.log(values)
-
     if (values.answer === user.secretAnswer) {
       reset()
       setPage('resetPassword')

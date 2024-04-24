@@ -33,7 +33,6 @@ const page = () => {
         !errors.account_id &&
         !errors.password &&
         !errors.passwordConfirmation
-      console.log(check)
     }
 
     if (check) {

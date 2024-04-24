@@ -16,7 +16,7 @@ const page = ({ params }) => {
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
-    <main className="pb-24 mt-8">
+    <main className="pb-24 mt-8 max-w-md">
       <div className="container flex items-center">
         <div className="h-20 w-20">
           <img
