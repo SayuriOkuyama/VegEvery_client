@@ -41,7 +41,7 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
 
   return (
     <Tabs defaultValue={type ? type : 'vegan'} className="flex flex-col">
-      <div className="flex justify-center space-x-0 mb-4">
+      <div className="flex flex-col sm:flex-row justify-center space-x-0 mb-4">
         <TabsList className="w-fit sm:m-0">
           <TabsTrigger
             value="vegan"
