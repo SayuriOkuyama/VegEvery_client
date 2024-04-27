@@ -157,12 +157,12 @@ const page = ({ params }) => {
   return (
     <main className="pb-20 max-w-2xl">
       {isAlertVisible && (
-        <div className="container z-50 absolute animate-bounce">
+        <div className="w-screen  max-w-2xl z-50 absolute animate-bounce  flex justify-center">
           <button
-            className="block w-full"
+            className="block w-fit"
             onClick={() => setAlertVisible(false)}>
-            <Alert className="container z-50">
-              <AlertDescription className="text-color text-center text-md">
+            <Alert>
+              <AlertDescription className="text-color text-center text-base">
                 保存しました
               </AlertDescription>
             </Alert>

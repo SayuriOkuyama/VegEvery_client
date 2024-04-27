@@ -38,7 +38,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 const page = ({ params }) => {
   const id = params.id
   const { user, csrf } = useAuth()
-  const [isAlertVisible, setAlertVisible] = useState(true)
+  const [isAlertVisible, setAlertVisible] = useState(false)
 
   const [articlesData, setArticlesData] = useState({
     article_id: '',
@@ -160,14 +160,14 @@ const page = ({ params }) => {
   if (!data || (user && !bookshelves)) return <p>Loading...</p>
 
   return (
-    <main className="pb-20 max-w-4xl">
+    <main className="pb-20 max-w-2xl">
       {isAlertVisible && (
-        <div className="z-50 w-screen  max-w-4xl absolute animate-bounce flex justify-center">
+        <div className="z-50 w-screen  max-w-2xl absolute animate-bounce flex justify-center">
           <button
             className="block w-fit"
             onClick={() => setAlertVisible(false)}>
-            <Alert className="">
-              <AlertDescription className="text-color text-center text-md">
+            <Alert>
+              <AlertDescription className="text-color text-center text-base">
                 保存しました
               </AlertDescription>
             </Alert>

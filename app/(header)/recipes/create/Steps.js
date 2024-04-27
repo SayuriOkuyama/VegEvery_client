@@ -59,7 +59,7 @@ const Steps = ({
             </div>
             <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
               {stepImages[index] && stepImages[index].url ? (
-                <div className="image-preview relative flex h-52 mx-auto">
+                <div className="image-preview aspect-[4/3] max-w-md relative flex mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
@@ -76,7 +76,7 @@ const Steps = ({
                   {stepImages[index].url && (
                     <img
                       src={stepImages[index].url}
-                      className="object-cover w-full h-full block"
+                      className="object-cover aspect-[4/3] max-w-md w-full h-full block"
                       alt="Uploaded Image"
                     />
                   )}

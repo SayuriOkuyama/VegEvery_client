@@ -143,7 +143,7 @@ const page = () => {
 
         <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
           {image ? (
-            <div className="image-preview relative flex w-full h-64">
+            <div className="image-preview aspect-[4/3] max-w-md relative flex w-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
@@ -152,7 +152,7 @@ const page = () => {
               </button>
               <img
                 src={image}
-                className="object-cover w-full h-full block"
+                className="aspect-[4/3] max-w-md object-cover w-full h-full block"
                 alt="Uploaded Image"
               />
             </div>
