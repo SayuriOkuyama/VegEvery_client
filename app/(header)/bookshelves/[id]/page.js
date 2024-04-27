@@ -16,11 +16,13 @@ import {
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+// import { useRouter } from 'next/navigation'
 
 const page = () => {
   const [bookshelves, setBookshelves] = useState()
   const { user, csrf } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
+  // const router = useRouter()
 
   useEffect(() => {
     if (!user) return
@@ -28,22 +30,34 @@ const page = () => {
     const getBookshelves = async () => {
       await csrf()
       const res = await axios.get(`/api/bookshelves/${user.id}`)
-      // console.log(res.data)
       setBookshelves(res.data)
     }
     getBookshelves()
   }, [user])
 
-  const bookshelfFormSchema = z.object({
-    name: z
-      .string()
-      .min(1, {
-        message: '※ 入力が必須です。',
-      })
-      .max(30, {
-        message: '※ 30 文字以内で入力してください。',
-      }),
-  })
+  const bookshelfFormSchema = z
+    .object({
+      name: z
+        .string()
+        .min(1, {
+          message: '※ 入力が必須です。',
+        })
+        .max(30, {
+          message: '※ 30 文字以内で入力してください。',
+        }),
+    })
+    .superRefine((data, ctx) => {
+      const sameName = bookshelves.data.filter(
+        bookshelf => bookshelf.name === data.name,
+      )
+      if (sameName.length > 0) {
+        return ctx.addIssue({
+          path: ['name'],
+          message: '同じ名前の本棚があります。',
+          code: z.ZodIssueCode.custom,
+        })
+      }
+    })
 
   const {
     register,
@@ -57,26 +71,27 @@ const page = () => {
     },
     mode: 'onChange',
   })
+  // console.log(errors)
 
   const onSubmit = async value => {
     const response = await axios.post(`/api/bookshelves/create/${user.id}`, {
       name: value.name,
     })
     // console.log(response.data)
-    const newBookshelf = response.data
+
     setBookshelves(prevState => {
-      return {
-        ...prevState,
-        newBookshelf,
-      }
+      const newBookshelf = prevState
+      newBookshelf.data.push(response.data)
+      return newBookshelf
     })
     reset()
     setIsOpen(false)
   }
 
   if (!user || !bookshelves) return <p>Loading...</p>
+
   return (
-    <main className="pb-24 container mt-8">
+    <main className="pb-24 container mt-8 max-w-4xl">
       <h2 className="text-center mb-4">本棚一覧</h2>
       <p className="text-center mb-4">お気に入りの投稿を保存・整理</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4">

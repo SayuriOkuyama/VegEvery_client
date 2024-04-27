@@ -191,11 +191,11 @@ const page = () => {
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
-    <main className="pb-32">
+    <main className="pb-32 max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <EditFormVegeTypes register={register} control={control} />
 
-        <div className="bg-orange">
+        <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
           {watcher.thumbnail_url ? (
             <div className="image-preview relative flex w-full h-64">
               <button
@@ -215,7 +215,7 @@ const page = () => {
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="h-64">
+            <div {...getRootProps()} className="w-full h-full">
               <input accept="image/*" {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>
@@ -234,7 +234,11 @@ const page = () => {
         <div className="container py-4 space-y-4">
           <div>
             <h3>レシピタイトル</h3>
-            <input className="border" type="text" {...register(`title`)} />
+            <input
+              className="border w-full"
+              type="text"
+              {...register(`title`)}
+            />
             {errors.title && (
               <div className="text-red-400">{errors.title.message}</div>
             )}
@@ -243,7 +247,7 @@ const page = () => {
           <div>
             <h3>調理目安時間</h3>
             <input
-              className="border w-8"
+              className="border w-8 px-1"
               type="number"
               placeholder="20"
               {...register(`time`)}
@@ -278,7 +282,7 @@ const page = () => {
             <DialogTrigger className="mx-auto">
               <Button
                 type="button"
-                className="mx-auto bg-button block py-1 mt-16 border-button-color ">
+                className="mx-auto bg-button block py-1 mt-16 border-button-color">
                 削除
               </Button>
             </DialogTrigger>
@@ -289,13 +293,13 @@ const page = () => {
                   <Button
                     onClick={handleDelete}
                     type="button"
-                    className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                    className="mx-auto bg-button block py-1 mt-8 border-button-color">
                     削除する
                   </Button>
                   <DialogClose asChild>
                     <Button
                       type="button"
-                      className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                      className="mx-auto bg-button block py-1 mt-8 border-button-color">
                       戻る
                     </Button>
                   </DialogClose>
@@ -305,7 +309,7 @@ const page = () => {
           </Dialog>
           <Button
             type="submit"
-            className="mx-auto bg-button block py-1 mt-16 border-button-color ">
+            className="mx-auto bg-button block py-1 mt-16 border-button-color">
             更新
           </Button>
         </div>

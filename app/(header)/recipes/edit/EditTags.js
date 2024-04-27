@@ -43,7 +43,7 @@ const EditTags = ({ register, control, errors }) => {
       <div>
         {/* 要素を追加する */}
         <button
-          className="border mt-4 mx-auto block px-2 bg-button border-button-color rounded-full text-sm"
+          className="border mt-4 mx-auto block px-8 py-2 bg-button border-button-color rounded-full text-sm"
           type="button"
           onClick={() => append({ name: '' })}>
           タグを追加

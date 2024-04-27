@@ -68,7 +68,7 @@ const Menus = ({ register, control, errors }) => {
       <div>
         {/* 要素を追加する */}
         <button
-          className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
+          className="border mt-4 block mx-auto px-8 py-2 rounded-full bg-button border-button-color text-sm"
           type="button"
           onClick={() =>
             append({
@@ -86,7 +86,7 @@ const Menus = ({ register, control, errors }) => {
               },
             })
           }>
-          アイテムを追加
+          メニューを追加
         </button>
       </div>
     </div>

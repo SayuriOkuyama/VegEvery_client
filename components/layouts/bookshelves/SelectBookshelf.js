@@ -35,15 +35,7 @@ const SelectBookshelf = ({
   const formSchema = z
     .object({
       checkNewBookshelf: z.boolean(),
-      newBookshelfName: z
-        .string()
-        .min(1, {
-          message: '※ 入力が必須です。',
-        })
-        .max(30, {
-          message: '※ 30 文字以内で入力してください。',
-        })
-        .optional(),
+      newBookshelfName: z.string(),
       name: z.string().optional(),
     })
     .superRefine((data, ctx) => {
@@ -56,6 +48,21 @@ const SelectBookshelf = ({
           message: '同じ名前の本棚があります。',
           code: z.ZodIssueCode.custom,
         })
+      }
+      if (data.checkNewBookshelf) {
+        if (data.newBookshelfName.length < 1) {
+          return ctx.addIssue({
+            path: ['newBookshelfName'],
+            message: '入力が必須です。',
+            code: z.ZodIssueCode.custom,
+          })
+        } else if (data.newBookshelfName.length > 30) {
+          return ctx.addIssue({
+            path: ['newBookshelfName'],
+            message: '30 文字以内で入力してください。',
+            code: z.ZodIssueCode.custom,
+          })
+        }
       }
     })
 
@@ -72,7 +79,7 @@ const SelectBookshelf = ({
 
   // console.log(bookshelves)
   // console.log(watcher)
-  // console.log(form.errors)
+  // console.log(form.formState.errors)
 
   useEffect(() => {
     setIsOpenNewBookshelf(watcher.checkNewBookshelf)
@@ -141,7 +148,6 @@ const SelectBookshelf = ({
     <>
       {bookshelves && bookshelves.length > 0 ? (
         <>
-          {/* <p className="text-center mb-8">保存する本棚を選択</p> */}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(storeArticle)}
@@ -224,7 +230,7 @@ const SelectBookshelf = ({
                 />
               )}
               <Button
-                type="submit"
+                onClick={form.handleSubmit(storeArticle)}
                 className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
                 保存
               </Button>

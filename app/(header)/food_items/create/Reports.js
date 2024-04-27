@@ -37,7 +37,7 @@ const Reports = ({
               hidden
               {...register(`reports.${index}.order`)}
             />
-            <div className="bg-orange h-52 w-full mx-auto">
+            <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
               {reportImages[index] && reportImages[index].url ? (
                 <div className="image-preview relative flex h-52 mx-auto">
                   <button
@@ -63,7 +63,7 @@ const Reports = ({
                 </div>
               ) : (
                 <Dropzone
-                  className="h-52"
+                  className="w-full h-full"
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
                     const createdUrl = URL.createObjectURL(file)
@@ -92,7 +92,7 @@ const Reports = ({
             </div>
             <div>
               <textarea
-                className="border mt-4 w-full"
+                className="border mt-4 w-full p-2 sm:p-4"
                 cols="30"
                 rows="10"
                 placeholder="コメントを入力"
@@ -107,7 +107,6 @@ const Reports = ({
                   </div>
                 )}
             </div>
-            {/* 何番目の要素を削除するか、index で指定する（指定しないと全部消える） */}
             {index !== 0 && (
               <button
                 className="border"
@@ -133,7 +132,7 @@ const Reports = ({
       <div>
         {/* 要素を追加する */}
         <button
-          className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
+          className="border bg-button border-button-color block mx-auto px-8 py-2 rounded-full text-base"
           type="button"
           onClick={() => append({ text: '' })}>
           レポートを追加

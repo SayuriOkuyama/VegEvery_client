@@ -135,11 +135,11 @@ const page = ({ params }) => {
   }
 
   return (
-    <main className="pb-32">
+    <main className="pb-32 max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <div className="text-center text-2xl">{watcher.restaurant.name}</div>
 
-        <div className="bg-orange">
+        <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
           {image ? (
             <div className="image-preview relative flex w-full h-64">
               <button
@@ -155,7 +155,7 @@ const page = ({ params }) => {
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="h-64">
+            <div {...getRootProps()} className="w-full h-full">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>

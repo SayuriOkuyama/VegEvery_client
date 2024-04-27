@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/popover'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import SideButtons from '@/components/layouts/SideButtons'
+// import SideButtons from '@/components/layouts/SideButtons'
 import useSWR from 'swr'
 import { getArticles } from '@/lib/utils/fetch.js'
 import { GoTrash } from 'react-icons/go'
@@ -87,7 +87,7 @@ const page = ({ params }) => {
   if (!data) return <p>Loading...</p>
 
   return (
-    <main className="pb-20">
+    <main className="pb-20 max-w-2xl">
       <div className="mt-8 container flex justify-end">
         <ShowStars num={restaurantData.stars} />
       </div>
@@ -112,7 +112,7 @@ const page = ({ params }) => {
                         />
                         <AvatarFallback>icon</AvatarFallback>
                       </Avatar>
-                      <div className="text-md self-center">
+                      <div className="text-md self-center sm:text-lg">
                         {review.userName}
                       </div>
                     </div>
@@ -127,7 +127,7 @@ const page = ({ params }) => {
                     alt="レビューサムネイル画像"
                     className="object-cover m-auto h-72"
                   />
-                  <div className="mx-4 my-4">{review.text}</div>
+                  <div className="mx-4 my-4 sm:text-lg">{review.text}</div>
                   {review.menus.map((menu, index) => {
                     let vegeTags = [
                       menu.vegan,
@@ -141,7 +141,7 @@ const page = ({ params }) => {
                     ]
                     return (
                       <React.Fragment key={index}>
-                        <div className="container bg-green p-2">
+                        <div className="container bg-green p-2 max-w-md text-base sm:text-lg">
                           <div className="flex">
                             <p>注文したメニュー：</p>
                             <p>{menu.name}</p>
@@ -185,7 +185,7 @@ const page = ({ params }) => {
                               <DialogClose asChild>
                                 <Button
                                   type="button"
-                                  className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                                  className="mx-auto bg-button block py-1 mt-8 border-button-color">
                                   戻る
                                 </Button>
                               </DialogClose>
@@ -235,13 +235,13 @@ const page = ({ params }) => {
           マップに戻る
         </Button>
       </Link>
-      <SideButtons
+      {/* <SideButtons
         articleId={restaurantData.placeId}
         likeableType="Review"
         likes={restaurantData.likes}
         setRestaurantData={setRestaurantData}
         user={user}
-      />
+      /> */}
     </main>
   )
 }

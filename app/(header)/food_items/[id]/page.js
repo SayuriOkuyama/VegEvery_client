@@ -155,7 +155,7 @@ const page = ({ params }) => {
   if (!data) return <p>Loading...</p>
 
   return (
-    <main className="pb-20">
+    <main className="pb-20 max-w-2xl">
       {isAlertVisible && (
         <div className="container z-50 absolute animate-bounce">
           <button
@@ -178,7 +178,7 @@ const page = ({ params }) => {
           </div>
         </Link>
       )}
-      <div className="flex justify-center mt-4 mb-2">
+      <div className="flex justify-center mt-4 mb-2 sm:my-8">
         <VegeTag vegeTags={articlesData.vegeTags} />
       </div>
       <Image
@@ -188,7 +188,7 @@ const page = ({ params }) => {
         alt="フードアイテム画像"
         className="object-cover m-auto h-72"
       />
-      <h2 className="mx-2 mt-2">{articlesData.title}</h2>
+      <h2 className="mx-2 mt-2 sm:my-8">{articlesData.title}</h2>
       <div className="flex flex-row flex-wrap container space-x-1">
         {articlesData.tags &&
           articlesData.tags.map(tag => {
