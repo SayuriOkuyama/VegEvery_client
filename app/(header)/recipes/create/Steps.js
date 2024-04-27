@@ -57,9 +57,9 @@ const Steps = ({
                 </button>
               )}
             </div>
-            <div className="bg-orange h-52 w-full mx-auto">
+            <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
               {stepImages[index] && stepImages[index].url ? (
-                <div className="image-preview relative flex h-52 mx-auto">
+                <div className="image-preview aspect-[4/3] max-w-md relative flex mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
@@ -76,14 +76,14 @@ const Steps = ({
                   {stepImages[index].url && (
                     <img
                       src={stepImages[index].url}
-                      className="object-cover w-full h-full block"
+                      className="object-cover aspect-[4/3] max-w-md w-full h-full block"
                       alt="Uploaded Image"
                     />
                   )}
                 </div>
               ) : (
                 <Dropzone
-                  className="h-52"
+                  className="w-full h-full"
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
                     const createdUrl = URL.createObjectURL(file)
@@ -93,13 +93,6 @@ const Steps = ({
                       newState[index] = { url: createdUrl, file: file }
                       return newState
                     })
-                    // ↓これ入れたらテキスト消える
-                    // setValue(`steps.${index}`, {
-                    //   order: field.order,
-                    //   file,
-                    //   image_url: createdUrl,
-                    //   text: field.text,
-                    // })
                   }}>
                   {({ getRootProps, getInputProps }) => (
                     <>
@@ -119,7 +112,7 @@ const Steps = ({
             </div>
             <div>
               <textarea
-                className="border mt-4 w-full"
+                className="border mt-4 w-full p-2 sm:p-4"
                 cols="30"
                 rows="10"
                 placeholder="手順を入力"
@@ -140,7 +133,7 @@ const Steps = ({
       <div>
         {/* 要素を追加する */}
         <button
-          className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
+          className="border bg-button border-button-color block mx-auto px-8 py-2 rounded-full text-sm"
           type="button"
           onClick={() => append({ text: '' })}>
           手順を追加

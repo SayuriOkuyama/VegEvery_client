@@ -157,17 +157,17 @@ const page = ({ params }) => {
   }
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data || !bookshelves) return <p>Loading...</p>
+  if (!data || (user && !bookshelves)) return <p>Loading...</p>
 
   return (
-    <main className="pb-20">
+    <main className="pb-20 max-w-2xl">
       {isAlertVisible && (
-        <div className="container z-50 absolute animate-bounce">
+        <div className="z-50 w-screen  max-w-2xl absolute animate-bounce flex justify-center">
           <button
-            className="block w-full"
+            className="block w-fit"
             onClick={() => setAlertVisible(false)}>
-            <Alert className="container z-50">
-              <AlertDescription className="text-color text-center text-md">
+            <Alert>
+              <AlertDescription className="text-color text-center text-base">
                 保存しました
               </AlertDescription>
             </Alert>
@@ -183,7 +183,7 @@ const page = ({ params }) => {
           </div>
         </Link>
       )}
-      <div className="flex justify-center mt-4 mb-2">
+      <div className="flex justify-center mt-4 mb-2 sm:my-8">
         <VegeTag vegeTags={articlesData.vegeTags} />
       </div>
       <Image
@@ -193,7 +193,7 @@ const page = ({ params }) => {
         alt="レシピ画像1"
         className="object-cover m-auto h-72"
       />
-      <h2 className="mx-2 mt-2">{articlesData.title}</h2>
+      <h2 className="mx-2 mt-2 sm:mx-8 sm:my-8">{articlesData.title}</h2>
       <div className="flex flex-row flex-wrap container space-x-1">
         {articlesData.tags &&
           articlesData.tags.map(tag => {
@@ -232,19 +232,21 @@ const page = ({ params }) => {
       <div className="bg-green py-4">
         <div className="container">
           <h3>{`材料（${articlesData.servings}人前）`}</h3>
-          {articlesData.materials.map(material => {
-            return (
-              <li
-                key={material.id}
-                className="flex justify-between border-b-slate-200 border-b">
-                <div>・{material.name}</div>
-                <div>
-                  <span>{material.quantity}</span>
-                  <span>{material.unit === 'null' ? '' : material.unit}</span>
-                </div>
-              </li>
-            )
-          })}
+          <div className="sm:grid sm:grid-cols-2 sm:gap-4">
+            {articlesData.materials.map(material => {
+              return (
+                <li
+                  key={material.id}
+                  className="flex justify-between border-b-slate-200 border-b">
+                  <div>・{material.name}</div>
+                  <div>
+                    <span>{material.quantity}</span>
+                    <span>{material.unit === 'null' ? '' : material.unit}</span>
+                  </div>
+                </li>
+              )
+            })}
+          </div>
         </div>
       </div>
       <div className="container py-8">
@@ -260,6 +262,7 @@ const page = ({ params }) => {
                   width={400}
                   height={300}
                   alt="レシピ画像1"
+                  priority
                   className="object-cover m-auto mb-4 mt-2 h-60"
                 />
               )}

@@ -31,7 +31,7 @@ const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
                 hidden
                 {...register(`steps.${index}.order`)}
               />
-              <div className="bg-orange h-52 w-full mx-auto">
+              <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
                 {stepImages[index] && stepImages[index].url ? (
                   <div className="image-preview relative flex h-52 mx-auto">
                     <button
@@ -70,13 +70,6 @@ const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
                         }
                         return newState
                       })
-                      // ↓これ入れたらテキスト消える
-                      // setValue(`steps.${index}`, {
-                      //   order: field.order,
-                      //   file,
-                      //   image_url: createdUrl,
-                      //   text: field.text,
-                      // })
                     }}>
                     {({ getRootProps, getInputProps }) => (
                       <>
@@ -97,7 +90,7 @@ const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
 
               <div>
                 <textarea
-                  className="border mt-4 w-full"
+                  className="border mt-4 w-full p-2 sm:p-4"
                   cols="30"
                   rows="10"
                   placeholder="手順を入力"
@@ -138,7 +131,7 @@ const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
         })}
         {/* 要素を追加する */}
         <button
-          className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
+          className="border bg-button border-button-color block mx-auto px-8 py-2 rounded-full text-sm"
           type="button"
           onClick={() => append({ text: '' })}>
           手順を追加

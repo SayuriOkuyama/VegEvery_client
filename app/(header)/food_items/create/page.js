@@ -137,13 +137,13 @@ const page = () => {
   }
 
   return (
-    <main className="pb-32">
+    <main className="pb-32 max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <FormVegeType register={register} control={control} />
 
-        <div className="bg-orange">
+        <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
           {image ? (
-            <div className="image-preview relative flex w-full h-64">
+            <div className="image-preview aspect-[4/3] max-w-md relative flex w-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
@@ -152,12 +152,12 @@ const page = () => {
               </button>
               <img
                 src={image}
-                className="object-cover w-full h-full block"
+                className="aspect-[4/3] max-w-md object-cover w-full h-full block"
                 alt="Uploaded Image"
               />
             </div>
           ) : (
-            <div {...getRootProps()} className="h-64">
+            <div {...getRootProps()} className="w-full h-full">
               <input {...getInputProps()} />
               <div className="h-full flex justify-center items-center">
                 <IconContext.Provider value={{ color: '#ccc', size: '80px' }}>

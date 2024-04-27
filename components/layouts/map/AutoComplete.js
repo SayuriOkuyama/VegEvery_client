@@ -161,7 +161,7 @@ const AutoComplete = ({ setSelectedPlace, setClickedPlace }) => {
             className="pr-0 block w-72 h-8 ml-auto"
           />
         </div>
-        {predictionResults.length > 0 ? (
+        {predictionResults.length > 0 && (
           <ul className="bg-white rounded-sm mt-2 mr-1 p-2 space-y-1">
             {/* <li
                 key={1}
@@ -180,19 +180,16 @@ const AutoComplete = ({ setSelectedPlace, setClickedPlace }) => {
               )
             })}
           </ul>
-        ) : (
-          inputValue && (
-            <Button
-              onClick={handleSearch}
-              className="mt-2 border-button-color bg-button py-1 px-2 h-7">
-              このエリアのお店を表示
-              <IconContext.Provider
-                value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
-                <PiMagnifyingGlassLight className="self-center text-lg" />
-              </IconContext.Provider>
-            </Button>
-          )
         )}
+        <Button
+          onClick={handleSearch}
+          className="mt-2 border-button-color bg-button py-2 px-2 h-7 sm:text-base sm:p-4">
+          このエリアのお店を表示
+          <IconContext.Provider
+            value={{ size: '16px', className: 'p-0 ml-0 mr-0' }}>
+            <PiMagnifyingGlassLight className="self-center text-lg" />
+          </IconContext.Provider>
+        </Button>
       </div>
     </div>
   )

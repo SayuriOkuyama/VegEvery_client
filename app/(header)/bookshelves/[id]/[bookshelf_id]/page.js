@@ -107,17 +107,21 @@ const page = ({ params }) => {
   }
 
   const handleDelete = async () => {
-    await axios.delete(`/api/bookshelves/delete/bookshelf/${bookshelfId}`)
-    // console.log(res.data)
+    const res = await axios.delete(
+      `/api/bookshelves/delete/bookshelf/${bookshelfId}`,
+    )
+    console.log(res.data)
 
-    router.push(`bookshelves/${user.id}`)
+    router.push(`/bookshelves/${user.id}`)
   }
 
   if (!user || !bookshelfData) return <p>Loading...</p>
   return (
-    <main className="pb-20">
+    <main className="pb-20 max-w-3xl container">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="fixed top-3 right-3 w-10 h-10">
+        <DropdownMenuTrigger
+          asChild
+          className="fixed top-3 right-3 w-10 h-10 sm:hidden">
           <button className="flex justify-center items-center rounded-full p-1 side_icon">
             <PiNotePencilLight size="28px" />
           </button>
@@ -159,133 +163,175 @@ const page = ({ params }) => {
         </DropdownMenuContent>
       </DropdownMenu>
       <h2 className="text-center mt-8 mb-4">{bookshelfData.bookshelf.name}</h2>
-      <>
-        {bookshelfData &&
-        Object.keys(bookshelfData.pagination.data).length > 0 ? (
-          <form className="space-y-6">
-            {showCheckbox && (
-              <div className="text-center">削除する投稿を選択してください</div>
-            )}
-            <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-              {Object.keys(bookshelfData.pagination.data).map(key => {
-                const articleType = bookshelfData.pagination.data[key]
-                  .cooking_time
-                  ? 'recipe'
-                  : 'Item'
-                return (
-                  <div
-                    key={bookshelfData.pagination.data[key].id}
-                    className="relative">
-                    <ArticleCard
-                      tagSize="small"
-                      id={bookshelfData.pagination.data[key].id}
-                      title={bookshelfData.pagination.data[key].title}
-                      thumbnail={
-                        bookshelfData.pagination.data[key].thumbnail_url
-                      }
-                      user={bookshelfData.pagination.data[key].user}
-                      likes={bookshelfData.pagination.data[key].number_of_likes}
-                      time={bookshelfData.pagination.data[key].cooking_time}
-                      vegeTags={[
-                        bookshelfData.pagination.data[key].vegan,
-                        bookshelfData.pagination.data[key].oriental_vegetarian,
-                        bookshelfData.pagination.data[key].ovo_vegetarian,
-                        bookshelfData.pagination.data[key].pescatarian,
-                        bookshelfData.pagination.data[key].lacto_vegetarian,
-                        bookshelfData.pagination.data[key].pollo_vegetarian,
-                        bookshelfData.pagination.data[key].fruitarian,
-                        bookshelfData.pagination.data[key].other_vegetarian,
-                      ]}
-                    />
-                    {showCheckbox && (
-                      <div className="absolute right-0 top-0 w-full h-full bg-black-20">
-                        <div className="flex mx-auto mb-2">
-                          <div className="flex items-center">
-                            <CustomCheckbox
-                              register={register}
-                              id={key}
-                              watcher={watcher}
-                            />
-                            <input
-                              hidden
-                              {...register(`checkboxes.${key}.id`)}
-                              value={bookshelfData.pagination.data[key].id}
-                            />
-                            <input
-                              hidden
-                              {...register(`checkboxes.${key}.type`)}
-                              value={articleType}
-                            />
+      <div className="justify-around sm:flex">
+        <ul className="hidden sm:block space-y-4 border rounded-md p-3 h-fit">
+          <li>
+            <button onClick={() => setShowCheckbox(true)} className="text-lg">
+              保存した投稿の削除
+            </button>
+          </li>
+          <li>
+            <Dialog className="mt-0">
+              <DialogTrigger>
+                <div className="text-lg text-start">本棚の削除</div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>本棚を削除してよろしいですか？</DialogTitle>
+                  <DialogDescription className="flex">
+                    <Button
+                      onClick={() => handleDelete()}
+                      type="button"
+                      className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                      削除する
+                    </Button>
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                        戻る
+                      </Button>
+                    </DialogClose>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </li>
+        </ul>
+
+        <>
+          {bookshelfData &&
+          Object.keys(bookshelfData.pagination.data).length > 0 ? (
+            <form className="space-y-6">
+              {showCheckbox && (
+                <div className="text-center">
+                  削除する投稿を選択してください
+                </div>
+              )}
+              <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+                {Object.keys(bookshelfData.pagination.data).map(key => {
+                  const articleType = bookshelfData.pagination.data[key]
+                    .cooking_time
+                    ? 'recipe'
+                    : 'Item'
+                  return (
+                    <div
+                      key={bookshelfData.pagination.data[key].id}
+                      className="relative">
+                      <ArticleCard
+                        tagSize="small"
+                        id={bookshelfData.pagination.data[key].id}
+                        title={bookshelfData.pagination.data[key].title}
+                        thumbnail={
+                          bookshelfData.pagination.data[key].thumbnail_url
+                        }
+                        user={bookshelfData.pagination.data[key].user}
+                        likes={
+                          bookshelfData.pagination.data[key].number_of_likes
+                        }
+                        time={bookshelfData.pagination.data[key].cooking_time}
+                        vegeTags={[
+                          bookshelfData.pagination.data[key].vegan,
+                          bookshelfData.pagination.data[key]
+                            .oriental_vegetarian,
+                          bookshelfData.pagination.data[key].ovo_vegetarian,
+                          bookshelfData.pagination.data[key].pescatarian,
+                          bookshelfData.pagination.data[key].lacto_vegetarian,
+                          bookshelfData.pagination.data[key].pollo_vegetarian,
+                          bookshelfData.pagination.data[key].fruitarian,
+                          bookshelfData.pagination.data[key].other_vegetarian,
+                        ]}
+                      />
+                      {showCheckbox && (
+                        <div className="absolute right-0 top-0 w-full h-full bg-black-20">
+                          <div className="flex mx-auto mb-2">
+                            <div className="flex items-center">
+                              <CustomCheckbox
+                                register={register}
+                                id={key}
+                                watcher={watcher}
+                              />
+                              <input
+                                hidden
+                                {...register(`checkboxes.${key}.id`)}
+                                value={bookshelfData.pagination.data[key].id}
+                              />
+                              <input
+                                hidden
+                                {...register(`checkboxes.${key}.type`)}
+                                value={articleType}
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+              {showCheckbox && (
+                <>
+                  <div className="flex">
+                    <Button
+                      type="button"
+                      onClick={() => setShowCheckbox(false)}
+                      className="border border-button-color bg-button flex mx-auto items-center">
+                      <p>やめる</p>
+                    </Button>
+                    <Button
+                      onClick={handleSubmit(deleteFavorite)}
+                      type="submit"
+                      className="border border-button-color bg-button flex mx-auto items-center">
+                      <p>削除</p>
+                    </Button>
                   </div>
-                )
-              })}
-            </div>
-            {showCheckbox && (
-              <>
-                <div className="flex">
-                  <Button
-                    type="button"
-                    onClick={() => setShowCheckbox(false)}
-                    className="border border-button-color bg-button flex mx-auto items-center">
-                    <p>やめる</p>
-                  </Button>
-                  <Button
-                    onClick={handleSubmit(deleteFavorite)}
-                    type="submit"
-                    className="border border-button-color bg-button flex mx-auto items-center">
-                    <p>削除</p>
-                  </Button>
+                </>
+              )}
+              {bookshelfData && (
+                <PaginationParts
+                  pageData={bookshelfData.pagination}
+                  path={`/bookshelves/${user.id}/${bookshelfData.bookshelf_id}`}
+                />
+              )}
+              {isDeleting && (
+                <div className="fixed top-0 left-0 flex justify-center z-50 w-full h-full">
+                  <div className="mt-48">
+                    <div className="bg-white mt-32 p-8 rounded-sm shadow-md">
+                      {showDeleteMessage ? (
+                        <div className="">削除しました</div>
+                      ) : (
+                        <div className="flex items-center space-x-1">
+                          <LiaSpinnerSolid className="animate-spin" />
+                          <p>削除しています</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </>
-            )}
-            {bookshelfData && (
-              <PaginationParts
-                pageData={bookshelfData.pagination}
-                path={`/bookshelves/${user.id}/${bookshelfData.bookshelf_id}`}
-              />
-            )}
-            {isDeleting && (
-              <div className="fixed top-0 left-0 flex justify-center z-50 w-full h-full">
-                <div className="mt-48">
-                  <div className="bg-white mt-32 p-8 rounded-sm shadow-md">
-                    {showDeleteMessage ? (
-                      <div className="">削除しました</div>
-                    ) : (
-                      <div className="flex items-center space-x-1">
-                        <LiaSpinnerSolid className="animate-spin" />
-                        <p>削除しています</p>
-                      </div>
-                    )}
-                  </div>
+              )}
+            </form>
+          ) : (
+            <div>
+              <div className="pt-1 pb-8 py-4 ">
+                <div className="container mt-32">
+                  <p className="text-center">お気に入りが保存されていません</p>
+                  <Link href={`/bookshelves/${user.id}`}>
+                    <Button className="border border-button-color bg-button flex mx-auto items-center mt-8">
+                      <p>本棚一覧にもどる</p>
+                    </Button>
+                  </Link>
                 </div>
               </div>
-            )}
-          </form>
-        ) : (
-          <>
-            <div className="pt-1 pb-8 py-4 ">
-              <div className="container mt-32">
-                <p className="text-center">お気に入りが保存されていません</p>
-                <Link href={`/bookshelves/${user.id}`}>
-                  <Button className="border border-button-color bg-button flex mx-auto items-center mt-8">
-                    <p>本棚一覧にもどる</p>
-                  </Button>
-                </Link>
-              </div>
+              {bookshelfData && (
+                <PaginationParts
+                  pageData={bookshelfData.pagination}
+                  path={`/bookshelves/${user.id}/${bookshelfData.bookshelf_id}`}
+                />
+              )}
             </div>
-            {bookshelfData && (
-              <PaginationParts
-                pageData={bookshelfData.pagination}
-                path={`/bookshelves/${user.id}/${bookshelfData.bookshelf_id}`}
-              />
-            )}
-          </>
-        )}
-      </>
+          )}
+        </>
+      </div>
     </main>
   )
 }

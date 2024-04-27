@@ -14,8 +14,8 @@ const Materials = ({ register, control, errors }) => {
           材料（
           <input
             type="text"
-            placeholder="２〜３"
-            className="w-12 border"
+            placeholder="2 ~ 3"
+            className="w-12 border px-1"
             {...register('servings')}
           />
           ）人前
@@ -29,35 +29,70 @@ const Materials = ({ register, control, errors }) => {
           <div key={field.id}>
             <div className="flex space-x-2">
               <input
-                className="border block w-20"
+                className="border block w-44 sm:w-80 px-1"
                 type="text"
                 placeholder="材料名"
                 {...register(`materials.${index}.name`)}
               />
               <div className="flex items-center">
                 <input
-                  className="border block w-12"
+                  className="border block w-12 px-1"
                   type="text"
                   placeholder="100"
                   {...register(`materials.${index}.quantity`)}
                 />
                 <select
-                  className="border block w-12"
+                  className="border block w-24 text-sm"
                   {...register(`materials.${index}.unit`)}>
-                  <option value="null">単位なし</option>
-                  <option value="g">g</option>
-                  <option value="mg">mg</option>
-                  <option value="L">L</option>
-                  <option value="mL">mL</option>
-                  <option value="cc">cc</option>
-                  <option value="個">個</option>
-                  <option value="袋">袋</option>
-                  <option value="本">本</option>
-                  <option value="片">片</option>
-                  <option value="枚">枚</option>
-                  <option value="杯（小さじ）">杯（小さじ）</option>
-                  <option value="杯（大さじ）">杯（大さじ）</option>
-                  <option value="カップ">カップ</option>
+                  <option className="text-sm text-end px-1" value="null">
+                    単位なし
+                  </option>
+                  <option className="text-sm text-end px-1" value="g">
+                    g
+                  </option>
+                  <option className="text-sm text-end px-1" value="mg">
+                    mg
+                  </option>
+                  <option className="text-sm text-end px-1" value="L">
+                    L
+                  </option>
+                  <option className="text-sm text-end px-1" value="mL">
+                    mL
+                  </option>
+                  <option className="text-sm text-end px-1" value="cc">
+                    cc
+                  </option>
+                  <option className="text-sm text-end px-1" value="個">
+                    個
+                  </option>
+                  <option className="text-sm text-end px-1" value="袋">
+                    袋
+                  </option>
+                  <option className="text-sm text-end px-1" value="本">
+                    本
+                  </option>
+                  <option className="text-sm text-end px-1" value="片">
+                    片
+                  </option>
+                  <option className="text-sm text-end px-1" value="枚">
+                    枚
+                  </option>
+                  <option className="text-sm text-end px-1" value="合">
+                    合
+                  </option>
+                  <option
+                    className="text-sm text-end px-1"
+                    value="杯（小さじ）">
+                    杯(小さじ)
+                  </option>
+                  <option
+                    className="text-sm text-end px-1"
+                    value="杯（大さじ）">
+                    杯(大さじ)
+                  </option>
+                  <option className="text-sm text-end px-1" value="カップ">
+                    カップ
+                  </option>
                 </select>
                 {index !== 0 && (
                   <button
@@ -95,7 +130,7 @@ const Materials = ({ register, control, errors }) => {
       </div>
       <div>
         <button
-          className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
+          className="border mt-4 block mx-auto px-8 py-2 rounded-full bg-button border-button-color text-sm"
           type="button"
           onClick={() => append({ name: '', quantity: '', unit: 'null' })}>
           材料を追加
