@@ -189,7 +189,7 @@ const page = () => {
   if (error) return <p>Error: {error.message}</p>
   if (!data) return <p>Loading...</p>
   return (
-    <main className="pb-32">
+    <main className="pb-32 max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <EditFormVegeTypes register={register} control={control} />
 
@@ -261,7 +261,7 @@ const page = () => {
 
         <div className="flex justify-center">
           <Dialog className="mx-auto">
-            <DialogTrigger className="mx-auto">
+            <DialogTrigger asChild className="mx-auto">
               <Button
                 type="button"
                 className="mx-auto bg-button block py-1 mt-16 border-button-color ">

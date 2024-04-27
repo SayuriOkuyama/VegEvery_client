@@ -181,21 +181,30 @@ const page = ({ params }) => {
       <div className="flex justify-center mt-4 mb-2 sm:my-8">
         <VegeTag vegeTags={articlesData.vegeTags} />
       </div>
-      <Image
-        src={articlesData.thumbnail_url}
-        width={400}
-        height={300}
-        alt="フードアイテム画像"
-        className="object-cover m-auto h-72"
-      />
-      <h2 className="mx-2 mt-2 sm:my-8">{articlesData.title}</h2>
+      {articlesData.thumbnail_url && (
+        <div className="aspect-[4/3] max-w-xl mx-auto relative">
+          <Image
+            src={articlesData.thumbnail_url}
+            sizes="600px"
+            fill
+            style={{
+              objectFit: 'cover',
+            }}
+            priority
+            alt="フードアイテムサムネイル画像"
+          />
+        </div>
+      )}
+      <h2 className="mx-2 mt-2 sm:mx-8 sm:my-8 sm:text-3xl">
+        {articlesData.title}
+      </h2>
       <div className="flex flex-row flex-wrap container space-x-1">
         {articlesData.tags &&
           articlesData.tags.map(tag => {
             return (
               <div
                 key={tag.id}
-                className="border rounded-full text-sm px-1 mt-2">
+                className="border rounded-full text-sm sm:text-base px-1 mt-2">
                 #{tag.name}
               </div>
             )
@@ -206,16 +215,19 @@ const page = ({ params }) => {
           href={`/account/user/${articlesData.user.id}?article=food_items`}
           className="flex">
           <Avatar className="self-end mr-2">
-            <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              src={articlesData.user.icon_url}
+              alt="ユーザーアイコン"
+            />
+            <AvatarFallback>Icon</AvatarFallback>
           </Avatar>
-          <div className="text-lg self-end">{articlesData.user.name}</div>
-        </Link>
-        <div className="">
-          <div className="flex text-lg">
-            <PiHeart className="self-center" />
-            <p>{articlesData.number_of_likes}</p>
+          <div className="text-lg sm:text-2xl self-end">
+            {articlesData.user.name}
           </div>
+        </Link>
+        <div className="flex text-lg">
+          <PiHeart className="self-center" />
+          <p>{articlesData.number_of_likes}</p>
         </div>
       </div>
       <div className="bg-green py-4">
@@ -224,7 +236,7 @@ const page = ({ params }) => {
             return (
               <li key={item.id} className="list-none">
                 <div className="border-button-color-b w-fit">
-                  <div className="font-bold">{item.name}</div>
+                  <div className="font-bold sm:text-2xl">{item.name}</div>
                 </div>
                 <div className="flex justify-end">
                   <span className="my-1 text-xs ml-auto border rounded-full border-button-color bg-button px-1 text-end">
@@ -233,12 +245,12 @@ const page = ({ params }) => {
                 </div>
                 <div>
                   <div className=" py-2">
-                    <p className="font-bold text-sm">購入場所</p>
-                    <p className="text-sm">{item.where_to_buy}</p>
+                    <p className="font-bold text-sm sm:text-lg">購入場所</p>
+                    <p className="text-sm sm:text-lg">{item.where_to_buy}</p>
                   </div>
                   <div className="flex justify-between py-2">
-                    <p className="font-bold text-sm">購入価格</p>
-                    <p className="text-sm">{item.price}</p>
+                    <p className="font-bold text-sm sm:text-lg">購入価格</p>
+                    <p className="text-sm sm:text-lg">{item.price}</p>
                   </div>
                 </div>
                 {index !== articlesData.items.length - 1 && (
@@ -250,34 +262,38 @@ const page = ({ params }) => {
         </ul>
       </div>
       <div className="container py-8">
-        <h3 className="mb-4">レポート</h3>
+        <h3 className="mb-4 sm:text-2xl">レポート</h3>
         {articlesData.reports.map(report => {
           return (
             <div key={report.id} className="pb-4">
-              <hr className="" />
-              <p>{report.order}.</p>
+              <hr />
+              <p className="sm:text-2xl">{report.order}.</p>
               {report.image_url && (
-                <Image
-                  src={report.image_url}
-                  width={400}
-                  height={300}
-                  alt="レシピ画像1"
-                  className="object-cover m-auto mb-4 mt-2 h-60"
-                />
+                <div className="aspect-[4/3] max-w-lg mx-auto relative mb-4 mt-2">
+                  <Image
+                    src={report.image_url}
+                    sizes="600px"
+                    fill
+                    style={{
+                      objectFit: 'cover',
+                    }}
+                    alt="アイテム画像"
+                  />
+                </div>
               )}
-              {report.text && <div>{report.text}</div>}
+              {report.text && <div className="sm:text-xl">{report.text}</div>}
             </div>
           )
         })}
       </div>
       <div className="bg-orange py-8">
         <div className="container">
-          <h3 className="mb-4">コメント</h3>
+          <h3 className="mb-4 sm:text-2xl">コメント</h3>
           {(articlesData.commentsToItem &&
             articlesData.commentsToItem.length) !== 0 ? (
             <hr className="accent-color-border my-4" />
           ) : (
-            <div className="text-center opacity-70 text-sm">
+            <div className="text-center opacity-70 text-sm sm:text-lg">
               まだコメントがありません
             </div>
           )}
@@ -336,7 +352,7 @@ const page = ({ params }) => {
             })}
           <div className="flex justify-center mt-8 mb-4">
             <Popover open={isOpen} onOpenChange={setIsOpen}>
-              <PopoverTrigger className="mx-auto bg-button border-button-color rounded-full px-8 py-2">
+              <PopoverTrigger className="mx-auto bg-button border-button-color rounded-full px-8 py-2 sm:text-xl">
                 コメントする
               </PopoverTrigger>
               <PopoverContent className="h-fit">
@@ -356,15 +372,17 @@ const page = ({ params }) => {
                     )}
                     <Button
                       type="submit"
-                      className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                      className="block h-8 sm:h-12 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2 sm:text-xl">
                       送信
                     </Button>
                   </form>
                 ) : (
                   <div className="p-4">
-                    <p className="text-center mb-8">ログインが必要です</p>
+                    <p className="text-center mb-8 sm:text-xl">
+                      ログインが必要です
+                    </p>
                     <Link href={'/login'}>
-                      <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+                      <Button className="block h-8 sm:h-12 mx-auto leading-none	bg-button border-button-color mt-2 py-2 sm:text-xl">
                         ログインページへ
                       </Button>
                     </Link>
