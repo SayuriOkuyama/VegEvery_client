@@ -9,7 +9,7 @@ const EditTags = ({ register, control, errors }) => {
 
   return (
     <div>
-      <h3>タグ</h3>
+      <h3 className="bold sm:text-xl">タグ</h3>
       <div className="">
         {fields.map((field, index) => (
           <div className="flex" key={field.id}>
@@ -38,7 +38,7 @@ const EditTags = ({ register, control, errors }) => {
       </div>
       <div>
         <button
-          className="border mt-4 mx-auto block px-2 bg-button border-button-color rounded-full text-sm"
+          className="border mt-4 mx-auto block px-8 py-2 bg-button border-button-color rounded-full text-sm"
           type="button"
           onClick={() => append({ name: '' })}>
           タグを追加

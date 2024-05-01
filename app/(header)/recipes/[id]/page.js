@@ -174,17 +174,19 @@ const page = ({ params }) => {
           </button>
         </div>
       )}
-      {user && articlesData.user.id === user.id && (
-        <Link
-          href={`/recipes/edit?id=${articlesData.article_id}`}
-          className="fixed top-3 right-3">
-          <div className="rounded-full p-1 side_icon">
-            <PiNotePencilLight size="28px" />
-          </div>
-        </Link>
-      )}
-      <div className="flex justify-center mt-4 mb-2 sm:my-8">
-        <VegeTag vegeTags={articlesData.vegeTags} />
+      <div className="relative">
+        <div className="flex justify-center mt-4 mb-2 sm:my-8">
+          <VegeTag vegeTags={articlesData.vegeTags} />
+        </div>
+        {user && articlesData.user.id === user.id && (
+          <Link
+            href={`/recipes/edit?id=${articlesData.article_id}`}
+            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3">
+            <div className="rounded-full p-1 side_icon">
+              <PiNotePencilLight size="28px" />
+            </div>
+          </Link>
+        )}
       </div>
       <div className="aspect-[4/3] max-w-xl mx-auto relative">
         <Image

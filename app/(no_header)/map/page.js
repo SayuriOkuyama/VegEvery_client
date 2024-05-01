@@ -23,7 +23,9 @@ function page() {
 
   return (
     <>
-      <Header className="hidden sm:block" />
+      <div className="hidden sm:block">
+        <Header />
+      </div>
       <main className="h-full">
         <div className="fixed top-2 left-2 z-50 sm:hidden">
           <Logo size="40" />

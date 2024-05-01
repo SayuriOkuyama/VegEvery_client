@@ -157,7 +157,7 @@ const page = ({ params }) => {
   return (
     <main className="pb-20 max-w-2xl">
       {isAlertVisible && (
-        <div className="w-screen  max-w-2xl z-50 absolute animate-bounce  flex justify-center">
+        <div className="w-screen max-w-2xl z-50 absolute animate-bounce flex justify-center">
           <button
             className="block w-fit"
             onClick={() => setAlertVisible(false)}>
@@ -172,14 +172,25 @@ const page = ({ params }) => {
       {user && articlesData.user.id === user.id && (
         <Link
           href={`/food_items/edit?id=${articlesData.article_id}`}
-          className="fixed top-3 right-3">
+          className="fixed sm:hidden top-3 right-3">
           <div className="rounded-full p-1 side_icon">
             <PiNotePencilLight size="28px" />
           </div>
         </Link>
       )}
-      <div className="flex justify-center mt-4 mb-2 sm:my-8">
-        <VegeTag vegeTags={articlesData.vegeTags} />
+      <div className="relative">
+        <div className="flex justify-center mt-4 mb-2 sm:my-8">
+          <VegeTag vegeTags={articlesData.vegeTags} />
+        </div>
+        {user && articlesData.user.id === user.id && (
+          <Link
+            href={`/food_items/edit?id=${articlesData.article_id}`}
+            className="fixed top-3 right-3 sm:block w-fit sm:absolute sm:top-0 sm:left-3">
+            <div className="rounded-full p-1 side_icon">
+              <PiNotePencilLight size="28px" />
+            </div>
+          </Link>
+        )}
       </div>
       {articlesData.thumbnail_url && (
         <div className="aspect-[4/3] max-w-xl mx-auto relative">

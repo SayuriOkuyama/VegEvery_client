@@ -57,7 +57,7 @@ export default async function Home() {
           className={`${kiteOne.className} text-center py-8 sm:text-5xl sm:my-16`}>
           for Every Vegetarian
         </h2>
-        <section className=" max-w-4xl mx-auto">
+        <section className="max-w-4xl mx-auto">
           <h3 className="text-center text-lg font-bold sm:text-start sm:text-3xl">
             レシピ
           </h3>

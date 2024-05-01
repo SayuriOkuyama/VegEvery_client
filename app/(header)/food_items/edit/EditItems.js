@@ -10,7 +10,7 @@ const Items = ({ register, control, errors }) => {
   return (
     <div className="bg-green py-4 container">
       <div className="flex">
-        <h3 className="mb-4">アイテム</h3>
+        <h3 className="mb-4 bold sm:text-xl">アイテム</h3>
       </div>
       <div className="space-y-2">
         {/* 一位に特定するために map する際に index を付与する */}
@@ -18,7 +18,7 @@ const Items = ({ register, control, errors }) => {
           <div key={field.id}>
             <hr className="" />
             <div className="space-y-4 py-2" key={field.id}>
-              <label className="block">
+              <label className="block bold">
                 アイテム名
                 <input
                   className="border block w-full mt-1"
@@ -86,7 +86,7 @@ const Items = ({ register, control, errors }) => {
       <div>
         {/* 要素を追加する */}
         <button
-          className="border mt-4 block mx-auto px-2 rounded-full bg-button border-button-color text-sm"
+          className="border mt-4 block mx-auto px-8 py-2 rounded-full bg-button border-button-color text-sm"
           type="button"
           onClick={() => append({ name: '', place: '', price: '' })}>
           アイテムを追加

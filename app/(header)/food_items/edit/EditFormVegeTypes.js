@@ -5,7 +5,7 @@ import { Avatar } from '@/components/ui/avatar'
 const FormVegeType = ({ register }) => {
   return (
     <div>
-      <h3 className="text-center">対応のベジタリアンを選択</h3>
+      <h3 className="text-center bold sm:text-2xl">対応のベジタリアンを選択</h3>
       <div className="text-center space-x-1 flex justify-center">
         <label htmlFor="vegan">
           <Avatar className="border w-8 h-8 justify-center items-center text-sm has-[:checked]:border-lime-600 has-[:checked]:border">
