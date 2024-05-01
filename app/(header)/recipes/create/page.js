@@ -149,9 +149,9 @@ const page = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <FormVegeType register={register} control={control} />
 
-        <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
+        <div className="bg-orange aspect-[4/3] max-w-2xl mx-auto">
           {image ? (
-            <div className="image-preview aspect-[4/3] max-w-md relative flex w-full">
+            <div className="image-preview aspect-[4/3] max-w-2xl relative flex w-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
@@ -160,7 +160,7 @@ const page = () => {
               </button>
               <img
                 src={image.image}
-                className="object-cover aspect-[4/3] max-w-md w-full h-full block"
+                className="object-cover aspect-[4/3] max-w-2xl w-full h-full block"
                 alt="Uploaded Image"
               />
             </div>

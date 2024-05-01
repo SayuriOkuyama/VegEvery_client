@@ -23,13 +23,14 @@ const ArticleCard = ({
       <Link
         href={`/${url}/${id}`}
         className="h-full flex flex-col justify-between">
-        <div className="relative">
+        <div className="aspect-[4/3] relative">
           <Image
             src={thumbnail}
-            width={300}
-            height={300}
-            alt="レシピ画像1"
-            className="object-cover m-auto"
+            sizes="600px"
+            fill
+            style={{
+              objectFit: 'cover',
+            }}
           />
           <div className="absolute top-0">
             <VegeTag vegeTags={vegeTags} size={tagSize} />
@@ -49,8 +50,8 @@ const ArticleCard = ({
         <CardFooter>
           <div className="flex">
             <Avatar>
-              <AvatarImage src={user.icon_url} alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={user.icon_url} alt="ユーザーアイコン" />
+              <AvatarFallback>Icon</AvatarFallback>
             </Avatar>
             <div className="text-sm self-end">{user.name}</div>
           </div>

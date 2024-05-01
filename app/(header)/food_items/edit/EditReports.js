@@ -13,23 +13,23 @@ const Reports = ({ register, setValue, control, errors, watcher }) => {
   return (
     <div className="container pb-8">
       <div className="flex">
-        <h3>レポート</h3>
+        <h3 className="bold sm:text-2xl">レポート</h3>
       </div>
       <div>
         {/* 一位に特定するために map する際に index を付与する */}
         {fields.map((field, index) => (
           <div key={field.id} className="my-4">
             <hr />
-            <h4>{index + 1}.</h4>
+            <h4 className="sm:text-2xl">{index + 1}.</h4>
             <input
               type="text"
               value={index + 1}
               hidden
               {...register(`reports.${index}.order`)}
             />
-            <div className="bg-orange h-52 w-full mx-auto">
+            <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
               {watcher.reports[index].url ? (
-                <div className="image-preview relative flex h-52 mx-auto">
+                <div className="image-preview aspect-[4/3] max-w-md relative flex mx-auto">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"
@@ -47,14 +47,14 @@ const Reports = ({ register, setValue, control, errors, watcher }) => {
                   {watcher.reports[index].url && (
                     <img
                       src={watcher.reports[index].url}
-                      className="object-cover w-full h-full block"
+                      className="object-cover aspect-[4/3] max-w-md w-full h-full block"
                       alt="Uploaded Image"
                     />
                   )}
                 </div>
               ) : (
                 <Dropzone
-                  className="h-52"
+                  className="w-full h-full"
                   onDrop={acceptedFiles => {
                     const file = acceptedFiles[0]
                     const createdUrl = URL.createObjectURL(file)
@@ -112,7 +112,7 @@ const Reports = ({ register, setValue, control, errors, watcher }) => {
       <div>
         {/* 要素を追加する */}
         <button
-          className="border bg-button border-button-color block mx-auto px-2 rounded-full text-sm"
+          className="border bg-button border-button-color block mx-auto px-8 py-2 rounded-full text-sm"
           type="button"
           onClick={() => {
             let nextOrder = fields.length + 1

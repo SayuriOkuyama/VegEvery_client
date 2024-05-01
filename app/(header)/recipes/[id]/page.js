@@ -174,33 +174,43 @@ const page = ({ params }) => {
           </button>
         </div>
       )}
-      {user && articlesData.user.id === user.id && (
-        <Link
-          href={`/recipes/edit?id=${articlesData.article_id}`}
-          className="fixed top-3 right-3">
-          <div className="rounded-full p-1 side_icon">
-            <PiNotePencilLight size="28px" />
-          </div>
-        </Link>
-      )}
-      <div className="flex justify-center mt-4 mb-2 sm:my-8">
-        <VegeTag vegeTags={articlesData.vegeTags} />
+      <div className="relative">
+        <div className="flex justify-center mt-4 mb-2 sm:my-8">
+          <VegeTag vegeTags={articlesData.vegeTags} />
+        </div>
+        {user && articlesData.user.id === user.id && (
+          <Link
+            href={`/recipes/edit?id=${articlesData.article_id}`}
+            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3">
+            <div className="rounded-full p-1 side_icon">
+              <PiNotePencilLight size="28px" />
+            </div>
+          </Link>
+        )}
       </div>
-      <Image
-        src={articlesData.thumbnail_url}
-        width={400}
-        height={300}
-        alt="レシピ画像1"
-        className="object-cover m-auto h-72"
-      />
-      <h2 className="mx-2 mt-2 sm:mx-8 sm:my-8">{articlesData.title}</h2>
+      <div className="aspect-[4/3] max-w-xl mx-auto relative">
+        <Image
+          src={articlesData.thumbnail_url}
+          sizes="600px"
+          fill
+          style={{
+            objectFit: 'cover',
+          }}
+          priority
+          alt="レシピサムネイル画像"
+        />
+      </div>
+
+      <h2 className="mx-2 mt-2 sm:mx-8 sm:my-8 sm:text-3xl">
+        {articlesData.title}
+      </h2>
       <div className="flex flex-row flex-wrap container space-x-1">
         {articlesData.tags &&
           articlesData.tags.map(tag => {
             return (
               <div
                 key={tag.id}
-                className="border rounded-full text-sm px-1 mt-2">
+                className="border rounded-full text-sm sm:text-base px-1 mt-2">
                 <Link href={`/recipes/search?search=${tag.name}`}>
                   #{tag.name}
                 </Link>
@@ -213,15 +223,20 @@ const page = ({ params }) => {
           href={`/account/user/${articlesData.user.id}?article=recipes`}
           className="flex">
           <Avatar className="self-end mr-2">
-            <AvatarImage src={articlesData.user.icon_url} alt="@shadcn" />
+            <AvatarImage
+              src={articlesData.user.icon_url}
+              alt="ユーザーアイコン"
+            />
             <AvatarFallback>Icon</AvatarFallback>
           </Avatar>
-          <div className="text-lg self-end">{articlesData.user.name}</div>
+          <div className="text-lg sm:text-2xl self-end">
+            {articlesData.user.name}
+          </div>
         </Link>
         <div>
           <div className="flex text-lg ml-auto justify-end">
             <TfiTimer className="flex self-center" />
-            <p>{articlesData.cooking_time}分</p>
+            <p> {articlesData.cooking_time} 分</p>
           </div>
           <div className="flex text-lg">
             <PiHeart className="self-center" />
@@ -231,17 +246,19 @@ const page = ({ params }) => {
       </div>
       <div className="bg-green py-4">
         <div className="container">
-          <h3>{`材料（${articlesData.servings}人前）`}</h3>
-          <div className="sm:grid sm:grid-cols-2 sm:gap-4">
+          <h3 className="sm:text-2xl">{`材料（${articlesData.servings}人前）`}</h3>
+          <div className="sm:grid sm:grid-cols-2 sm:gap-4 mt-2">
             {articlesData.materials.map(material => {
               return (
                 <li
                   key={material.id}
                   className="flex justify-between border-b-slate-200 border-b">
-                  <div>・{material.name}</div>
+                  <div className="sm:text-lg">・{material.name}</div>
                   <div>
-                    <span>{material.quantity}</span>
-                    <span>{material.unit === 'null' ? '' : material.unit}</span>
+                    <span className="sm:text-lg">{material.quantity}</span>
+                    <span className="sm:text-lg">
+                      {material.unit === 'null' ? '' : material.unit}
+                    </span>
                   </div>
                 </li>
               )
@@ -250,35 +267,40 @@ const page = ({ params }) => {
         </div>
       </div>
       <div className="container py-8">
-        <h3 className="mb-4">作り方</h3>
+        <h3 className="mb-4 sm:text-2xl">作り方</h3>
         {articlesData.recipe_steps.map(recipe_step => {
           return (
             <div key={recipe_step.id} className="pb-4">
               <hr />
-              <p>{recipe_step.order}.</p>
+              <p className="sm:text-2xl">{recipe_step.order}.</p>
               {recipe_step.image_url && (
-                <Image
-                  src={recipe_step.image_url}
-                  width={400}
-                  height={300}
-                  alt="レシピ画像1"
-                  priority
-                  className="object-cover m-auto mb-4 mt-2 h-60"
-                />
+                <div className="aspect-[4/3] max-w-lg mx-auto relative mb-4 mt-2">
+                  <Image
+                    src={recipe_step.image_url}
+                    sizes="600px"
+                    fill
+                    style={{
+                      objectFit: 'cover',
+                    }}
+                    alt="レシピ画像"
+                  />
+                </div>
               )}
-              {recipe_step.text && <div>{recipe_step.text}</div>}
+              {recipe_step.text && (
+                <div className="sm:text-xl">{recipe_step.text}</div>
+              )}
             </div>
           )
         })}
       </div>
       <div className="bg-orange py-8">
         <div className="container">
-          <h3 className="mb-4">コメント</h3>
+          <h3 className="mb-4 sm:text-2xl">コメント</h3>
           {(articlesData.commentsToRecipe &&
             articlesData.commentsToRecipe.length) !== 0 ? (
             <hr className="accent-color-border my-4" />
           ) : (
-            <div className="text-center opacity-70 text-sm">
+            <div className="text-center opacity-70 text-sm sm:text-lg">
               まだコメントがありません
             </div>
           )}
@@ -322,9 +344,9 @@ const page = ({ params }) => {
                     <Avatar className="self-end mr-2">
                       <AvatarImage
                         src={commentToRecipe.userIcon}
-                        alt="@shadcn"
+                        alt="ユーザーアイコン"
                       />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarFallback>Icon</AvatarFallback>
                     </Avatar>
                     <div className="text-md self-center">
                       {commentToRecipe.userName}
@@ -342,7 +364,7 @@ const page = ({ params }) => {
 
           <div className="flex justify-center mt-8 mb-4">
             <Popover open={isOpen} onOpenChange={setIsOpen}>
-              <PopoverTrigger className="mx-auto bg-button border-button-color rounded-full px-8 py-2">
+              <PopoverTrigger className="mx-auto bg-button border-button-color rounded-full px-8 py-2 sm:text-xl">
                 コメントする
               </PopoverTrigger>
               <PopoverContent className="h-fit">
@@ -362,15 +384,17 @@ const page = ({ params }) => {
                     )}
                     <Button
                       type="submit"
-                      className="block h-8 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2">
+                      className="block h-8 sm:h-12 mx-auto leading-none	bg-button border-button-color text-xs mt-2 py-2 sm:text-xl">
                       送信
                     </Button>
                   </form>
                 ) : (
                   <div className="p-4">
-                    <p className="text-center mb-8">ログインが必要です</p>
+                    <p className="text-center mb-8 sm:text-xl">
+                      ログインが必要です
+                    </p>
                     <Link href={'/login'}>
-                      <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+                      <Button className="block h-8 sm:h-12 mx-auto leading-none	bg-button border-button-color mt-2 py-2 sm:text-xl">
                         ログインページへ
                       </Button>
                     </Link>
@@ -382,7 +406,7 @@ const page = ({ params }) => {
         </div>
       </div>
       <Link href={'/recipes'} className="flex py-8">
-        <Button className="mx-auto bg-button border-button-color">
+        <Button className="mx-auto bg-button border-button-color sm:text-xl">
           一覧に戻る
         </Button>
       </Link>

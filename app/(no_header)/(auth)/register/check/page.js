@@ -22,6 +22,17 @@ const page = () => {
   // console.log(watcher.iconUrl)
   // console.log(errors)
 
+  const vegetarian_type = {
+    vegan: 'ヴィーガン',
+    oriental_vegetarian: 'オリエンタル・ベジタリアン',
+    ovo_vegetarian: 'オボ・ベジタリアン',
+    pescatarian: 'ペスカタリアン',
+    lacto_vegetarian: 'ラクト・ベジタリアン',
+    pollo_vegetarian: 'ポーヨ・ベジタリアン',
+    fruitarian: 'フルータリアン',
+    other_vegetarian: 'その他のベジタリアン',
+  }
+
   const onSubmit = async data => {
     // console.log(watcher)
 
@@ -109,7 +120,9 @@ const page = () => {
             <div className=" border-b flex justify-between items-center">
               <div>
                 ベジタリアンの種類：
-                {watcher.vegeType === 'none' ? '未選択' : watcher.vegeType}
+                {watcher.vegeType === 'none'
+                  ? '未選択'
+                  : vegetarian_type[watcher.vegeType]}
               </div>
               <Link href={`/register/step2`} className="">
                 <div className="rounded-full p-1 side_icon">

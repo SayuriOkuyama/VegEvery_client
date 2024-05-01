@@ -175,7 +175,7 @@ const page = () => {
 
         <div className="container py-4 space-y-4">
           <div>
-            <h3>タイトル</h3>
+            <h3 className="bold sm:text-xl">タイトル</h3>
             <input
               className="border w-full"
               type="text"

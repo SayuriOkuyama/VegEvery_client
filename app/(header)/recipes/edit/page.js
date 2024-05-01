@@ -195,9 +195,9 @@ const page = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <EditFormVegeTypes register={register} control={control} />
 
-        <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
+        <div className="bg-orange aspect-[4/3] max-w-2xl mx-auto">
           {watcher.thumbnail_url ? (
-            <div className="image-preview relative flex w-full h-64">
+            <div className="image-preview relative flex w-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
