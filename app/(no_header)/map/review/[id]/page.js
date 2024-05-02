@@ -68,6 +68,8 @@ const page = ({ params }) => {
       ]
       setRestaurantData({
         placeId: data.restaurant.place_id,
+        lat: data.restaurant.latitude,
+        lng: data.restaurant.longitude,
         name: data.restaurant.name,
         stars: data.restaurant.star,
         thumbnail_url: data.restaurant.thumbnail_url,
@@ -203,8 +205,9 @@ const page = ({ params }) => {
 
           <div className="flex justify-center mt-8 mb-4">
             {user ? (
-              <Link href={`/map/review/${restaurantData.placeId}/create`}>
-                <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+              <Link
+                href={`/map/review/${restaurantData.placeId}/create?name=${restaurantData.name}&lat=${restaurantData.lat}&lng=${restaurantData.lng}`}>
+                <Button className="block mx-auto leading-none	bg-button border-button-color mt-2 py-2">
                   レビューを投稿
                 </Button>
               </Link>
