@@ -94,7 +94,15 @@ const CreateCarousel = ({ clickedPlace }) => {
                   <CarouselItem key={index} className="pl-1 ">
                     <div className="p-1">
                       <Card>
-                        <CardContent className="aspect-square sm:aspect-auto sm:h-56 relative p-6">
+                        <CardContent className="aspect-[2/1] sm:aspect-[5/2] sm:h-56 relative p-6">
+                          <div className="absolute sm:hidden flex justify-end mt-1 top-1 left-1">
+                            <button
+                              className="border-b text-xs sm:text-sm flex items-center"
+                              onClick={() => handleSelectCarousel(place)}>
+                              <FaMapMarkerAlt />
+                              <p>ここへ移動</p>
+                            </button>
+                          </div>
                           <button
                             onClick={() => setShow(false)}
                             className="leading-none absolute border top-1 right-1 text-sm p-1 rounded-full">
@@ -104,7 +112,7 @@ const CreateCarousel = ({ clickedPlace }) => {
                             restaurantsData.restaurantIds.includes(
                               place.place_id,
                             ) && (
-                              <div className="flex justify-center sm:justify-start mb-2 sm:mb-0">
+                              <div className="flex justify-start mb-2 sm:mb-0">
                                 <VegeTag
                                   vegeTags={
                                     restaurantsData.vegeTags[place.place_id]
@@ -114,9 +122,9 @@ const CreateCarousel = ({ clickedPlace }) => {
                                 />
                               </div>
                             )}
-                          <div className="flex flex-col sm:flex-row w-full h-full items-center">
+                          <div className="flex w-full h-full items-center">
                             {place.photos && place.photos[0] && (
-                              <div className="w-2/3 h-32 overflow-hidden sm:w-1/4 sm:mr-4 relative">
+                              <div className="w-1/3 h-4/5 sm:w-1/4 overflow-hidden mr-1 sm:mr-4 relative">
                                 <img
                                   src={place.photos[0].getUrl()}
                                   alt="店舗画像"
@@ -124,17 +132,17 @@ const CreateCarousel = ({ clickedPlace }) => {
                                 />
                               </div>
                             )}
-                            <div className="flex flex-col sm:w-3/4">
+                            <div className="flex flex-col w-2/3 sm:w-3/4">
                               <div>
-                                <div className="flex justify-end mt-1 sm:absolute top-6 right-12">
+                                <div className="hidden sm:flex justify-end mt-1 sm:absolute top-0 right-12">
                                   <button
-                                    className="border-b text-sm flex items-center"
+                                    className="border-b text-xs sm:text-sm flex items-center"
                                     onClick={() => handleSelectCarousel(place)}>
                                     <FaMapMarkerAlt />
                                     <p>ここへ移動</p>
                                   </button>
                                 </div>
-                                <div className="font-semibold text-center my-4 sm:mt-0">
+                                <div className="font-semibold text-center text-sm sm:text-base my-2 sm:my-4 sm:mt-0">
                                   {place.name}
                                 </div>
                               </div>
@@ -143,31 +151,21 @@ const CreateCarousel = ({ clickedPlace }) => {
                                 place.place_id,
                               ) ? (
                                 <div>
-                                  {/* <div className="flex justify-center">
-                                    <VegeTag
-                                      vegeTags={
-                                        restaurantsData.vegeTags[place.place_id]
-                                      }
-                                      size="small"
-                                      className="text-center"
-                                    />
-                                  </div> */}
-
                                   <Link href={`/map/review/${place.place_id}/`}>
-                                    <Button className="mx-auto bg-button block py-0 mt-2 border-button-color">
+                                    <Button className="mx-auto bg-button block py-0 px-2 h-8 sm:h-10 sm:mt-2 border-button-color">
                                       レビューへ
                                     </Button>
                                   </Link>
                                 </div>
                               ) : (
                                 <div>
-                                  <p className="text-center">
+                                  <p className="text-center text-sm sm:text-base">
                                     ベジクチコミはありません
                                   </p>
                                   <Link
                                     href={`/map/review/${place.place_id}/create?name=${place.name}&lat=${place.geometry ? place.geometry.location.lat() : ''}&lng=${place.geometry ? place.geometry.location.lng() : ''}`}>
-                                    <Button className="mx-auto bg-button block py-1 mt-2 border-button-color">
-                                      最初のクチコミを投稿
+                                    <Button className="mx-auto bg-button block py-0 px-2 h-8 sm:h-10 sm:mt-2 border-button-color">
+                                      クチコミを投稿
                                     </Button>
                                   </Link>
                                 </div>
