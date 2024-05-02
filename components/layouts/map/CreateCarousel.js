@@ -87,7 +87,7 @@ const CreateCarousel = ({ clickedPlace }) => {
           {selectedCarousel && (
             <AdvancedMarker position={selectedCarousel.geometry.location} />
           )}
-          <Carousel className=" w-2/3 sm:w-4/5 max-w-2xl inset-x-0 mx-auto fixed bottom-20 sm:bottom-2 flex justify-center sm:left-5">
+          <Carousel className=" w-3/4 sm:w-4/5 max-w-2xl inset-x-0 mx-auto fixed bottom-20 sm:bottom-2 flex justify-center sm:left-5">
             <CarouselContent className="-ml-1">
               {placesData &&
                 placesData.map((place, index) => (
@@ -116,15 +116,15 @@ const CreateCarousel = ({ clickedPlace }) => {
                             )}
                           <div className="flex flex-col sm:flex-row w-full h-full items-center">
                             {place.photos && place.photos[0] && (
-                              <div className="w-full h-32 overflow-hidden flex items-center sm:w-1/4 sm:mr-4">
+                              <div className="w-2/3 h-32 overflow-hidden sm:w-1/4 sm:mr-4 relative">
                                 <img
                                   src={place.photos[0].getUrl()}
                                   alt="店舗画像"
-                                  className="object-contain m-auto block "
+                                  className="object-contain absolute top-1/2 left-1/2 transform	-translate-x-1/2 -translate-y-1/2 m-auto block"
                                 />
                               </div>
                             )}
-                            <div className="flex flex-col w-3/4">
+                            <div className="flex flex-col sm:w-3/4">
                               <div>
                                 <div className="flex justify-end mt-1 sm:absolute top-6 right-12">
                                   <button

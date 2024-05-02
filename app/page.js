@@ -54,7 +54,7 @@ export default async function Home() {
           <Logo size="100" />
         </div>
         <h2
-          className={`${kiteOne.className} text-center py-8 sm:text-5xl sm:my-16`}>
+          className={`${kiteOne.className} text-center py-8 sm:text-5xl sm:my-12`}>
           for Every Vegetarian
         </h2>
         <section className="max-w-4xl mx-auto">
