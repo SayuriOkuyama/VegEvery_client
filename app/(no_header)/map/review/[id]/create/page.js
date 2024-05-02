@@ -139,9 +139,9 @@ const page = ({ params }) => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <div className="text-center text-2xl">{watcher.restaurant.name}</div>
 
-        <div className="bg-orange aspect-[4/3] max-w-md mx-auto">
+        <div className="bg-orange aspect-[4/3] max-w-2xl mx-auto">
           {image ? (
-            <div className="image-preview relative flex w-full h-64">
+            <div className="image-preview relative flex w-full h-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
