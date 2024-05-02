@@ -292,7 +292,9 @@ const page = ({ params }) => {
                   />
                 </div>
               )}
-              {report.text && <div className="sm:text-xl">{report.text}</div>}
+              {report.text && (
+                <div className="sm:text-xl  py-2 sm:py-4">{report.text}</div>
+              )}
             </div>
           )
         })}
