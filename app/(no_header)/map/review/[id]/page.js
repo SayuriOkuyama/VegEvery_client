@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Image from 'next/image'
-import { PiHeart } from 'react-icons/pi'
+// import { PiHeart } from 'react-icons/pi'
 import axios from '@/lib/axios'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -151,7 +151,7 @@ const page = ({ params }) => {
                           </div>
                           <div className="flex">
                             <p>価格：</p>
-                            <p>{menu.price}円</p>
+                            <p>{menu.price}</p>
                           </div>
                           <div className="flex justify-center mt-4 mb-2">
                             <VegeTag vegeTags={vegeTags} />
@@ -163,12 +163,12 @@ const page = ({ params }) => {
                       </React.Fragment>
                     )
                   })}
-                  <div className="flex text-sm justify-end mr-4">
+                  {/* <div className="flex text-sm justify-end mr-4">
                     <PiHeart className="self-center" />
                     <p>{review.likes}</p>
-                  </div>
+                  </div> */}
                   {user && review.user_id === user.id && (
-                    <div className="flex justify-center mt-2">
+                    <div className="flex justify-end mt-2">
                       <Dialog className="mt-0">
                         <DialogTrigger className="rounded-full p-1 border-button-color bg-button">
                           <div className="flex items-center">

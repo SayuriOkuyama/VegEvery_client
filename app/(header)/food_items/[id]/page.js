@@ -172,7 +172,7 @@ const page = ({ params }) => {
       {user && articlesData.user.id === user.id && (
         <Link
           href={`/food_items/edit?id=${articlesData.article_id}`}
-          className="fixed sm:hidden top-3 right-3">
+          className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3 w-fit">
           <div className="rounded-full p-1 side_icon">
             <PiNotePencilLight size="28px" />
           </div>
@@ -230,7 +230,7 @@ const page = ({ params }) => {
               src={articlesData.user.icon_url}
               alt="ユーザーアイコン"
             />
-            <AvatarFallback>Icon</AvatarFallback>
+            <AvatarFallback />
           </Avatar>
           <div className="text-lg sm:text-2xl self-end">
             {articlesData.user.name}

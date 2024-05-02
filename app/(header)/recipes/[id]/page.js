@@ -181,7 +181,7 @@ const page = ({ params }) => {
         {user && articlesData.user.id === user.id && (
           <Link
             href={`/recipes/edit?id=${articlesData.article_id}`}
-            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3">
+            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3 w-fit">
             <div className="rounded-full p-1 side_icon">
               <PiNotePencilLight size="28px" />
             </div>
@@ -287,7 +287,9 @@ const page = ({ params }) => {
                 </div>
               )}
               {recipe_step.text && (
-                <div className="sm:text-xl">{recipe_step.text}</div>
+                <div className="sm:text-xl py-2 sm:py-4">
+                  {recipe_step.text}
+                </div>
               )}
             </div>
           )
