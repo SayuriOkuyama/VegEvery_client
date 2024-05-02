@@ -83,7 +83,7 @@ const page = () => {
                   id="name1"
                   type="text"
                   placeholder="べジヴリー"
-                  className="border w-full text-sm pl-1 h-8"
+                  className="border w-full text-sm pl-1 h-8 focus:text-base"
                   {...register(`name`)}
                 />
                 <p className="text-xs text-start">
@@ -108,7 +108,7 @@ const page = () => {
                     id="account_id"
                     type="text"
                     placeholder="vege1234"
-                    className="border w-full text-sm pl-1 h-8"
+                    className="border w-full text-sm pl-1 h-8 focus:text-base"
                     {...register(`account_id`)}
                   />
                 </div>
@@ -148,7 +148,7 @@ const page = () => {
                   id="name"
                   type="text"
                   placeholder="べジヴリー"
-                  className="border w-full text-sm pl-1 h-8"
+                  className="border w-full text-sm pl-1 h-8 focus:text-base"
                   {...register(`name`)}
                 />
                 <p className="text-xs text-start">
@@ -168,7 +168,7 @@ const page = () => {
                   id="password"
                   type="password"
                   placeholder="password#123!"
-                  className="border w-full text-sm pl-1 h-8"
+                  className="border w-full text-sm pl-1 h-8 focus:text-base"
                   {...register(`password`)}
                 />
                 <small className="block text-start">
@@ -191,7 +191,7 @@ const page = () => {
                   id="passwordConfirmation"
                   type="password"
                   placeholder="password#123!"
-                  className="border w-full text-sm pl-1 h-8"
+                  className="border w-full text-sm pl-1 h-8 focus:text-base"
                   {...register(`passwordConfirmation`)}
                 />
                 {errors.passwordConfirmation && (
