@@ -19,7 +19,7 @@ const page = () => {
   const noStoreRoute = () => {
     setValue(
       'iconUrl',
-      'https://static.vegevery.my-raga-bhakti.com/user/icon_image/user_icon.png',
+      'https://static.vegevery.my-raga-bhakti.com/user/icon/user_icon.png',
     )
     setValue('iconFile', '')
     router.push(`/register/${provider ? 'check' : 'step4'}`)
