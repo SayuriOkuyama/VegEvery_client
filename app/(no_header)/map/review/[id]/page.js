@@ -36,8 +36,9 @@ const page = ({ params }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      axios.get('/sanctum/csrf-cookie')
-      axios.get('/api/user').then(res => setUser(res.data))
+      await axios.get('/sanctum/csrf-cookie')
+      const res = await axios.get('/api/user')
+      setUser(res.data)
     }
     getUser()
   }, [])
@@ -201,21 +202,18 @@ const page = ({ params }) => {
             })}
 
           <div className="flex justify-center mt-8 mb-4">
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
-              <PopoverTrigger className="mx-auto bg-button border-button-color rounded-full px-8 py-2">
-                レビューを投稿
-              </PopoverTrigger>
-              <PopoverContent className="h-fit">
-                {user ? (
-                  <div className="p-4">
-                    <p className="text-center mb-8">ログインが必要です</p>
-                    <Link href={`/map/review/${restaurantData.placeId}`}>
-                      <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
-                        レビュー投稿ページへ
-                      </Button>
-                    </Link>
-                  </div>
-                ) : (
+            {user ? (
+              <Link href={`/map/review/${restaurantData.placeId}`}>
+                <Button className="block h-8 mx-auto leading-none	bg-button border-button-color mt-2 py-2">
+                  レビューを投稿
+                </Button>
+              </Link>
+            ) : (
+              <Popover open={isOpen} onOpenChange={setIsOpen}>
+                <PopoverTrigger className="mx-auto bg-button border-button-color rounded-full px-8 py-2">
+                  レビューを投稿
+                </PopoverTrigger>
+                <PopoverContent className="h-fit">
                   <div className="p-4">
                     <p className="text-center mb-8">ログインが必要です</p>
                     <Link href={'/login'}>
@@ -224,9 +222,9 @@ const page = ({ params }) => {
                       </Button>
                     </Link>
                   </div>
-                )}
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
         </div>
       </div>
