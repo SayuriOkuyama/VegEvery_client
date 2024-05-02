@@ -158,7 +158,7 @@ const AutoComplete = ({ setSelectedPlace, setClickedPlace }) => {
             onInput={event => onInputChange(event)}
             placeholder="マップを移動"
             type="text"
-            className="pr-0 block w-72 h-8 ml-auto"
+            className="pr-0 block w-72 h-8 ml-auto focus:text-base"
           />
         </div>
         {predictionResults.length > 0 && (
