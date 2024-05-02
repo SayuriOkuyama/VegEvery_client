@@ -113,7 +113,7 @@ const page = ({ params }) => {
                           src={review.userIcon}
                           alt="ユーザーアイコン"
                         />
-                        <AvatarFallback>icon</AvatarFallback>
+                        <AvatarFallback />
                       </Avatar>
                       <div className="text-md self-center sm:text-lg">
                         {review.userName}

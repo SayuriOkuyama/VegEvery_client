@@ -10,7 +10,7 @@ const ShowStars = ({ num, size }) => {
       <span>{num >= 2 ? <PiStarFill /> : <PiStarLight />}</span>
       <span>{num >= 3 ? <PiStarFill /> : <PiStarLight />}</span>
       <span>{num >= 4 ? <PiStarFill /> : <PiStarLight />}</span>
-      <span>{num === 5 ? <PiStarFill /> : <PiStarLight />}</span>
+      <span>{num == 5.0 ? <PiStarFill /> : <PiStarLight />}</span>
     </div>
   )
 }
