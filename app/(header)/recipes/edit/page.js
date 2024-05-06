@@ -197,7 +197,7 @@ const page = () => {
 
         <div className="bg-orange aspect-[4/3] max-w-2xl mx-auto">
           {watcher.thumbnail_url ? (
-            <div className="image-preview relative flex w-full">
+            <div className="image-preview relative flex w-full h-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"

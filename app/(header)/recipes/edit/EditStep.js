@@ -33,7 +33,7 @@ const EditStep = ({ register, control, stepImages, setStepImages, errors }) => {
               />
               <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
                 {stepImages[index] && stepImages[index].url ? (
-                  <div className="image-preview relative flex h-52 mx-auto">
+                  <div className="image-preview relative flex w-full h-full mx-auto">
                     <button
                       className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                       type="button"
