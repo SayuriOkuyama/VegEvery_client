@@ -5,6 +5,7 @@ import { getArticles } from '@/lib/utils/fetch.js'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Articles from '@/components/layouts/user/Articles'
+import Loading from '@/components/layouts/Loading'
 
 const page = ({ params }) => {
   const userId = params.id
@@ -14,9 +15,10 @@ const page = ({ params }) => {
   const { data, error } = useSWR(`/api/user/get/${userId}`, getArticles)
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data) return <p>Loading...</p>
+  if (!data) return <Loading />
+
   return (
-    <main className="pb-24 mt-8">
+    <main className="pb-24 mt-8 sm:min-h-[60vh]">
       <div className="container flex items-center">
         <div className="h-20 w-20">
           <img

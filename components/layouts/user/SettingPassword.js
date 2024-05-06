@@ -114,7 +114,7 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
   }
 
   return (
-    <main className="pb-24 max-w-md">
+    <main className="pb-24 max-w-md sm:min-h-[60svh]">
       {isComplete && (
         <div className="w-screen h-svh mt-32 max-w-sm">
           <div className="flex justify-center container">

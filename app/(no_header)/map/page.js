@@ -3,7 +3,8 @@
 import Logo from '@/components/ui/Logo'
 import Maps from '@/components/layouts/map/Maps'
 import Header from '@/components/layouts/Header'
-
+import { Suspense } from 'react'
+import Loading from '@/components/layouts/Loading'
 import { useEffect, useState } from 'react'
 
 function page() {
@@ -27,12 +28,14 @@ function page() {
         <Header />
       </div>
       <main className="h-full">
-        <div className="fixed top-2 left-2 z-50 sm:hidden">
-          <Logo size="40" />
-        </div>
-        <div className="w-full h-full pb-16">
-          {position && <Maps position={position} />}
-        </div>
+        <Suspense fallback={<Loading />}>
+          <div className="fixed top-2 left-2 z-50 sm:hidden">
+            <Logo size="40" />
+          </div>
+          <div className="w-full h-full pb-16">
+            {position && <Maps position={position} />}
+          </div>
+        </Suspense>
       </main>
     </>
   )

@@ -90,7 +90,7 @@ const page = ({ params }) => {
         </div>
       )}
       {data && data.message === 'registered' && (
-        <div className="container mx-auto">
+        <div className="container mx-auto sm:h-screen">
           <div className="pt-8">
             <Logo size="100" />
           </div>

@@ -45,6 +45,7 @@ import Link from 'next/link'
 import SettingPassword from '@/components/layouts/user/SettingPassword'
 import { LiaSpinnerSolid } from 'react-icons/lia'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import Loading from '@/components/layouts/Loading'
 
 const page = () => {
   const { user } = useAuth({ middleware: 'auth' })
@@ -121,10 +122,10 @@ const page = () => {
     setDeletedAccount(true)
   }
 
-  if (!user) return <p>Loading...</p>
+  if (!user) return <Loading />
 
   return (
-    <main className="pb-24 max-w-3xl">
+    <main className="pb-24 max-w-3xl sm:min-h-[60svh]">
       {isDeletingAccount && (
         <div className="w-screen h-svh mt-32">
           <div className="flex justify-center container">
