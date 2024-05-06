@@ -29,7 +29,7 @@ const Reports = ({ register, setValue, control, errors, watcher }) => {
             />
             <div className="bg-orange w-full aspect-[4/3] max-w-md mx-auto">
               {watcher.reports[index].url ? (
-                <div className="image-preview aspect-[4/3] max-w-md relative flex mx-auto">
+                <div className="image-preview relative flex w-full h-full">
                   <button
                     className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                     type="button"

@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/dialog'
 import { useAuth } from '@/hooks/auth'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import Loading from '@/components/layouts/Loading'
 
 const page = ({ params }) => {
   const id = params.id
@@ -157,7 +158,7 @@ const page = ({ params }) => {
   }
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data || (user && !bookshelves)) return <p>Loading...</p>
+  if (!data || (user && !bookshelves)) return <Loading />
 
   return (
     <main className="pb-20 max-w-2xl">

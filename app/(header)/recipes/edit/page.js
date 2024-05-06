@@ -25,6 +25,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog'
+import Loading from '@/components/layouts/Loading'
 
 const page = () => {
   const router = useRouter()
@@ -189,7 +190,7 @@ const page = () => {
   }
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data) return <p>Loading...</p>
+  if (!data) return <Loading />
   return (
     <main className="pb-32 max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
@@ -197,7 +198,7 @@ const page = () => {
 
         <div className="bg-orange aspect-[4/3] max-w-2xl mx-auto">
           {watcher.thumbnail_url ? (
-            <div className="image-preview relative flex w-full">
+            <div className="image-preview relative flex w-full h-full">
               <button
                 className="absolute right-1 top-1 bg-white w-4 h-4 leading-none"
                 type="button"
