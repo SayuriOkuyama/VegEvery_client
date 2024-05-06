@@ -5,6 +5,7 @@ import Link from 'next/link'
 import axios from '@/lib/axios'
 import Header from '@/components/layouts/Header'
 import Logo from '@/components/ui/Logo'
+import TopMapSection from '@/components/layouts/TopMapSection'
 
 const kiteOne = Kite_One({
   subsets: ['latin'],
@@ -49,7 +50,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <main className="pb-24">
+      <main className="pb-24 sm:pb-0">
         <div className="hidden sm:block mt-8 sm:mt-16">
           <Logo size="100" />
         </div>
@@ -141,19 +142,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
-        <section className="pt-8 sm:pt-16 max-w-4xl mx-auto">
-          <h3 className="text-center text-lg font-bold sm:text-start sm:text-3xl">
-            レストラン Map
-          </h3>
-          <div className="mt-8 w-full h-80 bg-slate-50 flex justify-center items-center max-w-lg mx-auto">
-            <Link href={'/map'} className="flex items-center relative bg-map">
-              <Button className="mx-auto bg-button border-button-color">
-                現在地から探す
-              </Button>
-            </Link>
-          </div>
-        </section>
-        {/* <div>X アカウント</div> */}
+        <TopMapSection />
       </main>
     </>
   )

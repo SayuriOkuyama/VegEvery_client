@@ -1,3 +1,5 @@
+'use client'
+
 import { IconContext } from 'react-icons' //IconContextをインポート
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import React, { useEffect, useRef } from 'react'
@@ -7,10 +9,19 @@ import { Button } from '@/components/ui/button'
 import { PiMagnifyingGlassLight } from 'react-icons/pi'
 import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
+import { Skeleton } from '@/components/ui/skeleton'
 
-const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
+const VegeTypeSort = ({
+  type,
+  pageData,
+  articles,
+  path,
+  search,
+  isLoading,
+}) => {
   const router = useRouter()
   const refInput = useRef()
+  // const [isLoading, setIsLoading] = useState()
 
   const vegeTags = [
     'vegan',
@@ -24,20 +35,30 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
   ]
 
   useEffect(() => {
+    if (isLoading) return
+    // setIsLoading(true)
+    // クエリパラメータを props で受け取り、セット
     if (!search || search === 'null') {
       refInput.current.value = ''
     } else {
       refInput.current.value = search
     }
   }, [search])
+
   // console.log(search)
+
   const handleSearch = () => {
     const search = refInput.current.value
     if (type === null) {
       type = 'vegan'
     }
+
     router.push(`/${path}?type=${type}&search=${search}&page=1`)
   }
+
+  // console.log(isLoading)
+
+  // if (isLoading) return <div>loading</div>
 
   return (
     <Tabs defaultValue={type ? type : 'vegan'} className="flex flex-col">
@@ -134,49 +155,157 @@ const VegeTypeSort = ({ type, pageData, articles, path, search }) => {
         </div>
       </div>
 
-      {vegeTags.map(vegeTag => {
-        return (
-          <TabsContent key={vegeTag} value={vegeTag}>
-            {articles && articles.length ? (
-              <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
-                  {articles.map(article => {
-                    return (
-                      <ArticleCard
-                        key={article.id}
-                        tagSize="small"
-                        id={article.id}
-                        title={article.title}
-                        thumbnail={article.thumbnail_url}
-                        user={article.user}
-                        likes={article.number_of_likes}
-                        time={article.cooking_time}
-                        vegeTags={[
-                          article.vegan,
-                          article.oriental_vegetarian,
-                          article.ovo_vegetarian,
-                          article.pescatarian,
-                          article.lacto_vegetarian,
-                          article.pollo_vegetarian,
-                          article.fruitarian,
-                          article.other_vegetarian,
-                        ]}
-                      />
-                    )
-                  })}
-                </div>
-              </>
-            ) : (
-              <div className="text-center mx-auto my-8 text-sm">
-                見つかりませんでした
+      {isLoading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+          <>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
               </div>
-            )}
-            {pageData && (
-              <PaginationParts pageData={pageData} type={type} path={path} />
-            )}
-          </TabsContent>
-        )
-      })}
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+          </>
+        </div>
+      ) : (
+        <>
+          {vegeTags.map(vegeTag => {
+            return (
+              <TabsContent key={vegeTag} value={vegeTag}>
+                {/* {loading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+                  <>
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col space-y-3">
+                      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-[250px]" />
+                        <Skeleton className="h-4 w-[200px]" />
+                      </div>
+                    </div>
+                  </>
+                </div>
+              ) : ( */}
+                <>
+                  {articles && (
+                    <>
+                      {articles.length ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+                          {articles.map(article => {
+                            return (
+                              <ArticleCard
+                                key={article.id}
+                                tagSize="small"
+                                id={article.id}
+                                title={article.title}
+                                thumbnail={article.thumbnail_url}
+                                user={article.user}
+                                likes={article.number_of_likes}
+                                time={article.cooking_time}
+                                vegeTags={[
+                                  article.vegan,
+                                  article.oriental_vegetarian,
+                                  article.ovo_vegetarian,
+                                  article.pescatarian,
+                                  article.lacto_vegetarian,
+                                  article.pollo_vegetarian,
+                                  article.fruitarian,
+                                  article.other_vegetarian,
+                                ]}
+                              />
+                            )
+                          })}
+                        </div>
+                      ) : (
+                        <div className="text-center mx-auto my-8 text-sm">
+                          見つかりませんでした
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
+
+                {pageData && (
+                  <PaginationParts
+                    pageData={pageData}
+                    type={type}
+                    path={path}
+                  />
+                )}
+              </TabsContent>
+            )
+          })}
+        </>
+      )}
     </Tabs>
   )
 }

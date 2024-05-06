@@ -149,6 +149,8 @@ const AutoComplete = ({ setSelectedPlace, setClickedPlace }) => {
     setClickedPlace(center)
   }
 
+  document.createElement('div')
+
   return (
     <div className="w-dvw flex justify-end items-center mt-5 mr-2">
       <div className="ml-auto">

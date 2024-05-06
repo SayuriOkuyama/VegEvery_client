@@ -162,7 +162,7 @@ const page = ({ params }) => {
   return (
     <main className="pb-20 max-w-2xl">
       {isAlertVisible && (
-        <div className="z-50 w-screen  max-w-2xl absolute animate-bounce flex justify-center">
+        <div className="z-50 w-screen max-w-2xl absolute animate-bounce flex justify-center">
           <button
             className="block w-fit"
             onClick={() => setAlertVisible(false)}>
@@ -227,7 +227,7 @@ const page = ({ params }) => {
               src={articlesData.user.icon_url}
               alt="ユーザーアイコン"
             />
-            <AvatarFallback>Icon</AvatarFallback>
+            <AvatarFallback />
           </Avatar>
           <div className="text-lg sm:text-2xl self-end">
             {articlesData.user.name}

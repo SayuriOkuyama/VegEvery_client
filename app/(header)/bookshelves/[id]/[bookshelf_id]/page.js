@@ -107,10 +107,8 @@ const page = ({ params }) => {
   }
 
   const handleDelete = async () => {
-    const res = await axios.delete(
-      `/api/bookshelves/delete/bookshelf/${bookshelfId}`,
-    )
-    console.log(res.data)
+    await axios.delete(`/api/bookshelves/delete/bookshelf/${bookshelfId}`)
+    // console.log(res.data)
 
     router.push(`/bookshelves/${user.id}`)
   }

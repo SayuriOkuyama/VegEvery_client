@@ -1,3 +1,5 @@
+'use client'
+
 import { Card, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -51,7 +53,11 @@ const ArticleCard = ({
           <div className="flex">
             <Avatar>
               <AvatarImage src={user.icon_url} alt="ユーザーアイコン" />
-              <AvatarFallback>Icon</AvatarFallback>
+              {/* <AvatarImage
+                src="https://static.vegevery.my-raga-bhakti.com/recipes/thumbnail/pasta.jpg"
+                alt="ユーザーアイコン"
+              /> */}
+              <AvatarFallback />
             </Avatar>
             <div className="text-sm self-end">{user.name}</div>
           </div>

@@ -1,11 +1,13 @@
 'use client'
+
 import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
-import axios from '@/lib/axios'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import useSWR from 'swr'
+import { getArticles } from '@/lib/utils/fetch.js'
 
 const page = () => {
   const [articles, setArticles] = useState()
@@ -19,28 +21,39 @@ const page = () => {
   // console.log(articles)
   // console.log(pageData)
 
+  const { data, isLoading } = useSWR(
+    `/api/recipes/search?type=${type}&search=${search}&page=${page}`,
+    getArticles,
+  )
+
   useEffect(() => {
-    const getArticles = async () => {
-      // try {
-      const response = await axios.get(
-        `/api/recipes/search?type=${type}&search=${search}&page=${page}`,
-      )
-
-      const data = await response.data
-
+    if (data) {
       setArticles(data.data)
       setPageData(data)
-      // } catch (err) {
-      //   throw err
-      // }
     }
-    getArticles()
-  }, [page, search, type])
+  }, [data, params, page, type])
+  // useEffect(() => {
+  //   const getArticles = async () => {
+  //     // try {
+  //     const response = await axios.get(
+  //       `/api/recipes/search?type=${type}&search=${search}&page=${page}`,
+  //     )
+
+  //     const data = await response.data
+
+  //     setArticles(data.data)
+  //     setPageData(data)
+  //     // } catch (err) {
+  //     //   throw err
+  //     // }
+  //   }
+  //   getArticles()
+  // }, [page, search, type])
 
   return (
-    <main className="pb-24 max-w-4xl mx-auto">
-      <h3 className="text-center text-lg font-bold mt-8 sm:mt-16 sm:text-2xl">
-        レシピ一覧
+    <main className="pb-24 max-w-4xl mx-auto min-h-screen">
+      <h3 className="text-center text-lg font-bold mt-8 sm:mt-16 sm:text-4xl sm:tracking-wide">
+        レシピ
       </h3>
       <div className="flex justify-end mt-4 mb-1">
         <Button className="py-0 px-2 mr-2 bg-button border-button-color">
@@ -72,6 +85,7 @@ const page = () => {
             articles={articles}
             path={'recipes/search'}
             search={search}
+            isLoading={isLoading}
           />
         </TabsContent>
       </Tabs>

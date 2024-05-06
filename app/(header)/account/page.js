@@ -51,15 +51,19 @@ const page = () => {
             </Link>
           </div>
           <div className="border border-button-color rounded-md w-36 h-40">
-            <Link
+            {/* <Link
               href={'/account/memo'}
-              className="h-40 flex flex-col justify-around pb-2">
+              className="h-40 flex flex-col justify-around pb-2"> */}
+            <div className="h-40 flex flex-col justify-around pb-2">
               <p className="text-center p-2">メモの作成</p>
+              <small className="block text-center">(※準備中)</small>
               <IconContext.Provider
                 value={{ size: '75px', className: 'mx-auto' }}>
                 <PiNotebookLight />
               </IconContext.Provider>
-            </Link>
+            </div>
+
+            {/* </Link> */}
           </div>
           {/* </div>
           <div className="flex justify-around"> */}

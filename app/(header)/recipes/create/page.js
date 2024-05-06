@@ -5,8 +5,6 @@ import { recipeFormSchema } from '@/lib/zod/recipeFormSchema'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import axios from '@/lib/axios'
-// import { supabase } from '@/lib/utils/supabase/supabase'
-// import { v4 as uuidv4 } from 'uuid'
 import Tags from './Tags'
 import Materials from './Materials.js'
 import Steps from './Steps.js'
@@ -16,11 +14,15 @@ import { PiCameraLight } from 'react-icons/pi'
 import { IconContext } from 'react-icons'
 import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation.js'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { LiaSpinnerSolid } from 'react-icons/lia'
 
 const page = () => {
   const [image, setImage] = useState(null)
   const [stepImages, setStepImages] = useState([{ url: '', file: '' }])
   const router = useRouter()
+  const [isPosting, setIsPosting] = useState(false)
+
   // const [user, setUser] = useState()
 
   // useEffect(() => {
@@ -81,6 +83,7 @@ const page = () => {
     // console.log('submit')
     // console.log(data)
 
+    setIsPosting(true)
     // FormDataオブジェクトを作成
     const formData = new FormData()
 
@@ -138,6 +141,7 @@ const page = () => {
     })
     // console.log(res.data)
     // console.log('画面遷移')
+    setIsPosting(false)
     router.push(`/recipes/${res.data.article.id}`)
     // } catch (error) {
     //   throw error
@@ -146,6 +150,20 @@ const page = () => {
 
   return (
     <main className="pb-32 max-w-2xl">
+      {isPosting && (
+        <div className="fixed inset-0 z-50 bg-[#ffffff9c]">
+          <div className="z-100 w-full max-w-2xl absolute top-1/2 animate-bounce flex justify-center">
+            <Alert className="w-4/5">
+              <AlertDescription className="text-color text-center text-base">
+                <div className="flex justify-center items-center space-x-1">
+                  <LiaSpinnerSolid className="animate-spin" />
+                  <p>投稿しています..</p>
+                </div>
+              </AlertDescription>
+            </Alert>
+          </div>
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
         <FormVegeType register={register} control={control} />
 
