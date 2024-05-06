@@ -147,7 +147,7 @@ const page = () => {
                 <input
                   id="name"
                   type="text"
-                  placeholder="べジヴリー"
+                  placeholder="ベジェヴリー"
                   className="border w-full text-sm pl-1 h-8 focus:text-base"
                   {...register(`name`)}
                 />
