@@ -3,6 +3,7 @@ import { Zen_Kaku_Gothic_New } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layouts/Navigation/Navigation'
 // import { UserProvider } from '@/contexts/UserProvider'
+import Footer from '@/components/layouts/Footer'
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
   subsets: ['latin'],
@@ -26,11 +27,15 @@ export default function RootLayout({ children }) {
         <meta property="og:image" content="/logo.png" />
       </Head>
       <html lang="ja">
-        <body className={`${zenKakuGothic.className}`}>
+        <body
+          className={`${zenKakuGothic.className} min-h-full sm:pb-50 relative`}>
           {/* <UserProvider> */}
           {children}
           <Navigation />
           {/* </UserProvider> */}
+          <footer className="hidden sm:block w-full mt-auto bg-green">
+            <Footer />
+          </footer>
         </body>
       </html>
     </>

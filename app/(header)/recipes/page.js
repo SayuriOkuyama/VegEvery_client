@@ -1,4 +1,5 @@
 'use client'
+
 import { Button } from '@/components/ui/button'
 import { PiNotePencilLight } from 'react-icons/pi'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -6,6 +7,7 @@ import Popular from '@/components/layouts/recipes/Popular.js'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import axios from '@/lib/axios'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const page = () => {
   const router = useRouter()
@@ -28,7 +30,7 @@ const page = () => {
   }
 
   return (
-    <main className="pb-24 max-w-4xl mx-auto">
+    <main className="pb-24 max-w-4xl mx-auto min-h-screen">
       <h3 className="text-center text-lg font-bold mt-8 sm:mt-16 sm:text-4xl sm:tracking-wide">
         レシピ
       </h3>
@@ -59,6 +61,52 @@ const page = () => {
         </TabsList>
         <TabsContent value="popular">
           <Popular path={'recipes'} />
+        </TabsContent>
+        <TabsContent value="search">
+          <div className="grid grid-cols-2 sm:grid-cols-3 pt-1 pb-8 py-4 gap-4 ">
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </main>
