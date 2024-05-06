@@ -61,7 +61,7 @@ const page = () => {
             value="search"
             onClick={() => router.push('/food_items/search?type=vegan&page=1')}
             className="sm:text-base">
-            タグ・ワード検索
+            ワード検索
           </TabsTrigger>
         </TabsList>
         <TabsContent value="search">

@@ -66,7 +66,7 @@ const page = () => {
       <div className="pt-8">
         <Logo size="100" />
       </div>
-      <main className="container mx-auto mt-8 max-w-md">
+      <main className="container mx-auto mt-8 pb-24 max-w-md">
         <div className="text-center space-y-3">
           <p className="text-center my-4">登録内容の確認</p>
           <div className=" space-y-2">
