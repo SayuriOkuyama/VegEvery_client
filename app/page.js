@@ -6,6 +6,7 @@ import axios from '@/lib/axios'
 import Header from '@/components/layouts/Header'
 import Logo from '@/components/ui/Logo'
 import TopMapSection from '@/components/layouts/TopMapSection'
+import Image from 'next/image'
 
 const kiteOne = Kite_One({
   subsets: ['latin'],
@@ -143,6 +144,27 @@ export default async function Home() {
           </div>
         </section>
         <TopMapSection />
+        <div className="sm:hidden flex justify-center mt-16 bg-green py-8">
+          <div className="p-2 border rounded-md bg-white">
+            <div className="flex items-center">
+              <a
+                href="https://twitter.com/VegEvery_x"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center space-x-2">
+                <div className="flex items-center rounded-full bg-white p-2 border">
+                  <Image
+                    src="/x-logo-black.png"
+                    width={20}
+                    height={20}
+                    alt="X"
+                  />
+                </div>
+                <div className="text-lg">VegEvery 公式アカウント</div>
+              </a>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   )
