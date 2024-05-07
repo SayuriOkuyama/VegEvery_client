@@ -33,7 +33,7 @@ const CheckSecretAnswer = ({ setPage, user }) => {
   const submit = async values => {
     setIsCheckingAnswer(true)
 
-    if (values.answer === user.secretAnswer) {
+    if (values.answer === user.answer) {
       reset()
       setPage('resetPassword')
     } else {
@@ -72,19 +72,18 @@ const CheckSecretAnswer = ({ setPage, user }) => {
         </div>
       ) : (
         <form onSubmit={handleSubmit(submit)} className="mt-8">
-          <div>
-            <p>秘密の質問</p>
-            <p>{user.secretAnswer}</p>
+          <div className="mb-4">
+            <p className="mb-2">秘密の質問</p>
+            <p>{user.question}</p>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="password" className="block text-start">
+            <label htmlFor="answer" className="block text-start">
               秘密の質問の答え
             </label>
             <input
-              id="password"
-              type="password"
-              placeholder="password#123!"
-              className="border w-full text-sm pl-1 h-8"
+              id="answer"
+              type="text"
+              className="border w-full text-sm pl-1 h-8 focus:text-base"
               {...register(`answer`)}
             />
             {errors.id && errors.answer.message && (

@@ -8,7 +8,7 @@ import { useContext, useEffect } from 'react'
 import Logo from '@/components/ui/Logo'
 import { Button } from '@/components/ui/button'
 import { FormContext } from '@/contexts/registerProvider'
-// import axios from '@/lib/axios'
+import Loading from '@/components/layouts/Loading'
 import { useAuth } from '@/hooks/auth'
 import { useState } from 'react'
 
@@ -70,7 +70,7 @@ const page = ({ params }) => {
   }
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data) return <p>Loading...</p>
+  if (!data) return <Loading />
 
   return (
     <>

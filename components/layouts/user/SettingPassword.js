@@ -6,22 +6,24 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import axios from '@/lib/axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import SettingSecret from '@/components/layouts/user/SettingSecret'
 
 const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
   const [isComplete, setIsComplete] = useState(false)
   const [settingPage, setSettingPage] = useState('secret')
+  const [isValid, setIsValid] = useState(false)
 
   const FormSchema = z
     .object({
       password: z.string(),
       passwordConfirmation: z.string(),
-      secretQuestion: z.string(),
-      secretAnswer: z.string(),
+      secretQuestion: z.string().optional(),
+      secretAnswer: z.string().optional(),
     })
     .superRefine((data, ctx) => {
+      console.log(data)
       if (
         !data.password ||
         data.password.length < 8 ||
@@ -44,7 +46,7 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
           code: z.ZodIssueCode.custom,
         })
       }
-      if (!user.secretQuestion) {
+      if (!user.question) {
         if (
           !data.secretQuestion ||
           data.secretQuestion.length < 2 ||
@@ -102,6 +104,36 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
     mode: 'onChange',
   })
   const watcher = watch()
+  console.log(watcher)
+  console.log(errors)
+  console.log(isValid)
+
+  useEffect(() => {
+    let check
+    if (watcher.secretAnswer) {
+      check =
+        watcher.password &&
+        watcher.passwordConfirmation &&
+        watcher.secretQuestion &&
+        watcher.secretAnswer &&
+        !errors.password &&
+        !errors.passwordConfirmation &&
+        !errors.secretQuestion &&
+        !errors.secretAnswer
+    } else {
+      check =
+        watcher.password &&
+        watcher.passwordConfirmation &&
+        !errors.password &&
+        !errors.passwordConfirmation
+    }
+
+    if (check) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
+  }, [watcher, errors])
 
   const submit = async values => {
     if (type === 'forget') {
@@ -176,13 +208,13 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
           <form onSubmit={handleSubmit(submit)} className="container mt-8">
             <div className="flex flex-col">
               <label htmlFor="password" className="block text-start">
-                パスワード
+                新しいパスワード
               </label>
               <input
                 id="password"
                 type="password"
                 placeholder="password#123!"
-                className="border w-full text-sm pl-1 h-8"
+                className="border w-full text-sm pl-1 h-8 focus:text-base"
                 {...register(`password`)}
               />
               <small className="block text-start">
@@ -205,7 +237,7 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
                 id="passwordConfirmation"
                 type="password"
                 placeholder="password#123!"
-                className="border w-full text-sm pl-1 h-8"
+                className="border w-full text-sm pl-1 h-8 focus:text-base"
                 {...register(`passwordConfirmation`)}
               />
               {errors.passwordConfirmation && (
@@ -238,11 +270,17 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
                     className="border border-button-color bg-button flex mx-auto items-center">
                     <p>やめる</p>
                   </Button>
-                  <Button
-                    type="submit"
-                    className="border border-button-color bg-button flex mx-auto items-center">
-                    <p>変更</p>
-                  </Button>
+                  {isValid ? (
+                    <Button
+                      type="submit"
+                      className="border border-button-color bg-button flex mx-auto items-center">
+                      <p>変更</p>
+                    </Button>
+                  ) : (
+                    <div className="border rounded-full px-8 border-button-color bg-button flex mx-auto items-center">
+                      <p className="disabled-text-color">変更</p>
+                    </div>
+                  )}
                 </>
               )}
             </div>

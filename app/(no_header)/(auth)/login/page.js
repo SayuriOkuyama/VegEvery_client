@@ -108,7 +108,7 @@ const page = () => {
                 id="account_id"
                 type="text"
                 placeholder="vegevery123"
-                className="border w-full text-sm pl-1 h-8"
+                className="border w-full text-sm pl-1 h-8 focus:text-base"
                 {...register(`account_id`)}
               />
             </div>
@@ -127,7 +127,7 @@ const page = () => {
             id="password"
             type="password"
             placeholder="password123!"
-            className="border w-full text-sm pl-1 h-8"
+            className="border w-full text-sm pl-1 h-8 focus:text-base"
             {...register(`password`)}
           />
           <p className="text-end text-sm">
