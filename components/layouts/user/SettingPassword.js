@@ -23,7 +23,6 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
       secretAnswer: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-      console.log(data)
       if (
         !data.password ||
         data.password.length < 8 ||
@@ -104,9 +103,9 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
     mode: 'onChange',
   })
   const watcher = watch()
-  console.log(watcher)
-  console.log(errors)
-  console.log(isValid)
+  // console.log(watcher)
+  // console.log(errors)
+  // console.log(isValid)
 
   useEffect(() => {
     let check
