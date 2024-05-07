@@ -15,7 +15,7 @@ const SettingSecret = ({ register, errors, watcher, setSettingPage }) => {
             id="secretQuestion"
             type="text"
             placeholder="初めての海外旅行で行った場所は？"
-            className="border w-full text-sm pl-1 h-8"
+            className="border w-full text-sm pl-1 h-8 focus:text-base"
             {...register(`secretQuestion`)}
           />
           {errors.secretQuestion && (
@@ -32,7 +32,7 @@ const SettingSecret = ({ register, errors, watcher, setSettingPage }) => {
             id="secretAnswer"
             type="text"
             placeholder="フランスのルーヴル美術館"
-            className="border w-full text-sm pl-1 h-8"
+            className="border w-full text-sm pl-1 h-8 focus:text-base"
             {...register(`secretAnswer`)}
           />
           {errors.secretAnswer && (

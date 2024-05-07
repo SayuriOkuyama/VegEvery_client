@@ -214,7 +214,7 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
                 id="password"
                 type="password"
                 placeholder="password#123!"
-                className="border w-full text-sm pl-1 h-8"
+                className="border w-full text-sm pl-1 h-8 focus:text-base"
                 {...register(`password`)}
               />
               <small className="block text-start">
@@ -237,7 +237,7 @@ const SettingPassword = ({ user, type, setIsResettingPassword, setPage }) => {
                 id="passwordConfirmation"
                 type="password"
                 placeholder="password#123!"
-                className="border w-full text-sm pl-1 h-8"
+                className="border w-full text-sm pl-1 h-8 focus:text-base"
                 {...register(`passwordConfirmation`)}
               />
               {errors.passwordConfirmation && (

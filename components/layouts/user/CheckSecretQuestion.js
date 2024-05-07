@@ -98,7 +98,7 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
               id="id"
               type="text"
               placeholder="VegEvery"
-              className="border w-full text-sm pl-1 h-8"
+              className="border w-full text-sm pl-1 h-8 focus:text-base"
               {...register(`id`)}
             />
             {errors.id && errors.id.message && <div>{errors.id.message}</div>}

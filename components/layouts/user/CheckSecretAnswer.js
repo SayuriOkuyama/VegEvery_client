@@ -83,7 +83,7 @@ const CheckSecretAnswer = ({ setPage, user }) => {
             <input
               id="answer"
               type="text"
-              className="border w-full text-sm pl-1 h-8"
+              className="border w-full text-sm pl-1 h-8 focus:text-base"
               {...register(`answer`)}
             />
             {errors.id && errors.answer.message && (

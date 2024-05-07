@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dialog'
 import ShowStars from '@/components/layouts/reviews/ShowStars'
 import VegeTag from '@/components/layouts/VegeTag'
-// import { PiNotePencilLight } from 'react-icons/pi'
+import Loading from '@/components/layouts/Loading'
 
 const page = ({ params }) => {
   const id = params.id
@@ -87,7 +87,7 @@ const page = ({ params }) => {
   }
 
   if (error) return <p>Error: {error.message}</p>
-  if (!data) return <p>Loading...</p>
+  if (!data) return <Loading />
 
   return (
     <main className="pb-20 max-w-2xl">
