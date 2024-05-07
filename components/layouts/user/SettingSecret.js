@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button'
 
 const SettingSecret = ({ register, errors, watcher, setSettingPage }) => {
-  console.log(errors.length)
-  console.log(errors)
   return (
     <>
       <div className="text-center space-y-8">

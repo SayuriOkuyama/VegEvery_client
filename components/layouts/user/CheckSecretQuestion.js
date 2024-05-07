@@ -41,7 +41,7 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
       setIsError('id')
     } else {
       setUser(res.data)
-      console.log(res.data)
+      // console.log(res.data)
 
       reset()
       if (res.data.answer) {
@@ -51,7 +51,7 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
       }
     }
   }
-  console.log(isError)
+  // console.log(isError)
 
   return (
     <div className="container sm:mt-16">
