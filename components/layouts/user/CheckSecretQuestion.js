@@ -41,14 +41,17 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
       setIsError('id')
     } else {
       setUser(res.data)
+      console.log(res.data)
+
       reset()
-      if (res.data.secretAnswer) {
+      if (res.data.answer) {
         setPage('checkSecretAnswer')
       } else {
-        setIsError('question')
+        setIsError('noQuestion')
       }
     }
   }
+  console.log(isError)
 
   return (
     <div className="container sm:mt-16">
@@ -88,13 +91,13 @@ const CheckSecretQuestion = ({ setPage, setUser }) => {
       ) : (
         <form onSubmit={handleSubmit(submit)} className="mt-8">
           <div className="flex flex-col">
-            <label htmlFor="password" className="block text-start">
+            <label htmlFor="id" className="block text-start">
               アカウント ID
             </label>
             <input
-              id="password"
-              type="password"
-              placeholder="password#123!"
+              id="id"
+              type="text"
+              placeholder="VegEvery"
               className="border w-full text-sm pl-1 h-8"
               {...register(`id`)}
             />

@@ -1,16 +1,18 @@
 import { Button } from '@/components/ui/button'
 
 const SettingSecret = ({ register, errors, watcher, setSettingPage }) => {
+  console.log(errors.length)
+  console.log(errors)
   return (
     <>
       <div className="text-center space-y-8">
         <p className="text-center my-8">秘密の質問を設定</p>
         <div>
-          <label htmlFor="name" className="block text-start">
+          <label htmlFor="secretQuestion" className="block text-start">
             秘密の質問
           </label>
           <input
-            id="name"
+            id="secretQuestion"
             type="text"
             placeholder="初めての海外旅行で行った場所は？"
             className="border w-full text-sm pl-1 h-8"
@@ -23,11 +25,11 @@ const SettingSecret = ({ register, errors, watcher, setSettingPage }) => {
           )}
         </div>
         <div>
-          <label htmlFor="password" className="block text-start">
+          <label htmlFor="secretAnswer" className="block text-start">
             秘密の質問の答え
           </label>
           <input
-            id="password"
+            id="secretAnswer"
             type="text"
             placeholder="フランスのルーヴル美術館"
             className="border w-full text-sm pl-1 h-8"
@@ -40,7 +42,10 @@ const SettingSecret = ({ register, errors, watcher, setSettingPage }) => {
           )}
         </div>
       </div>
-      {!errors.length && watcher.secretAnswer && watcher.secretAnswer ? (
+      {!errors.secretQuestion &&
+      !errors.secretAnswer &&
+      watcher.secretQuestion &&
+      watcher.secretAnswer ? (
         <Button
           onClick={() => setSettingPage('password')}
           className="border flex items-center py-3 px-20 mt-8 sm:mt-16 mx-auto bg-button border-button-color">
