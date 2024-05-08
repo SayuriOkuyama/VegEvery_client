@@ -52,7 +52,11 @@ const ArticleCard = ({
         <CardFooter>
           <div className="flex">
             <Avatar>
-              <AvatarImage src={user.icon_url} alt="ユーザーアイコン" />
+              <AvatarImage
+                src={`https://dz6c1hmcx20gt.cloudfront.net/${user.icon_storage_path}`}
+                // src={user.icon_url}
+                alt="ユーザーアイコン"
+              />
               {/* <AvatarImage
                 src="https://static.vegevery.my-raga-bhakti.com/recipes/thumbnail/pasta.jpg"
                 alt="ユーザーアイコン"
