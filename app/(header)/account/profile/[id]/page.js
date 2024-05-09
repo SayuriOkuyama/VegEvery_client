@@ -105,7 +105,7 @@ const page = () => {
     user.introduction = res.data.introduction
     user.icon_path = res.data.icon_storage_path
     user.icon_url = res.data.icon_url
-    console.log(res.data)
+    // console.log(res.data)
 
     setIsEdit(false)
   }
@@ -125,10 +125,10 @@ const page = () => {
   }
 
   if (!user) return <Loading />
-  console.log(
-    `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_storage_path}`,
-  )
-  console.log(user)
+  // console.log(
+  //   `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_storage_path}`,
+  // )
+  // console.log(user)
   return (
     <main className="pb-24 max-w-3xl sm:min-h-[60svh]">
       {isDeletingAccount && (
