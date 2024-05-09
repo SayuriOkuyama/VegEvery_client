@@ -22,7 +22,11 @@ const page = ({ params }) => {
       <div className="container flex items-center">
         <div className="h-20 w-20">
           <img
-            src={data.icon_url}
+            src={
+              data.icon_storage_path
+                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${data.icon_storage_path}`
+                : data.icon_url
+            }
             className="object-cover w-full h-full block rounded-full"
             alt="ユーザーアイコン"
           />

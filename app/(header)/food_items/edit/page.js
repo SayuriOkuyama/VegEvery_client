@@ -63,7 +63,8 @@ const page = () => {
           reportData.push({
             order: report.order,
             text: report.text,
-            url: report.image_url,
+            url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${report.image_path}`,
+            // url: report.image_url,
             path: report.image_path,
             file: '',
           })
@@ -79,7 +80,8 @@ const page = () => {
       reset({
         title: data.article.title,
         thumbnail_path: data.article.thumbnail_path,
-        thumbnail_url: data.article.thumbnail_url,
+        // thumbnail_url: data.article.thumbnail_url,
+        thumbnail_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${data.article.thumbnail_path}`,
         thumbnail_newFile: '',
         tags: data.article.tags,
         items: data.article.items,

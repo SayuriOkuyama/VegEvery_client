@@ -72,7 +72,8 @@ const page = ({ params }) => {
         lng: data.restaurant.longitude,
         name: data.restaurant.name,
         stars: data.restaurant.star,
-        thumbnail_url: data.restaurant.thumbnail_url,
+        thumbnail_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${data.restaurant.thumbnail_path}`,
+        // thumbnail_url: data.restaurant.thumbnail_url,
         restaurantVegeTags: restaurantVegeTags,
         reviews: data.reviews,
       })
@@ -108,16 +109,25 @@ const page = ({ params }) => {
                 <div key={review.id} className="relative">
                   <div className="flex mb-4 items-center justify-between">
                     <div className="flex">
-                      <Avatar className="self-end mr-2">
-                        <AvatarImage
-                          src={review.userIcon}
-                          alt="ユーザーアイコン"
-                        />
-                        <AvatarFallback />
-                      </Avatar>
-                      <div className="text-md self-center sm:text-lg">
-                        {review.userName}
-                      </div>
+                      <Link
+                        href={`/account/user/${review.user_id}?article=recipes`}
+                        className="flex">
+                        <Avatar className="self-end mr-2">
+                          <AvatarImage
+                            src={
+                              review.userIcon_path
+                                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${review.userIcon_path}`
+                                : review.userIcon
+                            }
+                            // src={review.userIcon}
+                            alt="ユーザーアイコン"
+                          />
+                          <AvatarFallback />
+                        </Avatar>
+                        <div className="text-md self-center sm:text-lg">
+                          {review.userName}
+                        </div>
+                      </Link>
                     </div>
                     <div className="h-fit leading-none">
                       <ShowStars num={review.stars} />
