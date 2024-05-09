@@ -53,7 +53,7 @@ const ArticleCard = ({
           <div className="flex">
             <Avatar>
               <AvatarImage
-                src={`https://dz6c1hmcx20gt.cloudfront.net/${user.icon_storage_path}`}
+                src={`https://dz6c1hmcx20gt.cloudfront.net${user.icon_storage_path}`}
                 // src={user.icon_url}
                 alt="ユーザーアイコン"
               />
