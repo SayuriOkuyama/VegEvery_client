@@ -81,7 +81,8 @@ const Popular = ({ path }) => {
                     tagSize="small"
                     id={article.id}
                     title={article.title}
-                    thumbnail={article.thumbnail_url}
+                    thumbnail={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${article.thumbnail_path}`}
+                    // thumbnail={article.thumbnail_url}
                     user={article.user}
                     likes={article.number_of_likes}
                     time={article.cooking_time}

@@ -72,7 +72,8 @@ export default async function Home() {
                     tagSize="small"
                     id={articleOfRecipe.id}
                     title={articleOfRecipe.title}
-                    thumbnail={articleOfRecipe.thumbnail_url}
+                    thumbnail={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${articleOfRecipe.thumbnail_path}`}
+                    // thumbnail={articleOfRecipe.thumbnail_url}
                     user={articleOfRecipe.user}
                     likes={articleOfRecipe.number_of_likes}
                     time={articleOfRecipe.cooking_time}
@@ -113,7 +114,8 @@ export default async function Home() {
                       tagSize="small"
                       id={articlesOfItem.id}
                       title={articlesOfItem.title}
-                      thumbnail={articlesOfItem.thumbnail_url}
+                      thumbnail={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${articlesOfItem.thumbnail_path}`}
+                      // thumbnail={articlesOfItem.thumbnail_url}
                       user={articlesOfItem.user}
                       likes={articlesOfItem.number_of_likes}
                       time={articlesOfItem.cooking_time}

@@ -80,6 +80,7 @@ const page = ({ params }) => {
         title: data.article.title,
         servings: data.article.servings,
         thumbnail_url: data.article.thumbnail_url,
+        thumbnail_path: data.article.thumbnail_path,
         cooking_time: data.article.cooking_time,
         number_of_likes: data.article.number_of_likes,
         user: data.article.user,
@@ -191,7 +192,8 @@ const page = ({ params }) => {
       </div>
       <div className="aspect-[4/3] max-w-xl mx-auto relative">
         <Image
-          src={articlesData.thumbnail_url}
+          src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${articlesData.thumbnail_path}`}
+          // src={articlesData.thumbnail_url}
           sizes="600px"
           fill
           style={{
@@ -225,7 +227,12 @@ const page = ({ params }) => {
           className="flex">
           <Avatar className="self-end mr-2">
             <AvatarImage
-              src={articlesData.user.icon_url}
+              src={
+                articlesData.user.icon_storage_path
+                  ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${articlesData.user.icon_storage_path}`
+                  : articlesData.user.icon_url
+              }
+              // src={articlesData.user.icon_url}
               alt="ユーザーアイコン"
             />
             <AvatarFallback />
@@ -277,7 +284,8 @@ const page = ({ params }) => {
               {recipe_step.image_url && (
                 <div className="aspect-[4/3] max-w-lg mx-auto relative mb-4 mt-2">
                   <Image
-                    src={recipe_step.image_url}
+                    src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${recipe_step.image_path}`}
+                    // src={recipe_step.image_url}
                     sizes="600px"
                     fill
                     style={{
@@ -344,16 +352,25 @@ const page = ({ params }) => {
                     </Dialog>
                   )}
                   <div className="flex">
-                    <Avatar className="self-end mr-2">
-                      <AvatarImage
-                        src={commentToRecipe.userIcon}
-                        alt="ユーザーアイコン"
-                      />
-                      <AvatarFallback>Icon</AvatarFallback>
-                    </Avatar>
-                    <div className="text-md self-center">
-                      {commentToRecipe.userName}
-                    </div>
+                    <Link
+                      href={`/account/user/${commentToRecipe.user_id}?article=recipes`}
+                      className="flex">
+                      <Avatar className="self-end mr-2">
+                        <AvatarImage
+                          src={
+                            commentToRecipe.userIconPath
+                              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${commentToRecipe.userIconPath}`
+                              : commentToRecipe.userIcon
+                          }
+                          // src={commentToRecipe.userIcon}
+                          alt="ユーザーアイコン"
+                        />
+                        <AvatarFallback>Icon</AvatarFallback>
+                      </Avatar>
+                      <div className="text-md self-center">
+                        {commentToRecipe.userName}
+                      </div>
+                    </Link>
                   </div>
                   <div className="mx-4 my-2">{commentToRecipe.text}</div>
                   <div className="flex text-sm justify-end mr-4">

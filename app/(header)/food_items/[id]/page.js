@@ -78,6 +78,7 @@ const page = ({ params }) => {
         title: data.article.title,
         servings: data.article.servings,
         thumbnail_url: data.article.thumbnail_url,
+        thumbnail_path: data.article.thumbnail_path,
         cooking_time: data.article.cooking_time,
         number_of_likes: data.article.number_of_likes,
         user: data.article.user,
@@ -198,7 +199,8 @@ const page = ({ params }) => {
         {articlesData.thumbnail_url && (
           <div className="aspect-[4/3] max-w-xl mx-auto relative">
             <Image
-              src={articlesData.thumbnail_url}
+              src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${articlesData.thumbnail_path}`}
+              // src={articlesData.thumbnail_url}
               sizes="600px"
               fill
               style={{
@@ -230,7 +232,12 @@ const page = ({ params }) => {
             className="flex">
             <Avatar className="self-end mr-2">
               <AvatarImage
-                src={articlesData.user.icon_url}
+                src={
+                  articlesData.user.icon_storage_path
+                    ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${articlesData.user.icon_storage_path}`
+                    : articlesData.user.icon_url
+                }
+                // src={articlesData.user.icon_url}
                 alt="ユーザーアイコン"
               />
               <AvatarFallback />
@@ -252,11 +259,11 @@ const page = ({ params }) => {
                   <div className="border-button-color-b w-fit">
                     <div className="font-bold sm:text-2xl">{item.name}</div>
                   </div>
-                  <div className="flex justify-end">
+                  {/* <div className="flex justify-end">
                     <span className="my-1 text-xs ml-auto border rounded-full border-button-color bg-button px-1 text-end">
                       レシピを探す
                     </span>
-                  </div>
+                  </div> */}
                   <div>
                     <div className=" py-2">
                       <p className="font-bold text-sm sm:text-lg">購入場所</p>
@@ -285,7 +292,8 @@ const page = ({ params }) => {
                 {report.image_url && (
                   <div className="aspect-[4/3] max-w-lg mx-auto relative mb-4 mt-2">
                     <Image
-                      src={report.image_url}
+                      src={`${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${report.image_path}`}
+                      // src={report.image_url}
                       sizes="600px"
                       fill
                       style={{
@@ -349,16 +357,25 @@ const page = ({ params }) => {
                       </Dialog>
                     )}
                     <div className="flex">
-                      <Avatar className="self-end mr-2">
-                        <AvatarImage
-                          src={commentToItem.userIcon}
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <div className="text-md self-center text-sm">
-                        {commentToItem.userName}
-                      </div>
+                      <Link
+                        href={`/account/user/${commentToItem.user_id}?article=recipes`}
+                        className="flex">
+                        <Avatar className="self-end mr-2">
+                          <AvatarImage
+                            src={
+                              commentToItem.userIconPath
+                                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${commentToItem.userIconPath}`
+                                : commentToItem.userIcon
+                            }
+                            // src={commentToItem.userIcon}
+                            alt="ユーザーアイコン"
+                          />
+                          <AvatarFallback />
+                        </Avatar>
+                        <div className="text-md self-center text-sm">
+                          {commentToItem.userName}
+                        </div>
+                      </Link>
                     </div>
                     <div className="mx-4 my-2 text-sm">
                       {commentToItem.text}

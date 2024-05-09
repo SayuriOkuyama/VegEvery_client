@@ -76,7 +76,8 @@ const page = () => {
       account_id: user.account_id,
       name: user.name,
       icon_path: user.icon_storage_path,
-      icon_url: user.icon_url,
+      icon_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_url}`,
+      // icon_url: user.icon_url,
       icon_file: '',
       vegetarian_type: vegetarian_type[user.vegetarian_type],
       introduction: user.introduction,
@@ -102,8 +103,9 @@ const page = () => {
     user.name = res.data.name
     user.vegetarian_type = res.data.vegetarian_type
     user.introduction = res.data.introduction
-    user.icon_path = res.data.icon_path
+    user.icon_path = res.data.icon_storage_path
     user.icon_url = res.data.icon_url
+    console.log(res.data)
 
     setIsEdit(false)
   }
@@ -123,7 +125,10 @@ const page = () => {
   }
 
   if (!user) return <Loading />
-
+  console.log(
+    `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_storage_path}`,
+  )
+  console.log(user)
   return (
     <main className="pb-24 max-w-3xl sm:min-h-[60svh]">
       {isDeletingAccount && (
@@ -325,7 +330,11 @@ const page = () => {
                 ) : (
                   <Link href={`/account/user/${user.id}?article=recipes`}>
                     <img
-                      src={user.icon_url}
+                      src={
+                        user.icon_storage_path
+                          ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_storage_path}`
+                          : user.icon_url
+                      }
                       className="object-cover w-full h-full block rounded-full"
                       alt="ユーザーアイコン"
                     />

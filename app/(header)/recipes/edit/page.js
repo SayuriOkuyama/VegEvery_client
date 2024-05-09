@@ -64,7 +64,8 @@ const page = () => {
 
           setValue(`steps.${index}`, {
             order: step.order,
-            image_url: step.image_url,
+            image_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`,
+            // image_url: step.image_url,
             text: step.text,
           })
           // 画像出力用
@@ -79,7 +80,8 @@ const page = () => {
       reset({
         title: data.article.title,
         thumbnail_path: data.article.thumbnail_path,
-        thumbnail_url: data.article.thumbnail_url,
+        thumbnail_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${data.article.thumbnail_path}`,
+        // thumbnail_url: data.article.thumbnail_url,
         thumbnail_newFile: '',
         tags: data.article.tags,
         materials: data.article.materials,
