@@ -63,7 +63,9 @@ const page = () => {
           reportData.push({
             order: report.order,
             text: report.text,
-            url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${report.image_path}`,
+            url: report.image_path
+              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${report.image_path}`
+              : '',
             // url: report.image_url,
             path: report.image_path,
             file: '',

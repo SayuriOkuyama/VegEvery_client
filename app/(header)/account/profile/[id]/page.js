@@ -69,18 +69,27 @@ const page = () => {
     resolver: zodResolver(EditUserFormSchema),
     mode: 'onChange',
   })
-
+  // console.log(form.formState.errors)
+  // console.log(user)
+  // console.log(form.watch())
   const editProfile = () => {
     setIsEdit(true)
+    let icon_url
+    if (user.icon_storage_path) {
+      icon_url = `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_storage_path}`
+    } else {
+      icon_url = user.icon_url
+    }
+
     form.reset({
       account_id: user.account_id,
       name: user.name,
       icon_path: user.icon_storage_path,
-      icon_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_url}`,
+      icon_url: icon_url,
       // icon_url: user.icon_url,
       icon_file: '',
       vegetarian_type: vegetarian_type[user.vegetarian_type],
-      introduction: user.introduction,
+      introduction: user.introduction ? user.introduction : '',
     })
   }
 
@@ -104,7 +113,8 @@ const page = () => {
     user.vegetarian_type = res.data.vegetarian_type
     user.introduction = res.data.introduction
     user.icon_path = res.data.icon_storage_path
-    user.icon_url = res.data.icon_url
+    user.icon_url = `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${res.data.icon_storage_path}`
+
     // console.log(res.data)
 
     setIsEdit(false)

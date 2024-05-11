@@ -365,7 +365,7 @@ const page = ({ params }) => {
                           // src={commentToRecipe.userIcon}
                           alt="ユーザーアイコン"
                         />
-                        <AvatarFallback>Icon</AvatarFallback>
+                        <AvatarFallback />
                       </Avatar>
                       <div className="text-md self-center">
                         {commentToRecipe.userName}

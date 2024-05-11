@@ -64,7 +64,9 @@ const page = () => {
 
           setValue(`steps.${index}`, {
             order: step.order,
-            image_url: `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`,
+            image_url: step.image_path
+              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`
+              : '',
             // image_url: step.image_url,
             text: step.text,
           })
