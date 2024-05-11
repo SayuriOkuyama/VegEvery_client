@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Articles from '@/components/layouts/user/Articles'
 import Loading from '@/components/layouts/Loading'
+import VegeTag from '@/components/layouts/VegeTag.js'
 
 const page = ({ params }) => {
   const userId = params.id
@@ -23,22 +24,25 @@ const page = ({ params }) => {
         <div className="h-20 w-20">
           <img
             src={
-              data.icon_storage_path
-                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${data.icon_storage_path}`
-                : data.icon_url
+              data.user.icon_storage_path
+                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${data.user.icon_storage_path}`
+                : data.user.icon_url
             }
             className="object-cover w-full h-full block rounded-full"
             alt="ユーザーアイコン"
           />
         </div>
         <div className="ml-8">
-          <p className="text-2xl">{data.name}</p>
-          <p className="text-base">@{data.account_id}</p>
+          <div className="flex items-center">
+            <VegeTag vegeTags={data.vegeType} size="small" />
+            <p className="text-2xl">{data.user.name}</p>
+          </div>
+          <p className="text-base">@{data.user.account_id}</p>
         </div>
       </div>
       <div className="mx-auto w-4/5 bg-green mt-4 rounded-sm p-4">
-        {data.introduction ? (
-          <div>{data.introduction}</div>
+        {data.user.introduction ? (
+          <div>{data.user.introduction}</div>
         ) : (
           <div className="text-center">自己紹介がありません。</div>
         )}

@@ -173,15 +173,6 @@ const page = ({ params }) => {
         </div>
       )}
       <Suspense fallback={<p>Loading feed...</p>}>
-        {user && articlesData.user.id === user.id && (
-          <Link
-            href={`/food_items/edit?id=${articlesData.article_id}`}
-            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3 w-fit">
-            <div className="rounded-full p-1 side_icon">
-              <PiNotePencilLight size="28px" />
-            </div>
-          </Link>
-        )}
         <div className="relative">
           <div className="flex justify-center mt-4 mb-2 sm:my-8">
             <VegeTag vegeTags={articlesData.vegeTags} />
