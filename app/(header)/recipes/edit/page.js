@@ -26,6 +26,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import Loading from '@/components/layouts/Loading'
+import Error from '../error'
 
 const page = () => {
   const router = useRouter()
@@ -193,7 +194,8 @@ const page = () => {
     // }
   }
 
-  if (error) return <p>Error: {error.message}</p>
+  if (error) return <Error error={error} />
+  // if (error) return <p>Error: {error.message}</p>
   if (!data) return <Loading />
   return (
     <main className="pb-32 max-w-2xl">

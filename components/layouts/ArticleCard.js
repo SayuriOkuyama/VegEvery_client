@@ -30,6 +30,7 @@ const ArticleCard = ({
             src={thumbnail}
             sizes="600px"
             fill
+            alt="サムネイル画像"
             style={{
               objectFit: 'cover',
             }}
@@ -58,8 +59,8 @@ const ArticleCard = ({
                     ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${user.icon_storage_path}`
                     : user.icon_url
                 }
-                // src={user.icon_url}
                 alt="ユーザーアイコン"
+                // src={user.icon_url}
               />
               {/* <AvatarImage
                 src="https://static.vegevery.my-raga-bhakti.com/recipes/thumbnail/pasta.jpg"

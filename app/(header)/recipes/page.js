@@ -14,9 +14,27 @@ const page = () => {
   const [user, setUser] = useState()
 
   useEffect(() => {
+    // throw new Error('ERROR!!!!!')
+
     const getUser = async () => {
-      await axios.get('/sanctum/csrf-cookie')
-      await axios.get('/api/user').then(res => setUser(res.data))
+      // throw new Error('ERROR!!!!!')
+
+      try {
+        await axios.get('/sanctum/csrf-cookie')
+        const res = await axios.get('/api/user')
+        setUser(res.data)
+      } catch (error) {
+        // 認証エラー以外の場合はエラーを投げる
+
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 403)
+        ) {
+          console.log('エラー発生 in recipe')
+
+          throw error // このエラーは error.tsx によって捕捉される
+        }
+      }
     }
     getUser()
   }, [])

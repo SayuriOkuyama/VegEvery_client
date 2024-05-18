@@ -8,6 +8,9 @@
 
 # testing
 /coverage
+/app/(header)/error-test/
+/app/api/sentry-example-api/
+/app/sentry-example-page/
 
 # next.js
 /.next/
@@ -38,3 +41,6 @@ next-env.d.ts
 
 # Sentry Config File
 .sentryclirc
+sentry.client.config.ts
+sentry.edge.config.ts
+sentry.server.config.ts
