@@ -58,7 +58,7 @@ const page = ({ params }) => {
   const [bookshelves, setBookshelves] = useState()
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
-  console.log(articlesData)
+  // console.log(articlesData)
   useEffect(() => {
     if (data) {
       const recipe_steps = data.article.recipe_steps.sort(
