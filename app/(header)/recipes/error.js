@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 
 const Error = ({ error, reset }) => {
   useEffect(() => {
-    console.error('in recipes/error.js')
+    // console.error('in recipes/error.js')
   }, [error])
 
   return (

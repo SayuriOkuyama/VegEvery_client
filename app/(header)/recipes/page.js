@@ -28,9 +28,9 @@ const page = () => {
 
         if (
           error.response &&
-          (error.response.status === 401 || error.response.status === 403)
+          (error.response.status !== 401 || error.response.status !== 403)
         ) {
-          console.log('エラー発生 in recipe')
+          // console.log('エラー発生 in recipe')
 
           throw error // このエラーは error.tsx によって捕捉される
         }
