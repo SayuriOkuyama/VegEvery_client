@@ -63,18 +63,20 @@ const page = () => {
         if (step) {
           data.article.recipe_steps[index].order = index + 1
 
+          const url = step.image_path
+            ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`
+            : ''
+
           setValue(`steps.${index}`, {
             order: step.order,
-            image_url: step.image_path
-              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`
-              : '',
+            image_url: url,
             // image_url: step.image_url,
             text: step.text,
           })
           // 画像出力用
           setStepImages(prevState => {
             const newState = prevState
-            newState.push({ url: step.image_url, path: step.image_path })
+            newState.push({ url: url, path: step.image_path })
             return newState
           })
         }
