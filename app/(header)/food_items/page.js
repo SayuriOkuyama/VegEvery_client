@@ -28,6 +28,7 @@ const page = () => {
       router.push('/food_items/create')
     }
   }
+
   return (
     <main className="pb-24 max-w-4xl mx-auto min-h-screen">
       <h3 className="text-center text-lg font-bold mt-8 sm:text-4xl sm:tracking-wide sm:mt-16">

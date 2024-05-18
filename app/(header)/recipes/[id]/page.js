@@ -93,6 +93,7 @@ const page = ({ params }) => {
       })
     }
   }, [data])
+  // console.log(data)
 
   useEffect(() => {
     if (user) {
@@ -183,7 +184,7 @@ const page = ({ params }) => {
         {user && articlesData.user.id === user.id && (
           <Link
             href={`/recipes/edit?id=${articlesData.article_id}`}
-            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3 w-fit">
+            className="fixed top-3 right-3 sm:block sm:absolute sm:top-0 sm:left-3 w-fit z-50">
             <div className="rounded-full p-1 side_icon">
               <PiNotePencilLight size="28px" />
             </div>

@@ -91,6 +91,7 @@ const page = ({ params }) => {
       })
     }
   }, [data])
+  // console.log(data)
 
   useEffect(() => {
     if (user) {

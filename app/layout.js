@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { Zen_Kaku_Gothic_New } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layouts/Navigation/Navigation'
-// import { UserProvider } from '@/contexts/UserProvider'
+import { UserProvider } from '@/contexts/UserProvider'
 import Footer from '@/components/layouts/Footer'
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
@@ -29,13 +29,13 @@ export default function RootLayout({ children }) {
       <html lang="ja">
         <body
           className={`${zenKakuGothic.className} min-h-full sm:pb-50 relative`}>
-          {/* <UserProvider> */}
-          {children}
-          <Navigation />
-          {/* </UserProvider> */}
-          <footer className="hidden sm:block w-full mt-auto bg-green">
-            <Footer />
-          </footer>
+          <UserProvider>
+            {children}
+            <Navigation />
+            <footer className="hidden sm:block w-full mt-auto bg-green">
+              <Footer />
+            </footer>
+          </UserProvider>
         </body>
       </html>
     </>

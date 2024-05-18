@@ -6,9 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import VegeTypeSort from '@/components/layouts/recipes/VegeTypeSort.js'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
 import useSWR from 'swr'
 import { getArticles } from '@/lib/utils/fetch.js'
+import { useAuth } from '@/hooks/auth'
 
 const page = () => {
   const [articles, setArticles] = useState()
@@ -18,6 +18,7 @@ const page = () => {
   const page = params.get('page')
   const type = params.get('type')
   const search = params.get('search')
+  const { user } = useAuth()
 
   // console.log(articles)
   // console.log(pageData)
@@ -34,20 +35,28 @@ const page = () => {
     }
   }, [data, params, page, type])
 
+  const handleRouteCreate = () => {
+    if (!user) {
+      router.push('/login')
+    } else {
+      router.push('/food_items/create')
+    }
+  }
+
   return (
     <main className="pb-24  max-w-4xl  mx-auto min-h-screen">
       <h3 className="text-center text-lg font-bold mt-8 sm:text-4xl sm:tracking-wide sm:mt-16">
         フードアイテム情報
       </h3>
       <div className="flex justify-end mt-4 mb-1">
-        <Link href={'/food_items/create'}>
-          <Button className="py-0 px-2 mr-2 bg-button border-button-color">
-            <div className="flex items-end">
-              <PiNotePencilLight className="self-end text-lg text-bold" />
-              投稿する
-            </div>
-          </Button>
-        </Link>
+        <Button
+          onClick={handleRouteCreate}
+          className="py-0 px-2 mr-2 bg-button border-button-color">
+          <div className="flex items-end">
+            <PiNotePencilLight className="self-end text-lg text-bold" />
+            投稿する
+          </div>
+        </Button>
       </div>
       <Tabs defaultValue="search" className="flex flex-col">
         <TabsList className="w-100 self-center sm:mb-8 sm:space-x-4">

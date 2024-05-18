@@ -1,13 +1,12 @@
 import useSWR from 'swr'
 import axios from '@/lib/axios'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Cookie from 'js-cookie'
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   const router = useRouter()
   const params = useParams()
-  const [error401, setError401] = useState(false)
 
   const {
     data: user,
@@ -21,12 +20,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         return res.data
       })
       .catch(error => {
-        if (error.response.status !== 401) {
-          setError401(true)
-        }
-        // if (error.response.status !== 409) throw error
-
-        // router.push('/verify-email')
+        if (error.response.status !== 409) throw error
+        if (error.response.status !== 401)
+          throw new Error('Failed to Delete Invoice')
       }),
   )
   // revalidateOnFocus: false, // フォーカス時に再検証しない

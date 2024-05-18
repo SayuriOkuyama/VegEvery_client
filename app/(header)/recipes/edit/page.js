@@ -26,6 +26,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import Loading from '@/components/layouts/Loading'
+import Error from '../error'
 
 const page = () => {
   const router = useRouter()
@@ -62,18 +63,20 @@ const page = () => {
         if (step) {
           data.article.recipe_steps[index].order = index + 1
 
+          const url = step.image_path
+            ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`
+            : ''
+
           setValue(`steps.${index}`, {
             order: step.order,
-            image_url: step.image_path
-              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${step.image_path}`
-              : '',
+            image_url: url,
             // image_url: step.image_url,
             text: step.text,
           })
           // 画像出力用
           setStepImages(prevState => {
             const newState = prevState
-            newState.push({ url: step.image_url, path: step.image_path })
+            newState.push({ url: url, path: step.image_path })
             return newState
           })
         }
@@ -193,7 +196,8 @@ const page = () => {
     // }
   }
 
-  if (error) return <p>Error: {error.message}</p>
+  if (error) return <Error error={error} />
+  // if (error) return <p>Error: {error.message}</p>
   if (!data) return <Loading />
   return (
     <main className="pb-32 max-w-2xl">
