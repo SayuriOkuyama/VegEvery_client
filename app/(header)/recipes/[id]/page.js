@@ -56,9 +56,12 @@ const page = ({ params }) => {
   })
   const [isOpen, setIsOpen] = useState(false)
   const [bookshelves, setBookshelves] = useState()
+  const [comments, setComments] = useState([])
 
   const { data, error } = useSWR(`/api/recipes/${id}`, getArticles)
   // console.log(articlesData)
+  // console.log(comments)
+
   useEffect(() => {
     if (data) {
       const recipe_steps = data.article.recipe_steps.sort(
@@ -86,11 +89,12 @@ const page = ({ params }) => {
         user: data.article.user,
         materials: data.article.materials,
         recipe_steps: recipe_steps,
-        commentsToRecipe: data.comments,
         tags: data.article.tags,
         vegeTags: vegeTags,
         likes: data.likes,
       })
+
+      setComments(data.comments)
     }
   }, [data])
   // console.log(data)
@@ -140,23 +144,27 @@ const page = ({ params }) => {
     )
     // console.log(response.data)
     const newComment = response.data
-    setArticlesData(prevState => {
-      // console.log({
-      //   ...prevState,
-      //   commentsToRecipe: [...prevState.commentsToRecipe, newComment],
-      // })
-      return {
-        ...prevState,
-        commentsToRecipe: [...prevState.commentsToRecipe, newComment],
-      }
+
+    setComments(prevState => {
+      const newState = prevState
+      newState.push(newComment)
+      return newState
     })
     reset()
     setIsOpen(false)
+
+    router.refresh()
   }
 
   const handleCommentDelete = async commentId => {
-    await axios.delete(`/api/recipes/comment`, { data: { id: commentId } })
-    router.replace()
+    const res = await axios.delete(`/api/recipes/comment`, {
+      data: { id: commentId },
+    })
+    setComments(prevState => {
+      const newState = [...prevState].filter(comment => comment.id !== res.data)
+      return newState
+    })
+    router.refresh()
   }
 
   if (error) return <p>Error: {error.message}</p>
@@ -308,20 +316,19 @@ const page = ({ params }) => {
       <div className="bg-orange py-8">
         <div className="container">
           <h3 className="mb-4 sm:text-2xl">コメント</h3>
-          {(articlesData.commentsToRecipe &&
-            articlesData.commentsToRecipe.length) !== 0 ? (
+          {(comments && comments.length) !== 0 ? (
             <hr className="accent-color-border my-4" />
           ) : (
             <div className="text-center opacity-70 text-sm sm:text-lg">
               まだコメントがありません
             </div>
           )}
-          {articlesData.commentsToRecipe &&
-            articlesData.commentsToRecipe.length !== 0 &&
-            articlesData.commentsToRecipe.map(commentToRecipe => {
+          {comments &&
+            comments.length !== 0 &&
+            comments.map(comment => {
               return (
-                <div key={commentToRecipe.id} className="relative">
-                  {user && commentToRecipe.user_id === user.id && (
+                <div key={comment.id} className="relative">
+                  {user && comment.user_id === user.id && (
                     <Dialog className="mx-auto mt-0">
                       <DialogTrigger className="absolute right-4">
                         <div className=" bg-white/80 p-1 rounded-full">
@@ -331,16 +338,16 @@ const page = ({ params }) => {
                       <DialogContent>
                         <DialogHeader>
                           <DialogTitle>コメントを削除しますか？</DialogTitle>
-                          <DialogDescription className="flex">
-                            <Button
-                              onClick={() =>
-                                handleCommentDelete(commentToRecipe.id)
-                              }
-                              type="button"
-                              className="mx-auto bg-button block py-1 mt-8 border-button-color ">
-                              削除する
-                            </Button>
-                            <DialogClose asChild>
+                          <DialogDescription className="flex justify-around">
+                            <DialogClose as child>
+                              <Button
+                                onClick={() => handleCommentDelete(comment.id)}
+                                type="button"
+                                className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                                削除する
+                              </Button>
+                            </DialogClose>
+                            <DialogClose as child>
                               <Button
                                 type="button"
                                 className="mx-auto bg-button block py-1 mt-8 border-button-color ">
@@ -354,14 +361,14 @@ const page = ({ params }) => {
                   )}
                   <div className="flex">
                     <Link
-                      href={`/account/user/${commentToRecipe.user_id}?article=recipes`}
+                      href={`/account/user/${comment.user_id}?article=recipes`}
                       className="flex">
                       <Avatar className="self-end mr-2">
                         <AvatarImage
                           src={
-                            commentToRecipe.userIconPath
-                              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${commentToRecipe.userIconPath}`
-                              : commentToRecipe.userIcon
+                            comment.userIconPath
+                              ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${comment.userIconPath}`
+                              : comment.userIcon
                           }
                           // src={commentToRecipe.userIcon}
                           alt="ユーザーアイコン"
@@ -369,11 +376,11 @@ const page = ({ params }) => {
                         <AvatarFallback />
                       </Avatar>
                       <div className="text-md self-center">
-                        {commentToRecipe.userName}
+                        {comment.userName}
                       </div>
                     </Link>
                   </div>
-                  <div className="mx-4 my-2">{commentToRecipe.text}</div>
+                  <div className="mx-4 my-2">{comment.text}</div>
                   {/* <div className="flex text-sm justify-end mr-4">
                     <PiHeart className="self-center" />
                     <p>{commentToRecipe.likes}</p>
