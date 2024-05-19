@@ -20,9 +20,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         return res.data
       })
       .catch(error => {
-        if (error.response.status !== 409) throw error
-        if (error.response.status !== 401)
-          throw new Error('Failed to Delete Invoice')
+        if (error.response.status !== 401) throw new Error('Fetch User Error')
       }),
   )
   // revalidateOnFocus: false, // フォーカス時に再検証しない
