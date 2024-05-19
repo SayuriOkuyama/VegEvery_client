@@ -41,6 +41,3 @@ next-env.d.ts
 
 # Sentry Config File
 .sentryclirc
-sentry.client.config.ts
-sentry.edge.config.ts
-sentry.server.config.ts
