@@ -16,6 +16,7 @@ import { useDropzone } from 'react-dropzone'
 import { useRouter } from 'next/navigation.js'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { LiaSpinnerSolid } from 'react-icons/lia'
+import Link from 'next/link.js'
 
 const page = () => {
   const [image, setImage] = useState(null)
@@ -239,10 +240,17 @@ const page = () => {
         />
         <hr className="mx-4" />
 
-        <div className="">
+        <div className="flex justify-around">
+          <Link href={'/recipes'}>
+            <Button
+              type="button"
+              className="w-32 bg-button block py-1 px-2 mt-16 border-button-color">
+              一覧に戻る
+            </Button>
+          </Link>
           <Button
             type="submit"
-            className="mx-auto bg-button block py-1 mt-16 border-button-color">
+            className="w-32 bg-button block py-1 mt-16 border-button-color">
             投稿
           </Button>
         </div>

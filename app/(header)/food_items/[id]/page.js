@@ -372,10 +372,10 @@ const page = ({ params }) => {
                     <div className="mx-4 my-2 text-sm">
                       {commentToItem.text}
                     </div>
-                    <div className="flex text-sm justify-end mr-4">
+                    {/* <div className="flex text-sm justify-end mr-4">
                       <PiHeart className="self-center" />
                       <p>{commentToItem.likes}</p>
-                    </div>
+                    </div> */}
                     <hr className="accent-color-border my-4" />
                   </div>
                 )
