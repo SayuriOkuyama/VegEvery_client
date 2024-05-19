@@ -199,6 +199,7 @@ const page = () => {
   if (error) return <Error error={error} />
   // if (error) return <p>Error: {error.message}</p>
   if (!data) return <Loading />
+
   return (
     <main className="pb-32 max-w-2xl">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 my-16">
