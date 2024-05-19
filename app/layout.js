@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { Zen_Kaku_Gothic_New } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/layouts/Navigation/Navigation'
-import { UserProvider } from '@/contexts/UserProvider'
+import { UserProvider } from '@/contexts/userProvider'
 import Footer from '@/components/layouts/Footer'
 
 const zenKakuGothic = Zen_Kaku_Gothic_New({
