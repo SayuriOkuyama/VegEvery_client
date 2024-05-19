@@ -55,6 +55,7 @@ const page = ({ params }) => {
   const router = useRouter()
   const [bookshelves, setBookshelves] = useState()
   const [isAlertVisible, setAlertVisible] = useState(false)
+  const [comments, setComments] = useState([])
 
   const { data, error } = useSWR(`/api/food_items/${id}`, getArticles)
 
@@ -84,11 +85,12 @@ const page = ({ params }) => {
         user: data.article.user,
         items: data.article.items,
         reports: reports,
-        commentsToItem: data.comments,
         tags: data.article.tags,
         vegeTags: vegeTags,
         likes: data.likes,
       })
+
+      setComments(data.comments)
     }
   }, [data])
   // console.log(data)
@@ -136,23 +138,26 @@ const page = ({ params }) => {
     )
     // console.log(response.data)
     const newComment = response.data
-    setArticlesData(prevState => {
-      // console.log({
-      //   ...prevState,
-      //   commentsToItem: [...prevState.commentsToItem, newComment],
-      // })
-      return {
-        ...prevState,
-        commentsToItem: [...prevState.commentsToItem, newComment],
-      }
+
+    setComments(prevState => {
+      const newState = prevState
+      newState.push(newComment)
+      return newState
     })
     reset()
     setIsOpen(false)
+    router.refresh()
   }
 
   const handleCommentDelete = async commentId => {
-    await axios.delete(`/api/food_items/comment`, { data: { id: commentId } })
-    router.replace()
+    const res = await axios.delete(`/api/food_items/comment`, {
+      data: { id: commentId },
+    })
+    setComments(prevState => {
+      const newState = [...prevState].filter(comment => comment.id !== res.data)
+      return newState
+    })
+    router.refresh()
   }
 
   if (error) return <p>Error: {error.message}</p>
@@ -305,19 +310,18 @@ const page = ({ params }) => {
         <div className="bg-orange py-8">
           <div className="container">
             <h3 className="mb-4 sm:text-2xl">コメント</h3>
-            {(articlesData.commentsToItem &&
-              articlesData.commentsToItem.length) !== 0 ? (
+            {(comments && comments.length) !== 0 ? (
               <hr className="accent-color-border my-4" />
             ) : (
               <div className="text-center opacity-70 text-sm sm:text-lg">
                 まだコメントがありません
               </div>
             )}
-            {articlesData.commentsToItem &&
-              articlesData.commentsToItem.map(commentToItem => {
+            {comments &&
+              comments.map(comment => {
                 return (
-                  <div key={commentToItem.id} className="relative">
-                    {commentToItem.user_id === 1 && (
+                  <div key={comment.id} className="relative">
+                    {comment.user_id === user.id && (
                       <Dialog className="mx-auto mt-0">
                         <DialogTrigger className="absolute right-4">
                           <div className=" bg-white/80 p-1 rounded-full">
@@ -328,14 +332,16 @@ const page = ({ params }) => {
                           <DialogHeader>
                             <DialogTitle>コメントを削除しますか？</DialogTitle>
                             <DialogDescription className="flex">
-                              <Button
-                                onClick={() =>
-                                  handleCommentDelete(commentToItem.id)
-                                }
-                                type="button"
-                                className="mx-auto bg-button block py-1 mt-8 border-button-color ">
-                                削除する
-                              </Button>
+                              <DialogClose asChild>
+                                <Button
+                                  onClick={() =>
+                                    handleCommentDelete(comment.id)
+                                  }
+                                  type="button"
+                                  className="mx-auto bg-button block py-1 mt-8 border-button-color ">
+                                  削除する
+                                </Button>
+                              </DialogClose>
                               <DialogClose asChild>
                                 <Button
                                   type="button"
@@ -350,28 +356,26 @@ const page = ({ params }) => {
                     )}
                     <div className="flex">
                       <Link
-                        href={`/account/user/${commentToItem.user_id}?article=recipes`}
+                        href={`/account/user/${comment.user_id}?article=recipes`}
                         className="flex">
                         <Avatar className="self-end mr-2">
                           <AvatarImage
                             src={
-                              commentToItem.userIconPath
-                                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${commentToItem.userIconPath}`
-                                : commentToItem.userIcon
+                              comment.userIconPath
+                                ? `${process.env.NEXT_PUBLIC_CLOUD_FRONT_URL}/${comment.userIconPath}`
+                                : comment.userIcon
                             }
-                            // src={commentToItem.userIcon}
+                            // src={comment.userIcon}
                             alt="ユーザーアイコン"
                           />
                           <AvatarFallback />
                         </Avatar>
                         <div className="text-md self-center text-sm">
-                          {commentToItem.userName}
+                          {comment.userName}
                         </div>
                       </Link>
                     </div>
-                    <div className="mx-4 my-2 text-sm">
-                      {commentToItem.text}
-                    </div>
+                    <div className="mx-4 my-2 text-sm">{comment.text}</div>
                     {/* <div className="flex text-sm justify-end mr-4">
                       <PiHeart className="self-center" />
                       <p>{commentToItem.likes}</p>
